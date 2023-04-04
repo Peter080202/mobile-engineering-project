@@ -271,9 +271,7 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
 
   const saveNewCard = () => {
     const newCard : FlashCard = {front: newFront, back: newBack}; 
-    console.log(deck.cards.length);
     deck.cards = [...deck.cards, newCard];
-    console.log(deck.cards.length);
     Alert.alert("Saved new card!")
   }
 
