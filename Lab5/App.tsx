@@ -281,8 +281,11 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
         editMode === null && (
           <>
             <Button title="Edit deck name" onPress={() => setEditMode(EditOptions.EditDeckName)}/>
+            <View style={styles.space} />
             <Button title="Edit cards" onPress={() => { setCard(); setEditMode(EditOptions.EditCards); }}/>
+            <View style={styles.space} />
             <Button title="Add cards" onPress={() => setEditMode(EditOptions.AddCard)}/>
+            <View style={styles.space} />
             <Button title="go back" onPress={() => setSelected(null)} /> 
           </>
         )
@@ -291,8 +294,10 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
         editMode === EditOptions.EditDeckName && (
           <View>
             <Text>Deck name:</Text>
-            <TextInput value={deckName} onChangeText={setDeckName} multiline={true} numberOfLines={4}/>
-            <Button title="save deck name" onPress={()=> saveDeckName()} disabled={deckName === deck.name}/>
+            <View style={styles.space} />
+            <TextInput style={styles.textfield} value={deckName} onChangeText={setDeckName} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
+            <Button title="save deck name" color="#009E60" onPress={()=> saveDeckName()} disabled={deckName === deck.name}/>
           </View>
         )
       }
@@ -300,13 +305,20 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
         editMode === EditOptions.EditCards && (
           <View>
             <Text>Front:</Text>
-            <TextInput value={front} onChangeText={setFront} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
+            <TextInput style={styles.textfield} value={front} onChangeText={setFront} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
             <Text>Back:</Text>
-            <TextInput value={back} onChangeText={setBack} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
+            <TextInput style={styles.textfield} value={back} onChangeText={setBack} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
             <Button title="previous card" onPress={()=> selectCard(false)} disabled={index <= 0}/>
+            <View style={styles.space} />
             <Button title="next card" onPress={()=> selectCard(true)} disabled={index >= deck.cards.length - 1}/>
-            <Button title="save card" onPress={() => saveCard()} disabled={deck.cards[index].front === front && deck.cards[index].back === back}/>
-            <Button title="delete card" onPress={() => deleteCard()}/>
+            <View style={styles.space} />
+            <Button title="save card" color="#009E60" onPress={() => saveCard()} disabled={deck.cards[index].front === front && deck.cards[index].back === back}/>
+            <View style={styles.space} />
+            <Button title="delete card" color="#FF0000" onPress={() => deleteCard()}/>
           </View>
         )
       }
@@ -314,17 +326,25 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
         editMode === EditOptions.AddCard && (
           <View>
             <Text>Add a card</Text>
+            <View style={styles.space} />
             <Text>Front:</Text>
-            <TextInput value={newFront} onChangeText={setNewFront} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
+            <TextInput style={styles.textfield} value={newFront} onChangeText={setNewFront} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
             <Text>Back:</Text>
-            <TextInput value={newBack} onChangeText={setNewBack} multiline={true} numberOfLines={4}/>
-            <Button title="save new card" onPress={() => saveNewCard()} disabled={newFront === "" || newBack === ""}/>
+            <View style={styles.space} />
+            <TextInput style={styles.textfield} value={newBack} onChangeText={setNewBack} multiline={true} numberOfLines={4}/>
+            <View style={styles.space} />
+            <Button title="save new card" color="#009E60" onPress={() => saveNewCard()} disabled={newFront === "" || newBack === ""}/>
           </View>
         )
       }
       {
         editMode !== null && (
-          <Button title="go back" onPress={() => setEditMode(null)} /> 
+          <>
+            <View style={styles.space} />
+            <Button title="go back" onPress={() => setEditMode(null)} /> 
+          </>
         )
       }
       
@@ -369,8 +389,11 @@ const SelectDeck = ({ decks }: { decks: CardDeck[] }) => {
       {cardDecks.map((d : CardDeck) => (
         <View>
           <Text>{d.name}</Text>
+          <View style={styles.space} />
           <Button title="select" onPress={() => { setSelected(d); setEditModeSelected(false); }} />
+          <View style={styles.space} />
           <Button title="edit" onPress={() => { setSelected(d); setEditModeSelected(true); }} />
+          <View style={styles.space} />
         </View>
       ))}
     </View>
@@ -401,5 +424,15 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 10
+  },
+  space: {
+    width: 20,
+    height: 10,
+  },
+  textfield: {
+    padding: 4,
+    fontSize: 14,
+    borderColor: "black",
+    borderWidth: 1
   }
 });
