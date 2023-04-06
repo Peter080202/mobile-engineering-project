@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, TextInput, Alert } from 'react-native';
+import { Text, View, StyleSheet, Button, TextInput, Alert, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import { flashcardDecks } from './flashcards';
 
@@ -98,7 +98,7 @@ const Card = ({
   );
 };
 
-type statisticsProps = {
+type StatisticsProps = {
   cardsReviewed: number;
   cardsLeft: number;
   correctGuesses: number;
@@ -110,7 +110,7 @@ const Statistics = ({
   cardsLeft,
   correctGuesses,
   incorrectGuesses,
-}: statisticsProps) => {
+}: StatisticsProps) => {
   return (
     <View>
       <Text>Cards reviewed: {cardsReviewed}</Text>
@@ -219,6 +219,8 @@ const Deck = ({ deck, onSave }: { deck: CardDeck; onSave: DeckCallback }) => {
 type DeckEditorProps ={
   deck: CardDeck;
   setSelected: any;
+  newDeck: boolean;
+  saveNewDeck: (newDeck: CardDeck) => void;
 }
 
 enum EditOptions {
@@ -227,19 +229,19 @@ enum EditOptions {
   AddCard
 }
 
-const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
-  const [editMode, setEditMode] = useState<EditOptions>(null);
+const DeckEditor = ({deck, setSelected, newDeck, saveNewDeck} : DeckEditorProps) => {
+  const [editMode, setEditMode] = useState<EditOptions | null>(null);
   const [index, setIndex] = useState<number>(0);
   const [deckName, setDeckName] = useState(deck.name);
-  const [front, setFront] = useState(deck.cards[index].front);
-  const [back, setBack] = useState(deck.cards[index].back);
+  const [front, setFront] = useState(deck.cards.length > 0 ? deck.cards[index].front : undefined);
+  const [back, setBack] = useState(deck.cards.length > 0 ? deck.cards[index].back : undefined);
 
   const [newFront, setNewFront] = useState("");
   const [newBack, setNewBack] = useState("");
 
   const setCard = () => {
-    setFront(deck.cards[index].front);
-    setBack(deck.cards[index].back);
+    setFront(deck.cards.length > 0 ? deck.cards[index].front : undefined);
+    setBack(deck.cards.length > 0 ? deck.cards[index].back : undefined); 
   }
 
   useEffect(() => {
@@ -256,9 +258,11 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
   }
 
   const saveCard = () => {
-    deck.cards[index].front = front;
-    deck.cards[index].back = back;
-    Alert.alert("Saved card!")
+    if (front && back) {
+      deck.cards[index].front = front;
+      deck.cards[index].back = back;
+      Alert.alert("Saved card!")
+    }
   }
 
   const deleteCard = () => {
@@ -282,11 +286,17 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
           <>
             <Button title="Edit deck name" onPress={() => setEditMode(EditOptions.EditDeckName)}/>
             <View style={styles.space} />
-            <Button title="Edit cards" onPress={() => { setCard(); setEditMode(EditOptions.EditCards); }}/>
+            <Button title="Edit cards" disabled={deck.cards.length <= 0} onPress={() => { setCard(); setEditMode(EditOptions.EditCards); }}/>
             <View style={styles.space} />
-            <Button title="Add cards" onPress={() => setEditMode(EditOptions.AddCard)}/>
+            <Button title="Add card" onPress={() => setEditMode(EditOptions.AddCard)}/>
             <View style={styles.space} />
-            <Button title="go back" onPress={() => setSelected(null)} /> 
+            { newDeck && (
+              <>
+                <Button title="Add new deck" disabled={deck.cards.length <= 0 || deck.name.length <= 0} color="#009E60" onPress={() => saveNewDeck(deck)}/>
+                <View style={styles.space} />
+              </>
+            )}
+            <Button title="Go back" onPress={() => setSelected(null)} /> 
           </>
         )
       }
@@ -343,7 +353,7 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
         editMode !== null && (
           <>
             <View style={styles.space} />
-            <Button title="go back" onPress={() => setEditMode(null)} /> 
+            <Button title="Go back" onPress={() => setEditMode(null)} /> 
           </>
         )
       }
@@ -360,7 +370,8 @@ const DeckEditor = ({deck, setSelected} : DeckEditorProps) => {
 const SelectDeck = ({ decks }: { decks: CardDeck[] }) => {
   const [selected, setSelected] = useState<CardDeck | null>(null);
   const [cardDecks, setCardDecks] = useState<CardDeck[]>(decks);
-  const [ editModeSelected, setEditModeSelected] = useState<Boolean>(false);
+  const [ editModeSelected, setEditModeSelected] = useState<boolean>(false);
+  const [newDeck, setNewDeck] = useState<boolean>(false);
 
   const saveDeck = (deck: CardDeck) => {
     console.log('saving deck', deck);
@@ -374,29 +385,43 @@ const SelectDeck = ({ decks }: { decks: CardDeck[] }) => {
     setCardDecks(newDecks);
   };
 
+  const deleteDeck = (deck: CardDeck) => {
+    const newDecks = cardDecks.filter(cd => deck.name != cd.name);
+    setCardDecks(newDecks);
+  }
+
+  const saveNewDeck = (newDeck: CardDeck) => {
+    setCardDecks([...cardDecks, newDeck]);
+    setSelected(null);
+  }
+
   return selected ? (
     <View>
       {editModeSelected ? 
-        <DeckEditor deck={selected} setSelected={setSelected}/> : 
+        <DeckEditor deck={selected} setSelected={setSelected} newDeck={newDeck} saveNewDeck={saveNewDeck}/> : 
         <>
           <Deck deck={selected} onSave={saveDeck} />
-          <Button title="go back" onPress={() => setSelected(null)} />
+          <Button title="Go back" onPress={() => setSelected(null)} />
         </>
       }
     </View>
   ) : (
-    <View>
+    <ScrollView>
       {cardDecks.map((d : CardDeck) => (
-        <View>
+        <View key={d.name}>
           <Text>{d.name}</Text>
           <View style={styles.space} />
           <Button title="select" onPress={() => { setSelected(d); setEditModeSelected(false); }} />
           <View style={styles.space} />
-          <Button title="edit" onPress={() => { setSelected(d); setEditModeSelected(true); }} />
+          <Button title="edit" onPress={() => { setSelected(d); setEditModeSelected(true); setNewDeck(false); }} />
+          <View style={styles.space} />
+          <Button title="delete deck" color="#FF0000" onPress={() => { deleteDeck(d); }} />
           <View style={styles.space} />
         </View>
       ))}
-    </View>
+      <View style={styles.space} />
+      <Button title="add new deck" color="#009E60" onPress={() => { setSelected({name: "", cards: []} ); setEditModeSelected(true); setNewDeck(true); }} />
+    </ScrollView>
   );
 };
 
