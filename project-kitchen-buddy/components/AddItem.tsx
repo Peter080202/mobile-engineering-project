@@ -5,6 +5,7 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useState, useRef } from "react";
 import SelectDropdown from "react-native-select-dropdown";
@@ -35,12 +36,7 @@ export default function AddItem({ navigation, route }: any) {
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const addNewItem = () => {
-    console.log(itemName);
-    console.log(category);
-    console.log(location);
-    console.log(confectionType);
-    console.log(expirationDate);
+  const resetForm = () => {
     setItemName("");
     setCategory(undefined);
     categoriesDropdownRef.current?.reset();
@@ -49,6 +45,14 @@ export default function AddItem({ navigation, route }: any) {
     setConfectionType(undefined);
     confectionTypesDropdownRef.current?.reset();
     setExpirationDate(undefined);
+  };
+
+  const addNewItem = () => {
+    if (itemName.length === 0) {
+      Alert.alert("Please enter an item name!");
+    } else {
+      resetForm();
+    }
   };
 
   return (

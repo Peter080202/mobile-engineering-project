@@ -8,6 +8,10 @@ export default function HomeScreen({ navigation }: any) {
         title="Data entry of kitchen ingredients"
         onPress={() => navigation.navigate("AddItem")}
       />
+      <Button
+        title="Show queries"
+        onPress={() => navigation.navigate("Queries")}
+      />
     </View>
   );
 }
