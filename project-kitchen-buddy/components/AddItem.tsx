@@ -1,95 +1,113 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-import {useRef, useState} from "react";
-import { MultiSelect } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Platform,
+  Alert,
+} from "react-native";
+import { useState } from "react";
+import SelectDropdown from "react-native-select-dropdown";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
+export default function AddItem({ navigation, route }: any) {
+  const [itemName, setItemName] = useState<string>("");
 
+  const categories = ["fruit", "vegetable", "dairy", "fish", "meat", "liquid"];
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    undefined
+  );
 
-export default function AddItem({ navigation, route } : any) {
+  const locations = ["fridge", "freezer", "pantry"];
+  const [selectedLocation, setSelectedLocation] = useState<string | undefined>(
+    undefined
+  );
+  const confectionTypes = ["fresh", "canned", "frozen", "cured"];
+  const [selectedConfectionType, setSelectedConfectionType] = useState<
+    string | undefined
+  >(undefined);
 
-    const itemName = useRef<TextInput>(null);
-    const [selected, setSelected] = useState<string[]>([]);
-    const [isCategoryDropwnFocus, setIsCategoryDropdownFocus] = useState(false);
-    const data = [
-        { label: 'Item 1', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-        { label: 'Item 4', value: '4' },
-        { label: 'Item 5', value: '5' },
-        { label: 'Item 6', value: '6' },
-        { label: 'Item 7', value: '7' },
-        { label: 'Item 8', value: '8' },
-      ];
+  const [expirationDate, setExpirationDate] = useState<Date | undefined>(
+    undefined
+  );
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
+  const addNewItem = () => {
+    console.log(itemName);
+    console.log(selectedCategory);
+    console.log(selectedLocation);
+    console.log(selectedConfectionType);
+    console.log(expirationDate);
+  };
 
-    return (<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Add a new item</Text>
-        <Text>Name:</Text>
-        <TextInput
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Add a new item</Text>
+      <Text>Name:</Text>
+      <TextInput
         style={styles.input}
-        ref={itemName}
+        value={itemName}
+        onChangeText={(itemName) => setItemName(itemName)}
       />
-      <MultiSelect
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          search
-          data={data}
-          labelField="label"
-          valueField="value"
-          placeholder="Select item"
-          searchPlaceholder="Search..."
-          value={selected}
-          onChange={item => {
-            setSelected(item);
-          }}
-          renderLeftIcon={() => (
-            <AntDesign
-              style={styles.icon}
-              color="black"
-              name="Safety"
-              size={20}
-            />
-          )}
-          selectedStyle={styles.selectedStyle}
-        />
-        </View>);
+      <SelectDropdown
+        data={categories}
+        onSelect={(selectedCategory: string) =>
+          setSelectedCategory(selectedCategory)
+        }
+        buttonTextAfterSelection={(selectedCategory: string) =>
+          selectedCategory
+        }
+        rowTextForSelection={(category: string) => category}
+        defaultButtonText="Select a category"
+      />
+      <SelectDropdown
+        data={locations}
+        onSelect={(selectedLocation: string) =>
+          setSelectedLocation(selectedLocation)
+        }
+        buttonTextAfterSelection={(selectedLocation: string) =>
+          selectedLocation
+        }
+        rowTextForSelection={(location: string) => location}
+        defaultButtonText="Select a location"
+      />
+      <SelectDropdown
+        data={confectionTypes}
+        onSelect={(selectedConfectionType: string) =>
+          setSelectedConfectionType(selectedConfectionType)
+        }
+        buttonTextAfterSelection={(selectedConfectionType: string) =>
+          selectedConfectionType
+        }
+        rowTextForSelection={(confectionType: string) => confectionType}
+        defaultButtonText="Select a confection type"
+      />
+      <Button
+        title="Select expiration date"
+        onPress={() => setDatePickerVisibility(true)}
+      />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        date={expirationDate}
+        onConfirm={(expirationDate: Date) => {
+          setExpirationDate(expirationDate);
+          setDatePickerVisibility(false);
+        }}
+        onCancel={() => setDatePickerVisibility(false)}
+      />
+      <Button title="Save new item" onPress={() => addNewItem()} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    input: {
-      height: 40,
-      width: 100,
-      padding: 10,
-      margin: 12,
-      borderWidth: 1,
-    },
-    dropdown: {
-        height: 50,
-        backgroundColor: 'transparent',
-        borderBottomColor: 'gray',
-        borderBottomWidth: 0.5,
-      },
-      placeholderStyle: {
-        fontSize: 16,
-      },
-      selectedTextStyle: {
-        fontSize: 14,
-      },
-      iconStyle: {
-        width: 20,
-        height: 20,
-      },
-      inputSearchStyle: {
-        height: 40,
-        fontSize: 16,
-      },
-      icon: {
-        marginRight: 5,
-      },
-      selectedStyle: {
-        borderRadius: 12,
-      },
-  });
+  input: {
+    height: 40,
+    width: 100,
+    padding: 10,
+    margin: 12,
+    borderWidth: 1,
+  },
+});
