@@ -15,7 +15,7 @@ import { getFormattedDate } from "../services/commons";
 export default function AddItem({ navigation, route }: any) {
   const defaultText = "---";
 
-  const [itemName, setItemName] = useState<string>("");
+  const [ingredientName, setIngredientName] = useState<string>("");
 
   const categories = ["fruit", "vegetable", "dairy", "fish", "meat", "liquid"];
   const [category, setCategory] = useState<string | undefined>(undefined);
@@ -37,7 +37,7 @@ export default function AddItem({ navigation, route }: any) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const resetForm = () => {
-    setItemName("");
+    setIngredientName("");
     setCategory(undefined);
     categoriesDropdownRef.current?.reset();
     setLocation(undefined);
@@ -48,7 +48,7 @@ export default function AddItem({ navigation, route }: any) {
   };
 
   const addNewItem = () => {
-    if (itemName.length === 0) {
+    if (ingredientName.length === 0) {
       Alert.alert("Please enter an item name!");
     } else {
       resetForm();
@@ -64,8 +64,8 @@ export default function AddItem({ navigation, route }: any) {
         <Text style={styles.text}>Item name:</Text>
         <TextInput
           style={styles.input}
-          value={itemName}
-          onChangeText={(itemName) => setItemName(itemName)}
+          value={ingredientName}
+          onChangeText={(itemName) => setIngredientName(itemName)}
         />
       </View>
       <View style={styles.rowContainer}>

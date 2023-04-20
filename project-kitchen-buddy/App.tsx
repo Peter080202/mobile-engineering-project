@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddItem from "./components/AddItem";
+import AddIngredient from "./components/AddIngredient";
 import HomeScreen from "./components/HomeScreen";
 import Queries from "./components/Queries";
 
@@ -17,7 +17,7 @@ export default function App() {
         />
         <Stack.Screen
           name="AddItem"
-          component={AddItem}
+          component={AddIngredient}
           options={{ title: "Add item to ingredients" }}
         />
         <Stack.Screen
