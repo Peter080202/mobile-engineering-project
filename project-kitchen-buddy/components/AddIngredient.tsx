@@ -6,38 +6,38 @@ import {
   Button,
   TouchableOpacity,
   Alert,
-} from "react-native";
-import { useState, useRef } from "react";
-import SelectDropdown from "react-native-select-dropdown";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { getFormattedDate } from "../services/commons";
+} from 'react-native';
+import {useState, useRef} from 'react';
+import SelectDropdown from 'react-native-select-dropdown';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {getFormattedDate} from '../services/commons';
 
-export default function AddItem({ navigation, route }: any) {
-  const defaultText = "---";
+export default function AddItem({navigation, route}: any) {
+  const defaultText = '---';
 
-  const [ingredientName, setIngredientName] = useState<string>("");
+  const [ingredientName, setIngredientName] = useState<string>('');
 
-  const categories = ["fruit", "vegetable", "dairy", "fish", "meat", "liquid"];
+  const categories = ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'];
   const [category, setCategory] = useState<string | undefined>(undefined);
   const categoriesDropdownRef = useRef<SelectDropdown>(null);
 
-  const locations = ["fridge", "freezer", "pantry"];
+  const locations = ['fridge', 'freezer', 'pantry'];
   const [location, setLocation] = useState<string | undefined>(undefined);
   const locationsDropdownRef = useRef<SelectDropdown>(null);
 
-  const confectionTypes = ["fresh", "canned", "frozen", "cured"];
+  const confectionTypes = ['fresh', 'canned', 'frozen', 'cured'];
   const [confectionType, setConfectionType] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const confectionTypesDropdownRef = useRef<SelectDropdown>(null);
 
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(
-    undefined
+    undefined,
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const resetForm = () => {
-    setIngredientName("");
+    setIngredientName('');
     setCategory(undefined);
     categoriesDropdownRef.current?.reset();
     setLocation(undefined);
@@ -49,14 +49,14 @@ export default function AddItem({ navigation, route }: any) {
 
   const addNewItem = () => {
     if (ingredientName.length === 0) {
-      Alert.alert("Please enter an item name!");
+      Alert.alert('Please enter an item name!');
     } else {
       resetForm();
     }
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: "column" }}>
+    <View style={{flex: 1, flexDirection: 'column'}}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Add a new item</Text>
       </View>
@@ -65,7 +65,7 @@ export default function AddItem({ navigation, route }: any) {
         <TextInput
           style={styles.input}
           value={ingredientName}
-          onChangeText={(itemName) => setIngredientName(itemName)}
+          onChangeText={itemName => setIngredientName(itemName)}
         />
       </View>
       <View style={styles.rowContainer}>
@@ -113,8 +113,7 @@ export default function AddItem({ navigation, route }: any) {
         <Text style={styles.text}>Expiration date:</Text>
         <TouchableOpacity
           style={styles.customButton}
-          onPress={() => setDatePickerVisibility(true)}
-        >
+          onPress={() => setDatePickerVisibility(true)}>
           <Text style={styles.text}>
             {expirationDate ? getFormattedDate(expirationDate) : defaultText}
           </Text>
@@ -147,20 +146,20 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flex: 0.1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
   },
   header: {
     marginTop: 10,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 30,
-    fontWeight: "bold",
-    color: "#2196F3",
+    fontWeight: 'bold',
+    color: '#2196F3',
   },
   text: {
     flex: 1,
@@ -175,9 +174,9 @@ const styles = StyleSheet.create({
   },
   customButton: {
     flex: 1.25,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingTop: 8,
-    backgroundColor: "#edeff2",
+    backgroundColor: '#edeff2',
   },
 });

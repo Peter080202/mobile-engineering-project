@@ -1,16 +1,16 @@
-import { Button, View, Text } from "react-native";
+import {Button, View, Text} from 'react-native';
 
-export default function HomeScreen({ navigation }: any) {
+export default function HomeScreen({navigation}: any) {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
       <Button
         title="Data entry of kitchen ingredients"
-        onPress={() => navigation.navigate("AddItem")}
+        onPress={() => navigation.navigate('AddItem')}
       />
       <Button
         title="Show queries"
-        onPress={() => navigation.navigate("Queries")}
+        onPress={() => navigation.navigate('Queries')}
       />
     </View>
   );
