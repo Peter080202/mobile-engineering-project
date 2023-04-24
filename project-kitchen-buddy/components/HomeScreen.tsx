@@ -6,7 +6,7 @@ export default function HomeScreen({navigation}: any) {
       <Text>Home Screen</Text>
       <Button
         title="Data entry of kitchen ingredients"
-        onPress={() => navigation.navigate('AddItem')}
+        onPress={() => navigation.navigate('Add Ingredient')}
       />
       <Button
         title="Show queries"

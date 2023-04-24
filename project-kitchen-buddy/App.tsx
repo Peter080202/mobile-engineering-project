@@ -1,31 +1,61 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 import AddIngredient from './components/AddIngredient';
 import HomeScreen from './components/HomeScreen';
-import Queries from './components/Queries';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import QueriesNavigator from './components/QueriesNavigator';
+import ExpirationQuery from './components/ExpirationQuery';
+
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const Stack = createNativeStackNavigator();
-
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
+      <Tab.Navigator>
+        <Tab.Screen 
+          name="Home" 
           component={HomeScreen}
-          options={{title: 'Welcome'}}
-        />
-        <Stack.Screen
-          name="AddItem"
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" size={size} color={color} />
+            ),
+          }}
+         />
+        <Tab.Screen 
+          name="Add Ingredient" 
           component={AddIngredient}
-          options={{title: 'Add item to ingredients'}}
+          options={{
+            tabBarLabel: 'Add Ingredient',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="add" size={size} color={color} />
+            ),
+          }} 
         />
-        <Stack.Screen
-          name="Queries"
-          component={Queries}
-          options={{title: 'Queries'}}
+        <Tab.Screen 
+          name="Expiring Soon" 
+          component={ExpirationQuery} 
+          options={{
+            tabBarLabel: 'Expiring Soon',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="time" size={size} color={color} />
+            ),
+          }}
         />
-      </Stack.Navigator>
+        <Tab.Screen 
+          name="Queries" 
+          component={QueriesNavigator} 
+          options={{
+            tabBarLabel: 'Query Ingredients',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="search" size={size} color={color} />
+            ),
+          }}
+        />
+        
+      </Tab.Navigator>
     </NavigationContainer>
   );
-}
+};
