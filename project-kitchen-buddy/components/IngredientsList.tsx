@@ -13,35 +13,39 @@ import SelectDropdown from 'react-native-select-dropdown';
 import {getFormattedDate} from '../services/commons';
 
 import {Ingredient} from '../types/types';
-import {testIngredients} from '../types/testdata';
 import {categories, confectionTypes, locations} from '../services/constants';
 
-export default function IngredientList() {
+type IngredientListProps = {
+  ingredients: Ingredient[];
+};
+
+export default function IngredientList({ingredients}: IngredientListProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentIngredient, setCurrentIngredient] = useState(
-    testIngredients[currentIndex],
+    ingredients[currentIndex],
   );
   const [onEdit, setOnEdit] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const handleNextIngredient = () => {
     setCurrentIndex(currentIndex + 1);
-    setCurrentIngredient(testIngredients[currentIndex + 1]);
+    setCurrentIngredient(ingredients[currentIndex + 1]);
     setOnEdit(false);
   };
 
   const handlePrevIngredient = () => {
     setCurrentIndex(currentIndex - 1);
-    setCurrentIngredient(testIngredients[currentIndex - 1]);
+    setCurrentIngredient(ingredients[currentIndex - 1]);
     setOnEdit(false);
   };
 
   const handleInputChange = (key: keyof Ingredient, value: string | Date) => {
+    // TODO: State change is permanent
     setCurrentIngredient({...currentIngredient, [key]: value});
   };
 
   const handleSaveIngredient = () => {
-    testIngredients[currentIndex] = currentIngredient;
+    ingredients[currentIndex] = currentIngredient;
     setOnEdit(false);
   };
 
@@ -151,7 +155,7 @@ export default function IngredientList() {
         <Button
           title="Next Ingredient"
           onPress={handleNextIngredient}
-          disabled={currentIndex === testIngredients.length - 1}
+          disabled={currentIndex === ingredients.length - 1}
         />
       </View>
     </View>

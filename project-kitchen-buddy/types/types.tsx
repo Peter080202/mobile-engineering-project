@@ -4,4 +4,5 @@ export type Ingredient = {
   location?: String;
   confectionType?: String;
   expirationDate?: Date;
+  timestamp: number;
 };

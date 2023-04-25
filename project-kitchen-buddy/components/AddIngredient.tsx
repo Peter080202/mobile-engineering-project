@@ -57,6 +57,7 @@ export default function AddItem({navigation, route}: any) {
         location: location || '',
         confectionType: confectionType || '',
         expirationDate,
+        timestamp: Date.now(),
       };
       testIngredients.push(newIngredient);
       resetForm();

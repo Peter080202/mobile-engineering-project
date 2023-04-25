@@ -7,6 +7,7 @@ export const testIngredients: Ingredient[] = [
     location: 'fridge',
     confectionType: 'fresh',
     expirationDate: new Date('2023-05-01'),
+    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 5,
   },
   {
     ingredientName: 'Carrots',
@@ -14,12 +15,14 @@ export const testIngredients: Ingredient[] = [
     location: 'fridge',
     confectionType: 'fresh',
     expirationDate: new Date('2023-04-26'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Milk',
     category: 'dairy',
     location: 'fridge',
     expirationDate: new Date('2023-04-25'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Salmon',
@@ -27,18 +30,21 @@ export const testIngredients: Ingredient[] = [
     location: 'freezer',
     confectionType: 'frozen',
     expirationDate: new Date('2024-05-31'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Chicken Thighs',
     category: 'meat',
     location: 'fridge',
     expirationDate: new Date('2023-04-27'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Orange Juice',
     category: 'liquid',
     location: 'fridge',
     expirationDate: new Date('2023-04-30'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Strawberries',
@@ -46,6 +52,7 @@ export const testIngredients: Ingredient[] = [
     location: 'fridge',
     confectionType: 'fresh',
     expirationDate: new Date('2023-04-25'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Green Beans',
@@ -53,12 +60,14 @@ export const testIngredients: Ingredient[] = [
     location: 'freezer',
     confectionType: 'frozen',
     expirationDate: new Date('2024-06-30'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Cheddar Cheese',
     category: 'dairy',
     location: 'fridge',
     expirationDate: new Date('2023-05-05'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Beef Roast',
@@ -66,6 +75,7 @@ export const testIngredients: Ingredient[] = [
     location: 'freezer',
     confectionType: 'frozen',
     expirationDate: new Date('2024-10-31'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Canned Corn',
@@ -73,12 +83,14 @@ export const testIngredients: Ingredient[] = [
     location: 'pantry',
     confectionType: 'canned',
     expirationDate: new Date('2024-12-31'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Yogurt',
     category: 'dairy',
     location: 'fridge',
     expirationDate: new Date('2023-04-29'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Tuna',
@@ -86,12 +98,14 @@ export const testIngredients: Ingredient[] = [
     location: 'pantry',
     confectionType: 'canned',
     expirationDate: new Date('2024-07-31'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Pork Chops',
     category: 'meat',
     location: 'fridge',
     expirationDate: new Date('2023-04-28'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Lemon',
@@ -99,6 +113,7 @@ export const testIngredients: Ingredient[] = [
     location: 'fridge',
     confectionType: 'fresh',
     expirationDate: new Date('2023-04-30'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Spinach',
@@ -106,6 +121,7 @@ export const testIngredients: Ingredient[] = [
     location: 'fridge',
     confectionType: 'fresh',
     expirationDate: new Date('2023-04-26'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Frozen Peas',
@@ -113,11 +129,13 @@ export const testIngredients: Ingredient[] = [
     location: 'freezer',
     confectionType: 'frozen',
     expirationDate: new Date('2023-10-31'),
+    timestamp: Date.now(),
   },
   {
     ingredientName: 'Ground Beef',
     category: 'meat',
     location: 'fridge',
     expirationDate: new Date('2023-04-29'),
+    timestamp: Date.now(),
   },
 ];

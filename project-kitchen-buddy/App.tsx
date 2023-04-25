@@ -6,6 +6,7 @@ import HomeScreen from './components/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import QueriesNavigator from './components/QueriesNavigator';
 import IngredientList from './components/IngredientsList';
+import {expiringSoonIngredients} from './services/constants';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +36,9 @@ export default function App() {
         />
         <Tab.Screen
           name="Expiring Soon"
-          component={IngredientList}
+          children={() => (
+            <IngredientList ingredients={expiringSoonIngredients} />
+          )}
           options={{
             tabBarLabel: 'Expiring Soon',
             tabBarIcon: ({color, size}) => (

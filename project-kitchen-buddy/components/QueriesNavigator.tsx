@@ -5,6 +5,11 @@ import SearchScreen from './Hello';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Hello from './Hello';
+import IngredientList from './IngredientsList';
+import {
+  incompleteIngredients,
+  recentlyAddedIngredients,
+} from '../services/constants';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,12 +23,14 @@ export default function QueriesNavigator() {
       />
       <Stack.Screen
         name="MissingData"
-        component={Hello}
+        children={() => <IngredientList ingredients={incompleteIngredients} />}
         options={{title: 'Incomplete Ingredients'}}
       />
       <Stack.Screen
         name="RecentlyAdded"
-        component={Hello}
+        children={() => (
+          <IngredientList ingredients={recentlyAddedIngredients} />
+        )}
         options={{title: 'Recently Added Ingredients'}}
       />
       <Stack.Screen
@@ -34,7 +41,12 @@ export default function QueriesNavigator() {
       <Stack.Screen
         name="SameCategory"
         component={Hello}
-        options={{title: 'Same Category/Confection'}}
+        options={{title: 'Same Category'}}
+      />
+      <Stack.Screen
+        name="SameConfectionType"
+        component={Hello}
+        options={{title: 'Same Confection Type'}}
       />
     </Stack.Navigator>
   );
@@ -65,6 +77,12 @@ function QueriesHomeScreen({navigation}: any) {
         style={styles.button}
         onPress={() => navigation.navigate('SameCategory')}>
         <Text style={styles.buttonText}>Same Category/Confection</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('SameConfectionType')}>
+        <Text style={styles.buttonText}>Same Confection Type</Text>
       </TouchableOpacity>
     </View>
   );
