@@ -11,23 +11,21 @@ import {useState, useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {getFormattedDate} from '../services/commons';
-import { Ingredient } from '../types/types';
-import { testIngredients } from '../types/testdata';
+import {Ingredient} from '../types/types';
+import {testIngredients} from '../types/testdata';
+import {categories, confectionTypes, locations} from '../services/constants';
 
 export default function AddItem({navigation, route}: any) {
   const defaultText = '---';
 
   const [ingredientName, setIngredientName] = useState<string>('');
 
-  const categories = ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'];
   const [category, setCategory] = useState<string | undefined>(undefined);
   const categoriesDropdownRef = useRef<SelectDropdown>(null);
 
-  const locations = ['fridge', 'freezer', 'pantry'];
   const [location, setLocation] = useState<string | undefined>(undefined);
   const locationsDropdownRef = useRef<SelectDropdown>(null);
 
-  const confectionTypes = ['fresh', 'canned', 'frozen', 'cured'];
   const [confectionType, setConfectionType] = useState<string | undefined>(
     undefined,
   );
@@ -37,7 +35,6 @@ export default function AddItem({navigation, route}: any) {
     undefined,
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
 
   const resetForm = () => {
     setIngredientName('');
