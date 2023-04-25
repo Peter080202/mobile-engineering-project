@@ -11,6 +11,8 @@ import {useState, useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {getFormattedDate} from '../services/commons';
+import { Ingredient } from '../types/types';
+import { testIngredients } from '../types/testdata';
 
 export default function AddItem({navigation, route}: any) {
   const defaultText = '---';
@@ -36,6 +38,7 @@ export default function AddItem({navigation, route}: any) {
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
+
   const resetForm = () => {
     setIngredientName('');
     setCategory(undefined);
@@ -51,6 +54,14 @@ export default function AddItem({navigation, route}: any) {
     if (ingredientName.length === 0) {
       Alert.alert('Please enter an item name!');
     } else {
+      const newIngredient: Ingredient = {
+        ingredientName: ingredientName,
+        category: category || '',
+        location: location || '',
+        confectionType: confectionType || '',
+        expirationDate,
+      };
+      testIngredients.push(newIngredient);
       resetForm();
     }
   };
