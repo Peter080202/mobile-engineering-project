@@ -36,9 +36,8 @@ export default function App() {
         />
         <Tab.Screen
           name="Expiring Soon"
-          children={() => (
-            <IngredientList ingredients={expiringSoonIngredients} />
-          )}
+          component={IngredientList}
+          initialParams={{ingredients: expiringSoonIngredients}}
           options={{
             tabBarLabel: 'Expiring Soon',
             tabBarIcon: ({color, size}) => (
