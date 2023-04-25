@@ -1,15 +1,16 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SearchScreen from './Hello';
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Hello from './Hello';
 import IngredientList from './IngredientsList';
 import {
+  categories,
+  confectionTypes,
   incompleteIngredients,
+  locations,
   recentlyAddedIngredients,
 } from '../services/constants';
+import {Ingredient} from '../types/types';
+import {testIngredients} from '../types/testdata';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,33 +23,69 @@ export default function QueriesNavigator() {
         options={{title: 'Search Ingredients'}}
       />
       <Stack.Screen
-        name="MissingData"
-        children={() => <IngredientList ingredients={incompleteIngredients} />}
-        options={{title: 'Incomplete Ingredients'}}
+        name="ButtonMenuScreen"
+        component={ButtonMenuScreen}
+        options={({route}: any) => ({title: route.params.title})}
       />
       <Stack.Screen
-        name="RecentlyAdded"
-        children={() => (
-          <IngredientList ingredients={recentlyAddedIngredients} />
-        )}
-        options={{title: 'Recently Added Ingredients'}}
-      />
-      <Stack.Screen
-        name="SameLocation"
-        component={Hello}
-        options={{title: 'Ingredients in the same Location'}}
-      />
-      <Stack.Screen
-        name="SameCategory"
-        component={Hello}
-        options={{title: 'Same Category'}}
-      />
-      <Stack.Screen
-        name="SameConfectionType"
-        component={Hello}
-        options={{title: 'Same Confection Type'}}
+        name="IngredientList"
+        component={IngredientList}
+        options={({route}: any) => ({title: route.params.title})}
       />
     </Stack.Navigator>
+  );
+}
+
+enum SelectionType {
+  Location = 'Location',
+  Confection_type = 'Confection Type',
+  Category = 'Category',
+}
+
+function ButtonMenuScreen({navigation, route}: any) {
+  const getFilteredIngredients = (
+    option: string,
+    selectionType: SelectionType,
+  ): Ingredient[] => {
+    switch (selectionType) {
+      case SelectionType.Location:
+        return testIngredients.filter(
+          ingredient => ingredient.location === option,
+        );
+      case SelectionType.Category:
+        return testIngredients.filter(
+          ingredient => ingredient.category === option,
+        );
+      case SelectionType.Confection_type:
+        return testIngredients.filter(
+          ingredient => ingredient.confectionType === option,
+        );
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {route.params.selection.map((option: string) => (
+        <TouchableOpacity
+          key={option}
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('IngredientList', {
+              ingredients: getFilteredIngredients(
+                option,
+                route.params.selectionType,
+              ),
+              title: `${route.params.selectionType} ${option}`,
+            })
+          }
+          disabled={
+            getFilteredIngredients(option, route.params.selectionType).length ==
+            0
+          }>
+          <Text style={styles.buttonText}>{option}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
   );
 }
 
@@ -57,31 +94,59 @@ function QueriesHomeScreen({navigation}: any) {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('MissingData')}>
+        onPress={() =>
+          navigation.navigate('IngredientList', {
+            ingredients: incompleteIngredients,
+            title: 'Incomplete Ingredients',
+          })
+        }>
         <Text style={styles.buttonText}>Incomplete Ingredients</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('RecentlyAdded')}>
+        onPress={() =>
+          navigation.navigate('IngredientList', {
+            ingredients: recentlyAddedIngredients,
+            title: 'Recently Added Ingredients',
+          })
+        }>
         <Text style={styles.buttonText}>Recently Added</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('SameLocation')}>
+        onPress={() =>
+          navigation.navigate('ButtonMenuScreen', {
+            selection: locations,
+            title: 'Same Location',
+            selectionType: SelectionType.Location,
+          })
+        }>
         <Text style={styles.buttonText}>Same Location</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('SameCategory')}>
-        <Text style={styles.buttonText}>Same Category/Confection</Text>
+        onPress={() =>
+          navigation.navigate('ButtonMenuScreen', {
+            selection: categories,
+            title: 'Same Category',
+            selectionType: SelectionType.Category,
+          })
+        }>
+        <Text style={styles.buttonText}>Same Category</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('SameConfectionType')}>
+        onPress={() =>
+          navigation.navigate('ButtonMenuScreen', {
+            selection: confectionTypes,
+            title: 'Same Confection Type',
+            selectionType: SelectionType.Confection_type,
+          })
+        }>
         <Text style={styles.buttonText}>Same Confection Type</Text>
       </TouchableOpacity>
     </View>

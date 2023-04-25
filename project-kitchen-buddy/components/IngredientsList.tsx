@@ -14,28 +14,29 @@ import {getFormattedDate} from '../services/commons';
 
 import {Ingredient} from '../types/types';
 import {categories, confectionTypes, locations} from '../services/constants';
+import {LogBox} from 'react-native';
 
-type IngredientListProps = {
-  ingredients: Ingredient[];
-};
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
-export default function IngredientList({ingredients}: IngredientListProps) {
+export default function IngredientList({navigation, route}: any) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentIngredient, setCurrentIngredient] = useState(
-    ingredients[currentIndex],
+    route.params.ingredients[currentIndex],
   );
   const [onEdit, setOnEdit] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const handleNextIngredient = () => {
     setCurrentIndex(currentIndex + 1);
-    setCurrentIngredient(ingredients[currentIndex + 1]);
+    setCurrentIngredient(route.params.ingredients[currentIndex + 1]);
     setOnEdit(false);
   };
 
   const handlePrevIngredient = () => {
     setCurrentIndex(currentIndex - 1);
-    setCurrentIngredient(ingredients[currentIndex - 1]);
+    setCurrentIngredient(route.params.ingredients[currentIndex - 1]);
     setOnEdit(false);
   };
 
@@ -45,7 +46,7 @@ export default function IngredientList({ingredients}: IngredientListProps) {
   };
 
   const handleSaveIngredient = () => {
-    ingredients[currentIndex] = currentIngredient;
+    route.params.ingredients[currentIndex] = currentIngredient;
     setOnEdit(false);
   };
 
@@ -155,7 +156,7 @@ export default function IngredientList({ingredients}: IngredientListProps) {
         <Button
           title="Next Ingredient"
           onPress={handleNextIngredient}
-          disabled={currentIndex === ingredients.length - 1}
+          disabled={currentIndex === route.params.ingredients.length - 1}
         />
       </View>
     </View>
