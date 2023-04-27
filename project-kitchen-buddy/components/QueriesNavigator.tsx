@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import IngredientList from './IngredientsList';
+import IngredientsList from './IngredientsList';
 import {
   categories,
   confectionTypes,
@@ -19,18 +19,24 @@ export default function QueriesNavigator({navigation, route}: any) {
       <Stack.Screen
         name="QueriesHome"
         component={QueriesHomeScreen}
-        initialParams={{ingredients: route.params.ingredients}}
+        initialParams={{
+          ingredients: route.params.ingredients,
+          setIngredients: route.params.setIngredients,
+        }}
         options={{title: 'Search Ingredients'}}
       />
       <Stack.Screen
         name="ButtonMenuScreen"
         component={ButtonMenuScreen}
-        initialParams={{ingredients: route.params.ingredients}}
+        initialParams={{
+          ingredients: route.params.ingredients,
+          setIngredients: route.params.setIngredients,
+        }}
         options={({route}: any) => ({title: route.params.title})}
       />
       <Stack.Screen
-        name="IngredientList"
-        component={IngredientList}
+        name="IngredientsList"
+        component={IngredientsList}
         options={({route}: any) => ({title: route.params.title})}
       />
     </Stack.Navigator>
@@ -71,8 +77,10 @@ function ButtonMenuScreen({navigation, route}: any) {
           key={option}
           style={styles.button}
           onPress={() =>
-            navigation.navigate('IngredientList', {
-              ingredients: getFilteredIngredients(
+            navigation.navigate('IngredientsList', {
+              ingredients: route.params.ingredients,
+              setIngredients: route.params.setIngredients,
+              filteredIngredients: getFilteredIngredients(
                 option,
                 route.params.selectionType,
               ),
@@ -96,8 +104,12 @@ function QueriesHomeScreen({navigation, route}: any) {
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
-          navigation.navigate('IngredientList', {
-            ingredients: incompleteIngredients(route.params.ingredients),
+          navigation.navigate('IngredientsList', {
+            ingredients: route.params.ingredients,
+            setIngredients: route.params.setIngredients,
+            filteredIngredients: incompleteIngredients(
+              route.params.ingredients,
+            ),
             title: 'Incomplete Ingredients',
           })
         }>
@@ -107,8 +119,12 @@ function QueriesHomeScreen({navigation, route}: any) {
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
-          navigation.navigate('IngredientList', {
-            ingredients: recentlyAddedIngredients(route.params.ingredients),
+          navigation.navigate('IngredientsList', {
+            ingredients: route.params.ingredients,
+            setIngredients: route.params.setIngredients,
+            filteredIngredients: recentlyAddedIngredients(
+              route.params.ingredients,
+            ),
             title: 'Recently Added Ingredients',
           })
         }>

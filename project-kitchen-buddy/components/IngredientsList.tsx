@@ -20,23 +20,28 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-export default function IngredientList({navigation, route}: any) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function IngredientsList({navigation, route}: any) {
+  const [editIngredientIndex, setEditIngredientIndex] = useState<number>();
+  const [currentListIndex, setCurrentListIndex] = useState(0);
   const [currentIngredient, setCurrentIngredient] = useState(
-    route.params.ingredients[currentIndex],
+    route.params.filteredIngredients[currentListIndex],
   );
   const [onEdit, setOnEdit] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const handleNextIngredient = () => {
-    setCurrentIndex(currentIndex + 1);
-    setCurrentIngredient(route.params.ingredients[currentIndex + 1]);
+    setCurrentListIndex(currentListIndex + 1);
+    setCurrentIngredient(
+      route.params.filteredIngredients[currentListIndex + 1],
+    );
     setOnEdit(false);
   };
 
   const handlePrevIngredient = () => {
-    setCurrentIndex(currentIndex - 1);
-    setCurrentIngredient(route.params.ingredients[currentIndex - 1]);
+    setCurrentListIndex(currentListIndex - 1);
+    setCurrentIngredient(
+      route.params.filteredIngredients[currentListIndex - 1],
+    );
     setOnEdit(false);
   };
 
@@ -46,11 +51,37 @@ export default function IngredientList({navigation, route}: any) {
   };
 
   const handleSaveIngredient = () => {
-    route.params.ingredients[currentIndex] = currentIngredient;
+    if (editIngredientIndex) {
+      route.params.filteredIngredients[currentListIndex] = currentIngredient;
+      route.params.ingredients[editIngredientIndex] = currentIngredient;
+      route.params.setIngredients(route.params.ingredients);
+    }
     setOnEdit(false);
   };
 
+  const getIndexFromCategoriesList = (): number => {
+    for (let i = 0; i < route.params.ingredients.length; i++) {
+      if (
+        route.params.ingredients[i].ingredientName ===
+          currentIngredient.ingredientName &&
+        route.params.ingredients[i].category === currentIngredient.category &&
+        route.params.ingredients[i].location === currentIngredient.location &&
+        route.params.ingredients[i].confectionType ===
+          currentIngredient.confectionType &&
+        route.params.ingredients[i].expirationDate ===
+          currentIngredient.expirationDate &&
+        route.params.ingredients[i].timestamp === currentIngredient.timestamp
+      ) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
   const handleEditButton = () => {
+    if (!onEdit) {
+      setEditIngredientIndex(getIndexFromCategoriesList());
+    }
     setOnEdit(!onEdit);
   };
 
@@ -151,12 +182,14 @@ export default function IngredientList({navigation, route}: any) {
         <Button
           title="Previous Ingredient"
           onPress={handlePrevIngredient}
-          disabled={currentIndex === 0}
+          disabled={currentListIndex === 0}
         />
         <Button
           title="Next Ingredient"
           onPress={handleNextIngredient}
-          disabled={currentIndex === route.params.ingredients.length - 1}
+          disabled={
+            currentListIndex === route.params.filteredIngredients.length - 1
+          }
         />
       </View>
     </View>

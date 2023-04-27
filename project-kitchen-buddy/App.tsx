@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import AddIngredient from './components/AddIngredient';
 import HomeScreen from './components/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import QueriesNavigator from './components/QueriesNavigator';
-import IngredientList from './components/IngredientsList';
+import IngredientsList from './components/IngredientsList';
 import {expiringSoonIngredients} from './services/constants';
 import {testIngredients} from './types/testdata';
 import {Ingredient} from './types/types';
@@ -14,6 +14,13 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [ingredients, setIngredients] = useState<Ingredient[]>(testIngredients);
+  const [expiringSoonIngredientsList, setExpiringSoonIngredientsList] =
+    useState<Ingredient[]>(expiringSoonIngredients(ingredients));
+
+  useEffect(() => {
+    setExpiringSoonIngredientsList(expiringSoonIngredients(ingredients));
+  }, [setIngredients]);
+
   return (
     <NavigationContainer>
       <Tab.Navigator>
@@ -43,8 +50,12 @@ export default function App() {
         />
         <Tab.Screen
           name="Expiring Soon"
-          component={IngredientList}
-          initialParams={{ingredients: expiringSoonIngredients(ingredients)}}
+          component={IngredientsList}
+          initialParams={{
+            ingredients: ingredients,
+            setIngredients: setIngredients,
+            filteredIngredients: expiringSoonIngredientsList,
+          }}
           options={{
             tabBarLabel: 'Expiring Soon',
             tabBarIcon: ({color, size}) => (
@@ -57,6 +68,7 @@ export default function App() {
           component={QueriesNavigator}
           initialParams={{
             ingredients: ingredients,
+            setIngredients: setIngredients,
           }}
           options={{
             tabBarLabel: 'Query Ingredients',
