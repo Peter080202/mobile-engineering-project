@@ -12,7 +12,6 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {getFormattedDate} from '../services/commons';
 import {Ingredient} from '../types/types';
-import {testIngredients} from '../types/testdata';
 import {categories, confectionTypes, locations} from '../services/constants';
 
 export default function AddItem({navigation, route}: any) {
@@ -59,7 +58,9 @@ export default function AddItem({navigation, route}: any) {
         expirationDate,
         timestamp: Date.now(),
       };
-      testIngredients.push(newIngredient);
+      route.params.ingredients.push(newIngredient);
+      route.params.setIngredients(route.params.ingredients);
+
       resetForm();
     }
   };

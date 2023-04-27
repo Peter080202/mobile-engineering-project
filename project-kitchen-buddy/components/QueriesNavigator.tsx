@@ -5,26 +5,27 @@ import IngredientList from './IngredientsList';
 import {
   categories,
   confectionTypes,
-  incompleteIngredients,
   locations,
+  incompleteIngredients,
   recentlyAddedIngredients,
 } from '../services/constants';
 import {Ingredient} from '../types/types';
-import {testIngredients} from '../types/testdata';
 
 const Stack = createNativeStackNavigator();
 
-export default function QueriesNavigator() {
+export default function QueriesNavigator({navigation, route}: any) {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="QueriesHome"
         component={QueriesHomeScreen}
+        initialParams={{ingredients: route.params.ingredients}}
         options={{title: 'Search Ingredients'}}
       />
       <Stack.Screen
         name="ButtonMenuScreen"
         component={ButtonMenuScreen}
+        initialParams={{ingredients: route.params.ingredients}}
         options={({route}: any) => ({title: route.params.title})}
       />
       <Stack.Screen
@@ -49,16 +50,16 @@ function ButtonMenuScreen({navigation, route}: any) {
   ): Ingredient[] => {
     switch (selectionType) {
       case SelectionType.Location:
-        return testIngredients.filter(
-          ingredient => ingredient.location === option,
+        return route.params.ingredients.filter(
+          (ingredient: Ingredient) => ingredient.location === option,
         );
       case SelectionType.Category:
-        return testIngredients.filter(
-          ingredient => ingredient.category === option,
+        return route.params.ingredients.filter(
+          (ingredient: Ingredient) => ingredient.category === option,
         );
       case SelectionType.Confection_type:
-        return testIngredients.filter(
-          ingredient => ingredient.confectionType === option,
+        return route.params.ingredients.filter(
+          (ingredient: Ingredient) => ingredient.confectionType === option,
         );
     }
   };
@@ -89,14 +90,14 @@ function ButtonMenuScreen({navigation, route}: any) {
   );
 }
 
-function QueriesHomeScreen({navigation}: any) {
+function QueriesHomeScreen({navigation, route}: any) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
           navigation.navigate('IngredientList', {
-            ingredients: incompleteIngredients,
+            ingredients: incompleteIngredients(route.params.ingredients),
             title: 'Incomplete Ingredients',
           })
         }>
@@ -107,7 +108,7 @@ function QueriesHomeScreen({navigation}: any) {
         style={styles.button}
         onPress={() =>
           navigation.navigate('IngredientList', {
-            ingredients: recentlyAddedIngredients,
+            ingredients: recentlyAddedIngredients(route.params.ingredients),
             title: 'Recently Added Ingredients',
           })
         }>
