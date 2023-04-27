@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import AddIngredient from './components/AddIngredient';
@@ -17,9 +17,12 @@ export default function App() {
   const [expiringSoonIngredientsList, setExpiringSoonIngredientsList] =
     useState<Ingredient[]>(expiringSoonIngredients(ingredients));
 
+  const [stateChanged, setStateChanged] = useState<boolean>(false);
+
   useEffect(() => {
     setExpiringSoonIngredientsList(expiringSoonIngredients(ingredients));
-  }, [setIngredients]);
+    setStateChanged(false);
+  }, [stateChanged]);
 
   return (
     <NavigationContainer>
@@ -36,11 +39,13 @@ export default function App() {
         />
         <Tab.Screen
           name="Add Ingredient"
-          component={AddIngredient}
-          initialParams={{
-            ingredients: ingredients,
-            setIngredients: setIngredients,
-          }}
+          children={() => (
+            <AddIngredient
+              ingredients={ingredients}
+              setIngredients={setIngredients}
+              setStateChanged={setStateChanged}
+            />
+          )}
           options={{
             tabBarLabel: 'Add Ingredient',
             tabBarIcon: ({color, size}) => (
@@ -50,12 +55,13 @@ export default function App() {
         />
         <Tab.Screen
           name="Expiring Soon"
-          component={IngredientsList}
-          initialParams={{
-            ingredients: ingredients,
-            setIngredients: setIngredients,
-            filteredIngredients: expiringSoonIngredientsList,
-          }}
+          children={() => (
+            <IngredientsList
+              ingredients={ingredients}
+              setIngredients={setIngredients}
+              filteredIngredients={expiringSoonIngredientsList}
+            />
+          )}
           options={{
             tabBarLabel: 'Expiring Soon',
             tabBarIcon: ({color, size}) => (
@@ -65,11 +71,12 @@ export default function App() {
         />
         <Tab.Screen
           name="Queries"
-          component={QueriesNavigator}
-          initialParams={{
-            ingredients: ingredients,
-            setIngredients: setIngredients,
-          }}
+          children={() => (
+            <QueriesNavigator
+              ingredients={ingredients}
+              setIngredients={setIngredients}
+            />
+          )}
           options={{
             tabBarLabel: 'Query Ingredients',
             tabBarIcon: ({color, size}) => (

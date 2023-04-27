@@ -1,4 +1,3 @@
-import {testIngredients} from '../types/testdata';
 import {Ingredient} from '../types/types';
 import {getDifferenceDaysFromNow} from './commons';
 
@@ -15,17 +14,12 @@ export const confectionTypes: string[] = ['fresh', 'canned', 'frozen', 'cured'];
 // If the expiration date of the ingredient is within the next 7 days
 export const expiringSoonIngredients = (
   ingredients: Ingredient[],
-): Ingredient[] => {
-  console.log('HERE RERENDERING');
-  console.log(ingredients);
-  console.log(ingredients.length);
-
-  return ingredients.filter(
+): Ingredient[] =>
+  ingredients.filter(
     (ingredient: Ingredient) =>
       ingredient.expirationDate &&
       getDifferenceDaysFromNow(ingredient.expirationDate) <= 7,
   );
-};
 export const incompleteIngredients = (
   ingredients: Ingredient[],
 ): Ingredient[] =>

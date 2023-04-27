@@ -13,15 +13,23 @@ import {Ingredient} from '../types/types';
 
 const Stack = createNativeStackNavigator();
 
-export default function QueriesNavigator({navigation, route}: any) {
+type QueriesNavigatorProps = {
+  ingredients: Ingredient[];
+  setIngredients: any;
+};
+
+export default function QueriesNavigator({
+  ingredients,
+  setIngredients,
+}: QueriesNavigatorProps) {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="QueriesHome"
         component={QueriesHomeScreen}
         initialParams={{
-          ingredients: route.params.ingredients,
-          setIngredients: route.params.setIngredients,
+          ingredients: ingredients,
+          setIngredients: setIngredients,
         }}
         options={{title: 'Search Ingredients'}}
       />
@@ -29,14 +37,20 @@ export default function QueriesNavigator({navigation, route}: any) {
         name="ButtonMenuScreen"
         component={ButtonMenuScreen}
         initialParams={{
-          ingredients: route.params.ingredients,
-          setIngredients: route.params.setIngredients,
+          ingredients: ingredients,
+          setIngredients: setIngredients,
         }}
         options={({route}: any) => ({title: route.params.title})}
       />
       <Stack.Screen
         name="IngredientsList"
-        component={IngredientsList}
+        children={({route}: any) => (
+          <IngredientsList
+            ingredients={ingredients}
+            setIngredients={setIngredients}
+            filteredIngredients={route.params.filteredIngredients}
+          />
+        )}
         options={({route}: any) => ({title: route.params.title})}
       />
     </Stack.Navigator>

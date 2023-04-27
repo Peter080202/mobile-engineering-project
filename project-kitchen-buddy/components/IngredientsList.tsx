@@ -20,28 +20,34 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-export default function IngredientsList({navigation, route}: any) {
+type IngredientsListProps = {
+  ingredients: Ingredient[];
+  setIngredients: any;
+  filteredIngredients: Ingredient[];
+};
+
+export default function IngredientsList({
+  ingredients,
+  setIngredients,
+  filteredIngredients,
+}: IngredientsListProps) {
   const [editIngredientIndex, setEditIngredientIndex] = useState<number>();
   const [currentListIndex, setCurrentListIndex] = useState(0);
   const [currentIngredient, setCurrentIngredient] = useState(
-    route.params.filteredIngredients[currentListIndex],
+    filteredIngredients[currentListIndex],
   );
   const [onEdit, setOnEdit] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const handleNextIngredient = () => {
     setCurrentListIndex(currentListIndex + 1);
-    setCurrentIngredient(
-      route.params.filteredIngredients[currentListIndex + 1],
-    );
+    setCurrentIngredient(filteredIngredients[currentListIndex + 1]);
     setOnEdit(false);
   };
 
   const handlePrevIngredient = () => {
     setCurrentListIndex(currentListIndex - 1);
-    setCurrentIngredient(
-      route.params.filteredIngredients[currentListIndex - 1],
-    );
+    setCurrentIngredient(filteredIngredients[currentListIndex - 1]);
     setOnEdit(false);
   };
 
@@ -52,25 +58,22 @@ export default function IngredientsList({navigation, route}: any) {
 
   const handleSaveIngredient = () => {
     if (editIngredientIndex) {
-      route.params.filteredIngredients[currentListIndex] = currentIngredient;
-      route.params.ingredients[editIngredientIndex] = currentIngredient;
-      route.params.setIngredients(route.params.ingredients);
+      filteredIngredients[currentListIndex] = currentIngredient;
+      ingredients[editIngredientIndex] = currentIngredient;
+      setIngredients(ingredients);
     }
     setOnEdit(false);
   };
 
   const getIndexFromCategoriesList = (): number => {
-    for (let i = 0; i < route.params.ingredients.length; i++) {
+    for (let i = 0; i < ingredients.length; i++) {
       if (
-        route.params.ingredients[i].ingredientName ===
-          currentIngredient.ingredientName &&
-        route.params.ingredients[i].category === currentIngredient.category &&
-        route.params.ingredients[i].location === currentIngredient.location &&
-        route.params.ingredients[i].confectionType ===
-          currentIngredient.confectionType &&
-        route.params.ingredients[i].expirationDate ===
-          currentIngredient.expirationDate &&
-        route.params.ingredients[i].timestamp === currentIngredient.timestamp
+        ingredients[i].ingredientName === currentIngredient.ingredientName &&
+        ingredients[i].category === currentIngredient.category &&
+        ingredients[i].location === currentIngredient.location &&
+        ingredients[i].confectionType === currentIngredient.confectionType &&
+        ingredients[i].expirationDate === currentIngredient.expirationDate &&
+        ingredients[i].timestamp === currentIngredient.timestamp
       ) {
         return i;
       }
@@ -187,9 +190,7 @@ export default function IngredientsList({navigation, route}: any) {
         <Button
           title="Next Ingredient"
           onPress={handleNextIngredient}
-          disabled={
-            currentListIndex === route.params.filteredIngredients.length - 1
-          }
+          disabled={currentListIndex === filteredIngredients.length - 1}
         />
       </View>
     </View>

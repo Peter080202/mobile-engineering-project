@@ -14,7 +14,17 @@ import {getFormattedDate} from '../services/commons';
 import {Ingredient} from '../types/types';
 import {categories, confectionTypes, locations} from '../services/constants';
 
-export default function AddItem({navigation, route}: any) {
+type AddItemProps = {
+  ingredients: Ingredient[];
+  setIngredients: any;
+  setStateChanged: any;
+};
+
+export default function AddItem({
+  ingredients,
+  setIngredients,
+  setStateChanged,
+}: AddItemProps) {
   const defaultText = '---';
 
   const [ingredientName, setIngredientName] = useState<string>('');
@@ -52,14 +62,15 @@ export default function AddItem({navigation, route}: any) {
     } else {
       const newIngredient: Ingredient = {
         ingredientName: ingredientName,
-        category: category || '',
-        location: location || '',
-        confectionType: confectionType || '',
-        expirationDate,
+        category: category,
+        location: location,
+        confectionType: confectionType,
+        expirationDate: expirationDate,
         timestamp: Date.now(),
       };
-      route.params.ingredients.push(newIngredient);
-      route.params.setIngredients(route.params.ingredients);
+      ingredients.push(newIngredient);
+      setIngredients(ingredients);
+      setStateChanged(true);
 
       resetForm();
     }
