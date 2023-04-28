@@ -11,47 +11,28 @@ import {
 } from '../services/constants';
 import {Ingredient} from '../types/types';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
+import {useIngredients} from '../store/ingredientsReducer';
 
 const Stack = createNativeStackNavigator();
 
-type QueriesNavigatorProps = {
-  navigation: any;
-  ingredients: Ingredient[];
-  setIngredients: any;
-};
-
-export default function QueriesNavigator({
-  navigation,
-  ingredients,
-  setIngredients,
-}: QueriesNavigatorProps) {
+export default function QueriesNavigator({navigation}: any) {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="QueriesHome"
         component={QueriesHomeScreen}
-        initialParams={{
-          ingredients: ingredients,
-          setIngredients: setIngredients,
-        }}
         options={{title: 'Search Ingredients'}}
       />
       <Stack.Screen
         name="ButtonMenuScreen"
         component={ButtonMenuScreen}
-        initialParams={{
-          ingredients: ingredients,
-          setIngredients: setIngredients,
-        }}
         options={({route}: any) => ({title: route.params.title})}
       />
       <Stack.Screen
         name="IngredientsList"
         children={({route}: any) => (
           <IngredientsList
-            navigation={navigation}
-            ingredients={ingredients}
-            setIngredients={setIngredients}
             filteredIngredients={route.params.filteredIngredients}
           />
         )}
@@ -71,21 +52,24 @@ enum SelectionType {
 }
 
 function ButtonMenuScreen({navigation, route}: any) {
+  const ingredients = useSelector(useIngredients);
+  console.log('HERE WITH INGREDIENTS');
+  console.log(ingredients);
   const getFilteredIngredients = (
     option: string,
     selectionType: SelectionType,
   ): Ingredient[] => {
     switch (selectionType) {
       case SelectionType.Location:
-        return route.params.ingredients.filter(
+        return ingredients.filter(
           (ingredient: Ingredient) => ingredient.location === option,
         );
       case SelectionType.Category:
-        return route.params.ingredients.filter(
+        return ingredients.filter(
           (ingredient: Ingredient) => ingredient.category === option,
         );
       case SelectionType.Confection_type:
-        return route.params.ingredients.filter(
+        return ingredients.filter(
           (ingredient: Ingredient) => ingredient.confectionType === option,
         );
     }
@@ -99,8 +83,6 @@ function ButtonMenuScreen({navigation, route}: any) {
           style={styles.button}
           onPress={() =>
             navigation.navigate('IngredientsList', {
-              ingredients: route.params.ingredients,
-              setIngredients: route.params.setIngredients,
               filteredIngredients: getFilteredIngredients(
                 option,
                 route.params.selectionType,
@@ -120,17 +102,14 @@ function ButtonMenuScreen({navigation, route}: any) {
 }
 
 function QueriesHomeScreen({navigation, route}: any) {
+  const ingredients = useSelector(useIngredients);
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
           navigation.navigate('IngredientsList', {
-            ingredients: route.params.ingredients,
-            setIngredients: route.params.setIngredients,
-            filteredIngredients: incompleteIngredients(
-              route.params.ingredients,
-            ),
+            filteredIngredients: incompleteIngredients(ingredients),
             title: 'Incomplete Ingredients',
           })
         }>
@@ -141,11 +120,7 @@ function QueriesHomeScreen({navigation, route}: any) {
         style={styles.button}
         onPress={() =>
           navigation.navigate('IngredientsList', {
-            ingredients: route.params.ingredients,
-            setIngredients: route.params.setIngredients,
-            filteredIngredients: recentlyAddedIngredients(
-              route.params.ingredients,
-            ),
+            filteredIngredients: recentlyAddedIngredients(ingredients),
             title: 'Recently Added Ingredients',
           })
         }>

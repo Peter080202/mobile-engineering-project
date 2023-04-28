@@ -19,7 +19,7 @@ export const ingredientsReducer = createSlice({
 
 export const {addIngredient, updateIngredients} = ingredientsReducer.actions;
 
-export const useSearchPattern = (state: {searchPattern: {ingredients: any}}) =>
-  state.searchPattern.ingredients;
+export const useIngredients = (state: {ingredients: {ingredients: any}}) =>
+  state.ingredients.ingredients;
 
 export default ingredientsReducer.reducer;

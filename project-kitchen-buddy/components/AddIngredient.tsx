@@ -13,18 +13,12 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {getFormattedDate} from '../services/commons';
 import {Ingredient} from '../types/types';
 import {categories, confectionTypes, locations} from '../services/constants';
+import {useDispatch} from 'react-redux';
+import {addIngredient} from '../store/ingredientsReducer';
 
-type AddItemProps = {
-  ingredients: Ingredient[];
-  setIngredients: any;
-  setStateChanged: any;
-};
+export default function AddItem() {
+  const dispatch = useDispatch();
 
-export default function AddItem({
-  ingredients,
-  setIngredients,
-  setStateChanged,
-}: AddItemProps) {
   const defaultText = '---';
 
   const [ingredientName, setIngredientName] = useState<string>('');
@@ -68,9 +62,7 @@ export default function AddItem({
         expirationDate: expirationDate,
         timestamp: Date.now(),
       };
-      ingredients.push(newIngredient);
-      setIngredients(ingredients);
-      setStateChanged(true);
+      dispatch(addIngredient(newIngredient));
 
       resetForm();
     }

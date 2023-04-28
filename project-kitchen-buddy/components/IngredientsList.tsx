@@ -1,22 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   FlatList,
   StyleSheet,
   Text,
   View,
-  Button,
   TextInput,
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import SelectDropdown from 'react-native-select-dropdown';
-import {getFormattedDate} from '../services/commons';
 
 import {Ingredient} from '../types/types';
-import {categories, confectionTypes, locations} from '../services/constants';
 import {LogBox} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   updateSearchPattern,
@@ -28,80 +22,20 @@ LogBox.ignoreLogs([
 ]);
 
 type IngredientsListProps = {
-  navigation: any;
-  ingredients: Ingredient[];
-  setIngredients: any;
   filteredIngredients: Ingredient[];
 };
 
 export default function IngredientsList({
-  navigation,
-  ingredients,
-  setIngredients,
   filteredIngredients,
 }: IngredientsListProps) {
-  const [editIngredientIndex, setEditIngredientIndex] = useState<number>();
-  const [currentListIndex, setCurrentListIndex] = useState(0);
-  const [currentIngredient, setCurrentIngredient] = useState(
-    filteredIngredients[currentListIndex],
-  );
-  const [onEdit, setOnEdit] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
+  console.log('HERE RENDERING');
+  console.log(filteredIngredients);
   // TODO: CHECK THESE ONES
   const dispatch = useDispatch();
 
-  const handleNextIngredient = () => {
-    setCurrentListIndex(currentListIndex + 1);
-    setCurrentIngredient(filteredIngredients[currentListIndex + 1]);
-    setOnEdit(false);
-  };
-
-  const handlePrevIngredient = () => {
-    setCurrentListIndex(currentListIndex - 1);
-    setCurrentIngredient(filteredIngredients[currentListIndex - 1]);
-    setOnEdit(false);
-  };
-
-  const handleInputChange = (key: keyof Ingredient, value: string | Date) => {
-    // TODO: State change is permanent
-    setCurrentIngredient({...currentIngredient, [key]: value});
-  };
-
-  const handleSaveIngredient = () => {
-    if (editIngredientIndex) {
-      filteredIngredients[currentListIndex] = currentIngredient;
-      ingredients[editIngredientIndex] = currentIngredient;
-      setIngredients(ingredients);
-    }
-    setOnEdit(false);
-  };
-
-  const getIndexFromCategoriesList = (): number => {
-    for (let i = 0; i < ingredients.length; i++) {
-      if (
-        ingredients[i].ingredientName === currentIngredient.ingredientName &&
-        ingredients[i].category === currentIngredient.category &&
-        ingredients[i].location === currentIngredient.location &&
-        ingredients[i].confectionType === currentIngredient.confectionType &&
-        ingredients[i].expirationDate === currentIngredient.expirationDate &&
-        ingredients[i].timestamp === currentIngredient.timestamp
-      ) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
-  const handleEditButton = () => {
-    if (!onEdit) {
-      setEditIngredientIndex(getIndexFromCategoriesList());
-    }
-    setOnEdit(!onEdit);
-  };
-
   const openEditMode = (ingredient: Ingredient) => {
-    navigation.navigate('QueriesHome');
+    // TODO: OPEN EDIT MODE HERE
+    console.log('TODO OPEN EDIT MODE');
   };
 
   const IngredientComp = ({ingredient}: {ingredient: Ingredient}) => {
