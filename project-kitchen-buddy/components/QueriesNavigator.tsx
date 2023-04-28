@@ -10,15 +10,18 @@ import {
   recentlyAddedIngredients,
 } from '../services/constants';
 import {Ingredient} from '../types/types';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 
 type QueriesNavigatorProps = {
+  navigation: any;
   ingredients: Ingredient[];
   setIngredients: any;
 };
 
 export default function QueriesNavigator({
+  navigation,
   ingredients,
   setIngredients,
 }: QueriesNavigatorProps) {
@@ -46,12 +49,16 @@ export default function QueriesNavigator({
         name="IngredientsList"
         children={({route}: any) => (
           <IngredientsList
+            navigation={navigation}
             ingredients={ingredients}
             setIngredients={setIngredients}
             filteredIngredients={route.params.filteredIngredients}
           />
         )}
-        options={({route}: any) => ({title: route.params.title})}
+        options={({route}: any) => ({
+          title: route.params.title,
+          headerRight: () => <Ionicons name="search" size={20} color={56} />,
+        })}
       />
     </Stack.Navigator>
   );
