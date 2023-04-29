@@ -6,4 +6,4 @@ export const getFormattedDate = (date: Date): string => {
 };
 
 export const getDifferenceDaysFromNow = (date: Date) =>
-  Math.abs(date.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+  (date.getTime() - Date.now()) / (1000 * 60 * 60 * 24);

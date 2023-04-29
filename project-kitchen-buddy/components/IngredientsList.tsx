@@ -19,6 +19,7 @@ import {
   incompleteIngredients,
   recentlyAddedIngredients,
 } from '../services/constants';
+import {getDifferenceDaysFromNow} from '../services/commons';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -26,6 +27,7 @@ LogBox.ignoreLogs([
 
 export default function IngredientsList({navigation, route}: any) {
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
+  const ingredients = useSelector(useIngredients);
 
   const filteredIngredients = (): Ingredient[] => {
     switch (route.params.filter) {
@@ -53,7 +55,6 @@ export default function IngredientsList({navigation, route}: any) {
     }
     return [];
   };
-  const ingredients = useSelector(useIngredients);
 
   // navigation.addListener('focus', () => {
   //   setIngredients(useSelector(useIngredients));
@@ -79,7 +80,29 @@ export default function IngredientsList({navigation, route}: any) {
   const IngredientComp = ({ingredient}: {ingredient: Ingredient}) => {
     return (
       <View style={[styles.paddedRow]}>
-        <Text style={{fontSize: 18}}>{ingredient.ingredientName}</Text>
+        <Text style={{fontSize: 18, flex: 1}}>{ingredient.ingredientName}</Text>
+        {route.params.filter === FilterType.ExpiringSoon &&
+          ingredient.expirationDate &&
+          (Math.round(getDifferenceDaysFromNow(ingredient.expirationDate)) <=
+          0 ? (
+            <Text
+              style={{
+                fontSize: 18,
+                color: 'red',
+                flex: 1,
+              }}>
+              Expired
+            </Text>
+          ) : (
+            <Text style={{fontSize: 18, flex: 1}}>
+              {Math.round(getDifferenceDaysFromNow(ingredient.expirationDate))}{' '}
+              {Math.round(
+                getDifferenceDaysFromNow(ingredient.expirationDate),
+              ) === 1
+                ? 'day'
+                : 'days'}
+            </Text>
+          ))}
       </View>
     );
   };
@@ -165,7 +188,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#edeff2',
   },
   paddedRow: {
-    // Task 1: Adjust padding
     padding: 10,
     flexDirection: 'row',
     width: Dimensions.get('window').width,
