@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -16,6 +16,7 @@ import {
   updateSearchPattern,
   useSearchPattern,
 } from '../store/searchPatternReducer';
+import SearchBar from './SearchBar';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -32,10 +33,12 @@ export default function IngredientsList({
   console.log(filteredIngredients);
   // TODO: CHECK THESE ONES
   const dispatch = useDispatch();
+  const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
 
   const openEditMode = (ingredient: Ingredient) => {
     // TODO: OPEN EDIT MODE HERE
     console.log('TODO OPEN EDIT MODE');
+    setFocusSearchBar(false);
   };
 
   const IngredientComp = ({ingredient}: {ingredient: Ingredient}) => {
@@ -60,19 +63,9 @@ export default function IngredientsList({
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={{
-          flex: 1,
-          height: 40,
-          width: 100,
-          padding: 10,
-          margin: 12,
-          borderWidth: 1,
-        }}
-        value={useSelector(useSearchPattern)}
-        onChangeText={searchPattern =>
-          dispatch(updateSearchPattern(searchPattern))
-        }
+      <SearchBar
+        focusSearchBar={focusSearchBar}
+        setFocusSearchBar={setFocusSearchBar}
       />
       <FlatList
         data={filteredIngredients.filter((ingredient: Ingredient) =>

@@ -38,7 +38,6 @@ export default function QueriesNavigator({navigation}: any) {
         )}
         options={({route}: any) => ({
           title: route.params.title,
-          headerRight: () => <Ionicons name="search" size={20} color={56} />,
         })}
       />
     </Stack.Navigator>
