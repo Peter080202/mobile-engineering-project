@@ -1,17 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
-import AddIngredient from './components/AddIngredient';
+import AddIngredient from './components/IngredientView';
 import HomeScreen from './components/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import QueriesNavigator from './components/QueriesNavigator';
 import IngredientsList from './components/IngredientsList';
-import {expiringSoonIngredients} from './services/constants';
-import {Ingredient} from './types/types';
-import {Provider, useSelector} from 'react-redux';
+import {Provider} from 'react-redux';
 import store from './store/store';
-import {useIngredients} from './store/ingredientsReducer';
-import {testIngredients} from './types/testdata';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,11 +19,7 @@ export default function AppWrapper({navigation}: any) {
   );
 }
 
-function App({navigation}: any) {
-  const ingredients = useSelector(useIngredients);
-  const [expiringSoonIngredientsList, setExpiringSoonIngredientsList] =
-    useState<Ingredient[]>(expiringSoonIngredients(ingredients));
-
+function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
@@ -43,7 +35,7 @@ function App({navigation}: any) {
         />
         <Tab.Screen
           name="Add Ingredient"
-          children={() => <AddIngredient />}
+          component={AddIngredient}
           options={{
             tabBarLabel: 'Add Ingredient',
             tabBarIcon: ({color, size}) => (
@@ -53,11 +45,7 @@ function App({navigation}: any) {
         />
         <Tab.Screen
           name="Expiring Soon"
-          children={() => (
-            <IngredientsList
-              filteredIngredients={expiringSoonIngredientsList}
-            />
-          )}
+          component={IngredientsList}
           options={{
             tabBarLabel: 'Expiring Soon',
             tabBarIcon: ({color, size}) => (
@@ -67,7 +55,7 @@ function App({navigation}: any) {
         />
         <Tab.Screen
           name="Queries"
-          children={() => <QueriesNavigator navigation={navigation} />}
+          component={QueriesNavigator}
           options={{
             tabBarLabel: 'Query Ingredients',
             tabBarIcon: ({color, size}) => (

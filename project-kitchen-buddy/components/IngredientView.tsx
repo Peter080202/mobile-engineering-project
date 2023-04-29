@@ -14,28 +14,47 @@ import {getFormattedDate} from '../services/commons';
 import {Ingredient} from '../types/types';
 import {categories, confectionTypes, locations} from '../services/constants';
 import {useDispatch} from 'react-redux';
-import {addIngredient} from '../store/ingredientsReducer';
+import {addIngredient, updateIngredients} from '../store/ingredientsReducer';
 
-export default function AddItem() {
+export default function IngredientView({navigation, route}: any) {
   const dispatch = useDispatch();
 
   const defaultText = '---';
 
-  const [ingredientName, setIngredientName] = useState<string>('');
+  const [ingredientName, setIngredientName] = useState<string>(
+    route.params !== undefined &&
+      route.params.ingredient.ingredientName !== undefined
+      ? route.params.ingredient.ingredientName
+      : '',
+  );
 
-  const [category, setCategory] = useState<string | undefined>(undefined);
+  const [category, setCategory] = useState<string | undefined>(
+    route.params !== undefined && route.params.ingredient.category !== undefined
+      ? route.params.ingredient.category
+      : undefined,
+  );
   const categoriesDropdownRef = useRef<SelectDropdown>(null);
 
-  const [location, setLocation] = useState<string | undefined>(undefined);
+  const [location, setLocation] = useState<string | undefined>(
+    route.params !== undefined && route.params.ingredient.location !== undefined
+      ? route.params.ingredient.location
+      : undefined,
+  );
   const locationsDropdownRef = useRef<SelectDropdown>(null);
 
   const [confectionType, setConfectionType] = useState<string | undefined>(
-    undefined,
+    route.params !== undefined &&
+      route.params.ingredient.confectionType !== undefined
+      ? route.params.ingredient.confectionType
+      : undefined,
   );
   const confectionTypesDropdownRef = useRef<SelectDropdown>(null);
 
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(
-    undefined,
+    route.params !== undefined &&
+      route.params.ingredient.expirationDate !== undefined
+      ? route.params.ingredient.expirationDate
+      : undefined,
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -68,10 +87,35 @@ export default function AddItem() {
     }
   };
 
+  const saveEditedItem = () => {
+    if (ingredientName.length === 0) {
+      Alert.alert('Please enter an item name!');
+    } else {
+      const newIngredient: Ingredient = {
+        ingredientName: ingredientName,
+        category: category,
+        location: location,
+        confectionType: confectionType,
+        expirationDate: expirationDate,
+        timestamp: Date.now(),
+      };
+      dispatch(
+        updateIngredients({
+          ingredient: newIngredient,
+          index: route.params.index,
+        }),
+      );
+    }
+  };
+
   return (
     <View style={{flex: 1, flexDirection: 'column'}}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Add a new item</Text>
+        {route.params !== undefined && route.params.ingredient !== undefined ? (
+          <Text style={styles.headerText}>Edit item</Text>
+        ) : (
+          <Text style={styles.headerText}>Add a new item</Text>
+        )}
       </View>
       <View style={styles.rowContainer}>
         <Text style={styles.text}>Item name:</Text>
@@ -86,6 +130,12 @@ export default function AddItem() {
         <SelectDropdown
           data={categories}
           ref={categoriesDropdownRef}
+          defaultValue={
+            route.params !== undefined &&
+            route.params.ingredient.category !== undefined
+              ? route.params.ingredient.category
+              : undefined
+          }
           onSelect={(selectedCategory: string) => setCategory(selectedCategory)}
           buttonTextAfterSelection={(selectedCategory: string) =>
             selectedCategory
@@ -99,6 +149,12 @@ export default function AddItem() {
         <SelectDropdown
           data={locations}
           ref={locationsDropdownRef}
+          defaultValue={
+            route.params !== undefined &&
+            route.params.ingredient.location !== undefined
+              ? route.params.ingredient.location
+              : undefined
+          }
           onSelect={(selectedLocation: string) => setLocation(selectedLocation)}
           buttonTextAfterSelection={(selectedLocation: string) =>
             selectedLocation
@@ -112,6 +168,12 @@ export default function AddItem() {
         <SelectDropdown
           data={confectionTypes}
           ref={confectionTypesDropdownRef}
+          defaultValue={
+            route.params !== undefined &&
+            route.params.ingredient.confectionType !== undefined
+              ? route.params.ingredient.confectionType
+              : undefined
+          }
           onSelect={(selectedConfectionType: string) =>
             setConfectionType(selectedConfectionType)
           }
@@ -133,7 +195,11 @@ export default function AddItem() {
         </TouchableOpacity>
       </View>
       <View style={styles.space} />
-      <Button title="Save new item" onPress={() => addNewItem()} />
+      {route.params !== undefined && route.params.ingredient !== undefined ? (
+        <Button title="Save item" onPress={() => saveEditedItem()} />
+      ) : (
+        <Button title="Save new item" onPress={() => addNewItem()} />
+      )}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"

@@ -89,6 +89,7 @@ export const testIngredients: Ingredient[] = [
     ingredientName: 'Yogurt',
     category: 'dairy',
     location: 'fridge',
+    confectionType: 'canned',
     expirationDate: new Date('2023-04-29'),
     timestamp: Date.now(),
   },

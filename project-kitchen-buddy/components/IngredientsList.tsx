@@ -4,40 +4,43 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
 
 import {Ingredient} from '../types/types';
 import {LogBox} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  updateSearchPattern,
-  useSearchPattern,
-} from '../store/searchPatternReducer';
+import {useSelector} from 'react-redux';
+import {useSearchPattern} from '../store/searchPatternReducer';
 import SearchBar from './SearchBar';
+import {useIngredients} from '../store/ingredientsReducer';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-type IngredientsListProps = {
-  filteredIngredients: Ingredient[];
-};
-
-export default function IngredientsList({
-  filteredIngredients,
-}: IngredientsListProps) {
-  console.log('HERE RENDERING');
-  console.log(filteredIngredients);
-  // TODO: CHECK THESE ONES
-  const dispatch = useDispatch();
+export default function IngredientsList({navigation}: any) {
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
+  const ingredients = useSelector(useIngredients);
+
+  // navigation.addListener('focus', () => {
+  //   setIngredients(useSelector(useIngredients));
+  // });
+
+  const getIndex = (ingredient: Ingredient) => {
+    for (let i = 0; i < ingredients.length; i++) {
+      if (ingredients[i].ingredientName === ingredient.ingredientName) {
+        return i;
+      }
+    }
+    return -1;
+  };
 
   const openEditMode = (ingredient: Ingredient) => {
-    // TODO: OPEN EDIT MODE HERE
-    console.log('TODO OPEN EDIT MODE');
+    navigation.navigate('EditIngredientView', {
+      ingredient: ingredient,
+      index: getIndex(ingredient),
+    });
     setFocusSearchBar(false);
   };
 
@@ -68,7 +71,7 @@ export default function IngredientsList({
         setFocusSearchBar={setFocusSearchBar}
       />
       <FlatList
-        data={filteredIngredients.filter((ingredient: Ingredient) =>
+        data={ingredients.filter((ingredient: Ingredient) =>
           ingredient.ingredientName.includes(useSelector(useSearchPattern)),
         )}
         keyExtractor={(item, index) => String(index)}

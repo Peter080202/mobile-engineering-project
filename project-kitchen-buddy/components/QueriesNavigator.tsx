@@ -10,9 +10,9 @@ import {
   recentlyAddedIngredients,
 } from '../services/constants';
 import {Ingredient} from '../types/types';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useIngredients} from '../store/ingredientsReducer';
+import IngredientView from './IngredientView';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,14 +31,15 @@ export default function QueriesNavigator({navigation}: any) {
       />
       <Stack.Screen
         name="IngredientsList"
-        children={({route}: any) => (
-          <IngredientsList
-            filteredIngredients={route.params.filteredIngredients}
-          />
-        )}
+        component={IngredientsList}
         options={({route}: any) => ({
           title: route.params.title,
         })}
+      />
+      <Stack.Screen
+        name="EditIngredientView"
+        component={IngredientView}
+        options={{title: 'Edit Ingredient'}}
       />
     </Stack.Navigator>
   );

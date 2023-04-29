@@ -14,12 +14,19 @@ export const confectionTypes: string[] = ['fresh', 'canned', 'frozen', 'cured'];
 // If the expiration date of the ingredient is within the next 7 days
 export const expiringSoonIngredients = (
   ingredients: Ingredient[],
-): Ingredient[] =>
-  ingredients.filter(
-    (ingredient: Ingredient) =>
-      ingredient.expirationDate &&
-      getDifferenceDaysFromNow(ingredient.expirationDate) <= 7,
-  );
+): Ingredient[] => {
+  console.log('HERE');
+  console.log(ingredients);
+  if (ingredients === undefined) {
+    return [];
+  } else {
+    return ingredients.filter(
+      (ingredient: Ingredient) =>
+        ingredient.expirationDate &&
+        getDifferenceDaysFromNow(ingredient.expirationDate) <= 7,
+    );
+  }
+};
 export const incompleteIngredients = (
   ingredients: Ingredient[],
 ): Ingredient[] =>

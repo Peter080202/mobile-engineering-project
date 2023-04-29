@@ -1,6 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {testIngredients} from '../types/testdata';
-import {Ingredient} from '../types/types';
 
 export const ingredientsReducer = createSlice({
   name: 'ingredients',
@@ -12,7 +11,11 @@ export const ingredientsReducer = createSlice({
       state.ingredients = [...state.ingredients, action.payload];
     },
     updateIngredients: (state, action) => {
-      state.ingredients = action.payload;
+      state.ingredients = [
+        ...state.ingredients.slice(0, action.payload.index),
+        action.payload.ingredient,
+        ...state.ingredients.slice(action.payload.index + 1),
+      ];
     },
   },
 });
