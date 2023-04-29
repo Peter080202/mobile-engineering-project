@@ -9,7 +9,7 @@ import {
   incompleteIngredients,
   recentlyAddedIngredients,
 } from '../services/constants';
-import {Ingredient} from '../types/types';
+import {FilterType, Ingredient} from '../types/types';
 import {useSelector} from 'react-redux';
 import {useIngredients} from '../store/ingredientsReducer';
 import IngredientView from './IngredientView';
@@ -46,32 +46,20 @@ export default function QueriesNavigator({navigation}: any) {
 }
 
 enum SelectionType {
-  Location = 'Location',
-  Confection_type = 'Confection Type',
   Category = 'Category',
+  Location = 'Location',
+  ConfectionType = 'Confection Type',
 }
 
 function ButtonMenuScreen({navigation, route}: any) {
-  const ingredients = useSelector(useIngredients);
-  console.log('HERE WITH INGREDIENTS');
-  console.log(ingredients);
-  const getFilteredIngredients = (
-    option: string,
-    selectionType: SelectionType,
-  ): Ingredient[] => {
+  const getFilterType = (selectionType: SelectionType): FilterType => {
     switch (selectionType) {
-      case SelectionType.Location:
-        return ingredients.filter(
-          (ingredient: Ingredient) => ingredient.location === option,
-        );
       case SelectionType.Category:
-        return ingredients.filter(
-          (ingredient: Ingredient) => ingredient.category === option,
-        );
-      case SelectionType.Confection_type:
-        return ingredients.filter(
-          (ingredient: Ingredient) => ingredient.confectionType === option,
-        );
+        return FilterType.Category;
+      case SelectionType.Location:
+        return FilterType.Location;
+      case SelectionType.ConfectionType:
+        return FilterType.ConfectionType;
     }
   };
 
@@ -83,16 +71,10 @@ function ButtonMenuScreen({navigation, route}: any) {
           style={styles.button}
           onPress={() =>
             navigation.navigate('IngredientsList', {
-              filteredIngredients: getFilteredIngredients(
-                option,
-                route.params.selectionType,
-              ),
-              title: `${route.params.selectionType} ${option}`,
+              filter: getFilterType(route.params.selectionType),
+              filterOption: option,
+              title: `${route.params.selectionType}: ${option}`,
             })
-          }
-          disabled={
-            getFilteredIngredients(option, route.params.selectionType).length ==
-            0
           }>
           <Text style={styles.buttonText}>{option}</Text>
         </TouchableOpacity>
@@ -109,7 +91,7 @@ function QueriesHomeScreen({navigation, route}: any) {
         style={styles.button}
         onPress={() =>
           navigation.navigate('IngredientsList', {
-            filteredIngredients: incompleteIngredients(ingredients),
+            filter: FilterType.Incomplete,
             title: 'Incomplete Ingredients',
           })
         }>
@@ -120,23 +102,11 @@ function QueriesHomeScreen({navigation, route}: any) {
         style={styles.button}
         onPress={() =>
           navigation.navigate('IngredientsList', {
-            filteredIngredients: recentlyAddedIngredients(ingredients),
+            filter: FilterType.RecentlyAdded,
             title: 'Recently Added Ingredients',
           })
         }>
         <Text style={styles.buttonText}>Recently Added</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate('ButtonMenuScreen', {
-            selection: locations,
-            title: 'Same Location',
-            selectionType: SelectionType.Location,
-          })
-        }>
-        <Text style={styles.buttonText}>Same Location</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -155,9 +125,21 @@ function QueriesHomeScreen({navigation, route}: any) {
         style={styles.button}
         onPress={() =>
           navigation.navigate('ButtonMenuScreen', {
+            selection: locations,
+            title: 'Same Location',
+            selectionType: SelectionType.Location,
+          })
+        }>
+        <Text style={styles.buttonText}>Same Location</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate('ButtonMenuScreen', {
             selection: confectionTypes,
             title: 'Same Confection Type',
-            selectionType: SelectionType.Confection_type,
+            selectionType: SelectionType.ConfectionType,
           })
         }>
         <Text style={styles.buttonText}>Same Confection Type</Text>

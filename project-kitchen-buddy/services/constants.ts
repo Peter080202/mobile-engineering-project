@@ -1,5 +1,7 @@
 import {Ingredient} from '../types/types';
 import {getDifferenceDaysFromNow} from './commons';
+import {useSelector} from 'react-redux';
+import {useIngredients} from '../store/ingredientsReducer';
 
 export const categories: string[] = [
   'fruit',
@@ -12,25 +14,15 @@ export const categories: string[] = [
 export const locations: string[] = ['fridge', 'freezer', 'pantry'];
 export const confectionTypes: string[] = ['fresh', 'canned', 'frozen', 'cured'];
 // If the expiration date of the ingredient is within the next 7 days
-export const expiringSoonIngredients = (
-  ingredients: Ingredient[],
-): Ingredient[] => {
-  console.log('HERE');
-  console.log(ingredients);
-  if (ingredients === undefined) {
-    return [];
-  } else {
-    return ingredients.filter(
-      (ingredient: Ingredient) =>
-        ingredient.expirationDate &&
-        getDifferenceDaysFromNow(ingredient.expirationDate) <= 7,
-    );
-  }
-};
-export const incompleteIngredients = (
-  ingredients: Ingredient[],
-): Ingredient[] =>
-  ingredients.filter(
+export const expiringSoonIngredients = (): Ingredient[] =>
+  useSelector(useIngredients).filter(
+    (ingredient: Ingredient) =>
+      ingredient.expirationDate &&
+      getDifferenceDaysFromNow(ingredient.expirationDate) <= 7,
+  );
+
+export const incompleteIngredients = (): Ingredient[] =>
+  useSelector(useIngredients).filter(
     (ingredient: Ingredient) =>
       ingredient.category === undefined ||
       ingredient.location === undefined ||
@@ -38,10 +30,8 @@ export const incompleteIngredients = (
       ingredient.expirationDate === undefined,
   );
 
-export const recentlyAddedIngredients = (
-  ingredients: Ingredient[],
-): Ingredient[] =>
-  ingredients.filter(
+export const recentlyAddedIngredients = (): Ingredient[] =>
+  useSelector(useIngredients).filter(
     (ingredient: Ingredient) =>
       (Date.now() - ingredient.timestamp) / (1000 * 60 * 60 * 24) <= 3,
   );

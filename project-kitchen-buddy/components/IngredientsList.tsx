@@ -8,19 +8,51 @@ import {
   Dimensions,
 } from 'react-native';
 
-import {Ingredient} from '../types/types';
+import {FilterType, Ingredient} from '../types/types';
 import {LogBox} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useSearchPattern} from '../store/searchPatternReducer';
 import SearchBar from './SearchBar';
 import {useIngredients} from '../store/ingredientsReducer';
+import {
+  expiringSoonIngredients,
+  incompleteIngredients,
+  recentlyAddedIngredients,
+} from '../services/constants';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-export default function IngredientsList({navigation}: any) {
+export default function IngredientsList({navigation, route}: any) {
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
+
+  const filteredIngredients = (): Ingredient[] => {
+    switch (route.params.filter) {
+      case FilterType.ExpiringSoon:
+        return expiringSoonIngredients();
+      case FilterType.Incomplete:
+        return incompleteIngredients();
+      case FilterType.RecentlyAdded:
+        return recentlyAddedIngredients();
+      case FilterType.Category:
+        return useSelector(useIngredients).filter(
+          (ingredient: Ingredient) =>
+            ingredient.category === route.params.filterOption,
+        );
+      case FilterType.Location:
+        return useSelector(useIngredients).filter(
+          (ingredient: Ingredient) =>
+            ingredient.location === route.params.filterOption,
+        );
+      case FilterType.ConfectionType:
+        return useSelector(useIngredients).filter(
+          (ingredient: Ingredient) =>
+            ingredient.confectionType === route.params.filterOption,
+        );
+    }
+    return [];
+  };
   const ingredients = useSelector(useIngredients);
 
   // navigation.addListener('focus', () => {
@@ -71,7 +103,7 @@ export default function IngredientsList({navigation}: any) {
         setFocusSearchBar={setFocusSearchBar}
       />
       <FlatList
-        data={ingredients.filter((ingredient: Ingredient) =>
+        data={filteredIngredients().filter((ingredient: Ingredient) =>
           ingredient.ingredientName.includes(useSelector(useSearchPattern)),
         )}
         keyExtractor={(item, index) => String(index)}
