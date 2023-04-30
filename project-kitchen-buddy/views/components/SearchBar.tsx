@@ -17,14 +17,12 @@ function SearchBar({focusSearchBar, setFocusSearchBar}: SearchBarProps) {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        {/* search Icon */}
         <Feather
           name="search"
           size={20}
           color="black"
           style={{marginLeft: 1}}
         />
-        {/* Input field */}
         <TextInput
           style={styles.input}
           placeholder="Search"
@@ -36,7 +34,6 @@ function SearchBar({focusSearchBar, setFocusSearchBar}: SearchBarProps) {
             setFocusSearchBar(true);
           }}
         />
-        {/* cross Icon, depending on whether the search bar is clicked or not */}
         {focusSearchBar && (
           <Entypo
             name="cross"

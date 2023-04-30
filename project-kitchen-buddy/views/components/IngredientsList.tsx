@@ -33,11 +33,11 @@ export default function IngredientsList({navigation, route}: any) {
   const filteredIngredients = (): Ingredient[] => {
     switch (route.params.filter) {
       case FilterType.ExpiringSoon:
-        return expiringSoonIngredients();
+        return expiringSoonIngredients(ingredients);
       case FilterType.Incomplete:
-        return incompleteIngredients();
+        return incompleteIngredients(ingredients);
       case FilterType.RecentlyAdded:
-        return recentlyAddedIngredients();
+        return recentlyAddedIngredients(ingredients);
       case FilterType.Category:
         return ingredients.filter(
           (ingredient: Ingredient) =>
@@ -81,21 +81,22 @@ export default function IngredientsList({navigation, route}: any) {
   const IngredientComp = ({ingredient}: {ingredient: Ingredient}) => {
     return (
       <View style={[styles.paddedRow]}>
-        <Text style={{fontSize: 18, flex: 1}}>{ingredient.ingredientName}</Text>
+        <Text style={styles.text}>{ingredient.ingredientName}</Text>
         {route.params.filter === FilterType.ExpiringSoon &&
           ingredient.expirationDate &&
           (Math.round(getDifferenceDaysFromNow(ingredient.expirationDate)) <=
           0 ? (
             <Text
-              style={{
-                fontSize: 18,
-                color: 'red',
-                flex: 1,
-              }}>
+              style={[
+                styles.text,
+                {
+                  color: 'red',
+                },
+              ]}>
               Expired
             </Text>
           ) : (
-            <Text style={{fontSize: 18, flex: 1}}>
+            <Text style={styles.text}>
               {Math.round(getDifferenceDaysFromNow(ingredient.expirationDate))}{' '}
               {Math.round(
                 getDifferenceDaysFromNow(ingredient.expirationDate),
@@ -109,15 +110,7 @@ export default function IngredientsList({navigation, route}: any) {
   };
 
   const ItemDivider = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '100%',
-          backgroundColor: '#607D8B',
-        }}
-      />
-    );
+    return <View style={styles.divider} />;
   };
 
   return (
@@ -167,7 +160,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    padding: 10,
+    flex: 1,
   },
   input: {
     height: 40,
@@ -192,5 +185,10 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     width: Dimensions.get('window').width,
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: '#607D8B',
   },
 });

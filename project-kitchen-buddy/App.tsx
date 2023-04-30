@@ -5,10 +5,8 @@ import AddIngredient from './views/components/IngredientView';
 import HomeScreen from './views/screens/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import QueriesNavigator from './views/navigators/QueriesNavigator';
-import IngredientsList from './views/components/IngredientsList';
 import {Provider} from 'react-redux';
 import store from './store/store';
-import {FilterType} from './types/types';
 import ExpiringSoonNavigator from './views/navigators/ExpiringSoonNavigator';
 
 const Tab = createBottomTabNavigator();

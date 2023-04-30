@@ -1,8 +1,8 @@
-import {Button, View, Text} from 'react-native';
+import {Button, View, Text, StyleSheet} from 'react-native';
 
 export default function HomeScreen({navigation}: any) {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={styles.container}>
       <Text>Home Screen</Text>
       <Button
         title="Data entry of kitchen ingredients"
@@ -15,3 +15,11 @@ export default function HomeScreen({navigation}: any) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

@@ -252,9 +252,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
   },
-  button: {
-    width: 40,
-  },
   space: {
     width: 20,
     height: 10,
