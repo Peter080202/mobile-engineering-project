@@ -7,4 +7,9 @@ export default configureStore({
     searchPattern: searchPatternReducer,
     ingredients: ingredientsReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
 });
