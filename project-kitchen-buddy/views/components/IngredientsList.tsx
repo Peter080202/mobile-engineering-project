@@ -80,7 +80,7 @@ export default function IngredientsList({navigation, route}: any) {
 
   const IngredientComp = ({ingredient}: {ingredient: Ingredient}) => {
     return (
-      <View style={[styles.paddedRow]}>
+      <View style={styles.paddedRow}>
         <Text style={styles.text}>{ingredient.ingredientName}</Text>
         {route.params.filter === FilterType.ExpiringSoon &&
           ingredient.expirationDate &&
@@ -148,38 +148,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 5,
   },
-  item: {
-    padding: 10,
-    height: 'auto',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    marginVertical: 5,
-    alignSelf: 'stretch',
-    paddingBottom: 5,
-  },
   text: {
     fontSize: 18,
     flex: 1,
-  },
-  input: {
-    height: 40,
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'stretch',
-    marginTop: 15,
-  },
-  customButton: {
-    flex: 1.25,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 8,
-    backgroundColor: '#edeff2',
   },
   paddedRow: {
     padding: 10,
