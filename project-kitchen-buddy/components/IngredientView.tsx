@@ -85,7 +85,6 @@ export default function IngredientView({navigation, route}: any) {
 
       resetForm();
       Alert.alert('Saved item successfully!');
-      navigation.goBack();
     }
   };
 
