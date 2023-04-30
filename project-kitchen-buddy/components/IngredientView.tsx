@@ -84,6 +84,7 @@ export default function IngredientView({navigation, route}: any) {
       dispatch(addIngredient(newIngredient));
 
       resetForm();
+      Alert.alert('Saved item successfully!');
     }
   };
 
@@ -105,6 +106,7 @@ export default function IngredientView({navigation, route}: any) {
           index: route.params.index,
         }),
       );
+      Alert.alert('Edited item successfully!');
     }
   };
 
