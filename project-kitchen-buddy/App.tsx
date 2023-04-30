@@ -9,6 +9,7 @@ import IngredientsList from './components/IngredientsList';
 import {Provider} from 'react-redux';
 import store from './store/store';
 import {FilterType} from './types/types';
+import ExpiringSoonNavigator from './components/ExpiringSoonNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,8 +47,7 @@ function App() {
         />
         <Tab.Screen
           name="Expiring Soon"
-          component={IngredientsList}
-          initialParams={{filter: FilterType.ExpiringSoon}}
+          component={ExpiringSoonNavigator}
           options={{
             tabBarLabel: 'Expiring Soon',
             tabBarIcon: ({color, size}) => (

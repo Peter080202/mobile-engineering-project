@@ -28,6 +28,7 @@ LogBox.ignoreLogs([
 export default function IngredientsList({navigation, route}: any) {
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
   const ingredients = useSelector(useIngredients);
+  const searchPattern = useSelector(useSearchPattern);
 
   const filteredIngredients = (): Ingredient[] => {
     switch (route.params.filter) {
@@ -38,17 +39,17 @@ export default function IngredientsList({navigation, route}: any) {
       case FilterType.RecentlyAdded:
         return recentlyAddedIngredients();
       case FilterType.Category:
-        return useSelector(useIngredients).filter(
+        return ingredients.filter(
           (ingredient: Ingredient) =>
             ingredient.category === route.params.filterOption,
         );
       case FilterType.Location:
-        return useSelector(useIngredients).filter(
+        return ingredients.filter(
           (ingredient: Ingredient) =>
             ingredient.location === route.params.filterOption,
         );
       case FilterType.ConfectionType:
-        return useSelector(useIngredients).filter(
+        return ingredients.filter(
           (ingredient: Ingredient) =>
             ingredient.confectionType === route.params.filterOption,
         );
@@ -127,7 +128,7 @@ export default function IngredientsList({navigation, route}: any) {
       />
       <FlatList
         data={filteredIngredients().filter((ingredient: Ingredient) =>
-          ingredient.ingredientName.includes(useSelector(useSearchPattern)),
+          ingredient.ingredientName.includes(searchPattern),
         )}
         keyExtractor={(item, index) => String(index)}
         renderItem={({item}: {item: Ingredient}) => (
