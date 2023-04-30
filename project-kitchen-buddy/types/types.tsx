@@ -7,6 +7,12 @@ export type Ingredient = {
   timestamp: number;
 };
 
+export enum SelectionType {
+  Category = 'Category',
+  Location = 'Location',
+  ConfectionType = 'Confection Type',
+}
+
 export enum FilterType {
   ExpiringSoon,
   Incomplete,

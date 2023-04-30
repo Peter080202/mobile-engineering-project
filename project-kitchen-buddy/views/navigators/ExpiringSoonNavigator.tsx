@@ -1,8 +1,8 @@
-import IngredientsList from './IngredientsList';
-import IngredientView from './IngredientView';
+import IngredientsList from '../components/IngredientsList';
+import IngredientView from '../components/IngredientView';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {FilterType} from '../types/types';
+import {FilterType} from '../../types/types';
 
 const Stack = createNativeStackNavigator();
 

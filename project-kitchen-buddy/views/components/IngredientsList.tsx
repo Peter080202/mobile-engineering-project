@@ -8,18 +8,18 @@ import {
   Dimensions,
 } from 'react-native';
 
-import {FilterType, Ingredient} from '../types/types';
+import {FilterType, Ingredient} from '../../types/types';
 import {LogBox} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useSearchPattern} from '../store/searchPatternReducer';
+import {useSearchPattern} from '../../store/searchPatternReducer';
 import SearchBar from './SearchBar';
-import {useIngredients} from '../store/ingredientsReducer';
+import {useIngredients} from '../../store/ingredientsReducer';
 import {
   expiringSoonIngredients,
   incompleteIngredients,
   recentlyAddedIngredients,
-} from '../services/constants';
-import {getDifferenceDaysFromNow} from '../services/commons';
+} from '../../services/constants';
+import {getDifferenceDaysFromNow} from '../../services/commons';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',

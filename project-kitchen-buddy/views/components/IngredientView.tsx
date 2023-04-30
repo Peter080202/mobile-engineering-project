@@ -6,15 +6,20 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  LogBox,
 } from 'react-native';
 import {useState, useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {getFormattedDate} from '../services/commons';
-import {Ingredient} from '../types/types';
-import {categories, confectionTypes, locations} from '../services/constants';
+import {getFormattedDate} from '../../services/commons';
+import {Ingredient} from '../../types/types';
+import {categories, confectionTypes, locations} from '../../services/constants';
 import {useDispatch} from 'react-redux';
-import {addIngredient, updateIngredients} from '../store/ingredientsReducer';
+import {addIngredient, updateIngredients} from '../../store/ingredientsReducer';
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 export default function IngredientView({navigation, route}: any) {
   const dispatch = useDispatch();

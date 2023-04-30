@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   updateSearchPattern,
   useSearchPattern,
-} from '../store/searchPatternReducer';
+} from '../../store/searchPatternReducer';
 
 type SearchBarProps = {
   focusSearchBar: boolean;
