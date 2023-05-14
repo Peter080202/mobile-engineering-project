@@ -11,6 +11,7 @@ export const categories: string[] = [
 ];
 export const locations: string[] = ['fridge', 'freezer', 'pantry'];
 export const confectionTypes: string[] = ['fresh', 'canned', 'frozen', 'cured'];
+export const quantityTypes: string[] = ['full', 'half empty', 'empty'];
 // If the expiration date of the ingredient is within the next 7 days
 export const expiringSoonIngredients = (
   ingredients: Ingredient[],

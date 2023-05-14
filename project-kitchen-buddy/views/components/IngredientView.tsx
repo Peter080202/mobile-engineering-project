@@ -13,7 +13,12 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {getFormattedDate} from '../../services/commons';
 import {Ingredient} from '../../types/types';
-import {categories, confectionTypes, locations} from '../../services/constants';
+import {
+  categories,
+  confectionTypes,
+  locations,
+  quantityTypes,
+} from '../../services/constants';
 import {useDispatch} from 'react-redux';
 import {addIngredient, updateIngredients} from '../../store/ingredientsReducer';
 
@@ -63,6 +68,13 @@ export default function IngredientView({navigation, route}: any) {
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
+  const [quantity, setQuantity] = useState<string | number | undefined>(
+    route.params !== undefined && route.params.ingredient.quantity !== undefined
+      ? route.params.ingredient.quantity
+      : undefined,
+  );
+  const quantityTypesDropdownRef = useRef<SelectDropdown>(null);
+
   const resetForm = () => {
     setIngredientName('');
     setCategory(undefined);
@@ -72,6 +84,8 @@ export default function IngredientView({navigation, route}: any) {
     setConfectionType(undefined);
     confectionTypesDropdownRef.current?.reset();
     setExpirationDate(undefined);
+    setQuantity(undefined);
+    quantityTypesDropdownRef.current?.reset();
   };
 
   const addNewItem = () => {
@@ -84,6 +98,7 @@ export default function IngredientView({navigation, route}: any) {
         location: location,
         confectionType: confectionType,
         expirationDate: expirationDate,
+        quantity: quantity,
         timestamp: Date.now(),
       };
       dispatch(addIngredient(newIngredient));
@@ -103,6 +118,7 @@ export default function IngredientView({navigation, route}: any) {
         location: location,
         confectionType: confectionType,
         expirationDate: expirationDate,
+        quantity: quantity,
         timestamp: Date.now(),
       };
       dispatch(
@@ -202,6 +218,51 @@ export default function IngredientView({navigation, route}: any) {
           </Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.rowContainer}>
+        <View style={{flex: 2}}>
+          <Text style={styles.text}>Quantity:</Text>
+        </View>
+        <TextInput
+          style={styles.quantityInput}
+          value={
+            typeof quantity === 'number'
+              ? String(quantity)
+              : quantity?.replace(/[^0-9]/g, '')
+          }
+          keyboardType="numeric"
+          onChangeText={quantity => {
+            quantity = quantity.replace(/[^0-9]/g, '');
+            if (quantity.length > 0) {
+              setQuantity(Number(quantity));
+              quantityTypesDropdownRef.current?.reset();
+            } else if (quantity.length == 0) {
+              setQuantity(undefined);
+            }
+          }}
+        />
+        <View style={{flex: 1}}>
+          <SelectDropdown
+            buttonStyle={{width: 80}}
+            data={quantityTypes}
+            ref={quantityTypesDropdownRef}
+            defaultValue={
+              route.params !== undefined &&
+              route.params.ingredient.quantity !== undefined &&
+              typeof route.params.ingredient.quantity === 'string'
+                ? route.params.ingredient.quantity
+                : undefined
+            }
+            onSelect={(selectedQuantity: string) =>
+              setQuantity(selectedQuantity)
+            }
+            buttonTextAfterSelection={(selectedQuantity: string) =>
+              selectedQuantity
+            }
+            rowTextForSelection={(quantity: string) => quantity}
+            defaultButtonText={defaultText}
+          />
+        </View>
+      </View>
       <View style={styles.space} />
       {route.params !== undefined && route.params.ingredient !== undefined ? (
         <Button title="Save item" onPress={() => saveEditedItem()} />
@@ -227,6 +288,13 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     width: 100,
+    padding: 10,
+    margin: 12,
+    borderWidth: 1,
+  },
+  quantityInput: {
+    flex: 1,
+    height: 40,
     padding: 10,
     margin: 12,
     borderWidth: 1,
@@ -257,10 +325,11 @@ const styles = StyleSheet.create({
     height: 10,
   },
   customButton: {
+    height: 40,
     flex: 1.25,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 8,
+    paddingTop: 4,
     backgroundColor: '#edeff2',
   },
 });
