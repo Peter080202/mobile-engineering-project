@@ -21,4 +21,5 @@ export enum FilterType {
   Category,
   Location,
   ConfectionType,
+  GroceryList,
 }

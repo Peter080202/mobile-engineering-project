@@ -8,6 +8,7 @@ import QueriesNavigator from './views/navigators/QueriesNavigator';
 import {Provider} from 'react-redux';
 import store from './store/store';
 import ExpiringSoonNavigator from './views/navigators/ExpiringSoonNavigator';
+import GroceryListNavigator from './views/navigators/GroceryListNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,6 +51,16 @@ function App() {
             tabBarLabel: 'Expiring Soon',
             tabBarIcon: ({color, size}) => (
               <Ionicons name="time" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Grocery List"
+          component={GroceryListNavigator}
+          options={{
+            tabBarLabel: 'Grocery List',
+            tabBarIcon: ({color, size}) => (
+              <Ionicons name="cart-outline" size={size} color={color} />
             ),
           }}
         />

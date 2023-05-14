@@ -119,7 +119,7 @@ export default function IngredientView({navigation, route}: any) {
         confectionType: confectionType,
         expirationDate: expirationDate,
         quantity: quantity,
-        timestamp: Date.now(),
+        timestamp: route.params.ingredient.timestamp,
       };
       dispatch(
         updateIngredients({

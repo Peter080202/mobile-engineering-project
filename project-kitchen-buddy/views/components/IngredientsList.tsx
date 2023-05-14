@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -10,24 +10,28 @@ import {
 
 import {FilterType, Ingredient} from '../../types/types';
 import {LogBox} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useSearchPattern} from '../../store/searchPatternReducer';
 import SearchBar from './SearchBar';
-import {useIngredients} from '../../store/ingredientsReducer';
+import {addIngredient, useIngredients} from '../../store/ingredientsReducer';
 import {
   expiringSoonIngredients,
+  groceryListIngredients,
   incompleteIngredients,
   recentlyAddedIngredients,
 } from '../../services/constants';
 import {getDifferenceDaysFromNow} from '../../services/commons';
+import {addToGroceryList, useGroceryList} from '../../store/groceryListReducer';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
 export default function IngredientsList({navigation, route}: any) {
+  const dispatch = useDispatch();
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
   const ingredients = useSelector(useIngredients);
+  const groceryList = useSelector(useGroceryList);
   const searchPattern = useSelector(useSearchPattern);
 
   const filteredIngredients = (): Ingredient[] => {
@@ -38,6 +42,14 @@ export default function IngredientsList({navigation, route}: any) {
         return incompleteIngredients(ingredients);
       case FilterType.RecentlyAdded:
         return recentlyAddedIngredients(ingredients);
+      case FilterType.GroceryList:
+        const timestamps: number[] = groceryList.map(
+          (groceryListItem: Ingredient) => groceryListItem.timestamp,
+        );
+        return groceryListIngredients(ingredients).filter(
+          (ingredient: Ingredient) =>
+            !timestamps.includes(ingredient.timestamp),
+        );
       case FilterType.Category:
         return ingredients.filter(
           (ingredient: Ingredient) =>
@@ -56,10 +68,6 @@ export default function IngredientsList({navigation, route}: any) {
     }
     return [];
   };
-
-  // navigation.addListener('focus', () => {
-  //   setIngredients(useSelector(useIngredients));
-  // });
 
   const getIndex = (ingredient: Ingredient) => {
     for (let i = 0; i < ingredients.length; i++) {
@@ -105,6 +113,14 @@ export default function IngredientsList({navigation, route}: any) {
                 : 'days'}
             </Text>
           ))}
+        {route.params.filter === FilterType.GroceryList &&
+          ingredient.quantity && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => dispatch(addToGroceryList(ingredient))}>
+              <Text>Add to grocery list</Text>
+            </TouchableOpacity>
+          )}
       </View>
     );
   };
@@ -147,6 +163,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingBottom: 5,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 5,
+    borderRadius: 5,
+    width: '45%',
   },
   text: {
     fontSize: 18,
