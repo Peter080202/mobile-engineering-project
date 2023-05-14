@@ -2,9 +2,9 @@ import IngredientsList from '../components/IngredientsList';
 import IngredientView from '../components/IngredientView';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {FilterType} from '../../types/types';
-import GroceryList from '../screens/GroceryList';
-import GroceryListAddSelection from '../screens/GroceryListAddSelection';
+import GroceryListScreen from '../screens/GroceryListScreen';
+import GroceryListAddSelectionScreen from '../screens/GroceryListAddSelectionScreen';
+import QuickEntryScreen from '../screens/QuickEntryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,13 +13,18 @@ export default function GroceryListNavigator({navigation}: any) {
     <Stack.Navigator>
       <Stack.Screen
         name="GroceryList"
-        component={GroceryList}
-        options={{title: 'Expiring Soon Ingredients'}}
+        component={GroceryListScreen}
+        options={{title: 'Grocery List'}}
       />
       <Stack.Screen
-        name="GroceryListAddSelection"
-        component={GroceryListAddSelection}
-        options={{title: 'Expiring Soon Ingredients'}}
+        name="GroceryListAddSelectionScreen"
+        component={GroceryListAddSelectionScreen}
+        options={{title: 'Add items to Grocery List'}}
+      />
+      <Stack.Screen
+        name="QuickEntry"
+        component={QuickEntryScreen}
+        options={{title: 'Add item to Grocery List'}}
       />
       <Stack.Screen
         name="IngredientsList"

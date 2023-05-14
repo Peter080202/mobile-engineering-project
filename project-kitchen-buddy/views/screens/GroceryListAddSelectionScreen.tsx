@@ -2,7 +2,10 @@ import {FilterType, SelectionType} from '../../types/types';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
-export default function GroceryListAddSelection({navigation, route}: any) {
+export default function GroceryListAddSelectionScreen({
+  navigation,
+  route,
+}: any) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -17,7 +20,11 @@ export default function GroceryListAddSelection({navigation, route}: any) {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log('clicked the quick entry button')}>
+        onPress={() =>
+          navigation.navigate('QuickEntry', {
+            title: `Add item to grocery list`,
+          })
+        }>
         <Text style={styles.buttonText}>Quick entry</Text>
       </TouchableOpacity>
     </View>

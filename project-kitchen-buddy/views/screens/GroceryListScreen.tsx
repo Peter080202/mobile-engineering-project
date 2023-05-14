@@ -1,21 +1,22 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {FilterType, SelectionType} from '../../types/types';
-import {categories, confectionTypes, locations} from '../../services/constants';
+import {FilterType} from '../../types/types';
 import React from 'react';
+import GroceryList from '../components/GroceryList';
 
-export default function GroceryList({navigation, route}: any) {
+export default function GroceryListScreen({navigation, route}: any) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
-          navigation.navigate('GroceryListAddSelection', {
+          navigation.navigate('GroceryListAddSelectionScreen', {
             filter: FilterType.Incomplete,
             title: 'Add items to grocery list',
           })
         }>
         <Text style={styles.buttonText}>Add ingredients</Text>
       </TouchableOpacity>
+      <GroceryList />
     </View>
   );
 }
