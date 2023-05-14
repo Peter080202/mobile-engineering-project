@@ -21,7 +21,6 @@ LogBox.ignoreLogs([
 export default function GroceryList({navigation, route}: any) {
   const dispatch = useDispatch();
   const groceryList = useSelector(useGroceryList);
-  const searchPattern = useSelector(useSearchPattern);
 
   const IngredientComp = ({ingredient}: {ingredient: Ingredient}) => {
     return (
@@ -37,22 +36,24 @@ export default function GroceryList({navigation, route}: any) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={groceryList.filter((ingredient: Ingredient) =>
-          ingredient.ingredientName.includes(searchPattern),
-        )}
-        keyExtractor={(item, index) => String(index)}
-        renderItem={({item}: {item: Ingredient}) => (
-          <TouchableOpacity
-            key={item.timestamp}
-            onPress={() => {
-              console.log('clicked me juhu');
-            }}>
-            <IngredientComp ingredient={item} />
-          </TouchableOpacity>
-        )}
-        ItemSeparatorComponent={ItemDivider}
-      />
+      {groceryList.length == 0 ? (
+        <Text style={styles.text}> No ingredients found</Text>
+      ) : (
+        <FlatList
+          data={groceryList}
+          keyExtractor={(item, index) => String(index)}
+          renderItem={({item}: {item: Ingredient}) => (
+            <TouchableOpacity
+              key={item.timestamp}
+              onPress={() => {
+                console.log('clicked me juhu');
+              }}>
+              <IngredientComp ingredient={item} />
+            </TouchableOpacity>
+          )}
+          ItemSeparatorComponent={ItemDivider}
+        />
+      )}
     </View>
   );
 }

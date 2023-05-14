@@ -131,26 +131,40 @@ export default function IngredientsList({navigation, route}: any) {
 
   return (
     <View style={styles.container}>
-      <SearchBar
-        focusSearchBar={focusSearchBar}
-        setFocusSearchBar={setFocusSearchBar}
-      />
-      <FlatList
-        data={filteredIngredients().filter((ingredient: Ingredient) =>
-          ingredient.ingredientName.includes(searchPattern),
-        )}
-        keyExtractor={(item, index) => String(index)}
-        renderItem={({item}: {item: Ingredient}) => (
-          <TouchableOpacity
-            key={item.timestamp}
-            onPress={() => {
-              openEditMode(item);
-            }}>
-            <IngredientComp ingredient={item} />
-          </TouchableOpacity>
-        )}
-        ItemSeparatorComponent={ItemDivider}
-      />
+      {filteredIngredients().length == 0 ? (
+        <Text
+          style={[
+            styles.text,
+            {
+              margin: 15,
+            },
+          ]}>
+          No ingredients found
+        </Text>
+      ) : (
+        <>
+          <SearchBar
+            focusSearchBar={focusSearchBar}
+            setFocusSearchBar={setFocusSearchBar}
+          />
+          <FlatList
+            data={filteredIngredients().filter((ingredient: Ingredient) =>
+              ingredient.ingredientName.includes(searchPattern),
+            )}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={({item}: {item: Ingredient}) => (
+              <TouchableOpacity
+                key={item.timestamp}
+                onPress={() => {
+                  openEditMode(item);
+                }}>
+                <IngredientComp ingredient={item} />
+              </TouchableOpacity>
+            )}
+            ItemSeparatorComponent={ItemDivider}
+          />
+        </>
+      )}
     </View>
   );
 }
