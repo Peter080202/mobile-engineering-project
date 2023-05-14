@@ -11,13 +11,16 @@ export const groceryListReducer = createSlice({
     addToGroceryList: (state, action) => {
       state.groceryList = [...state.groceryList, action.payload];
     },
-    removeItemFromGroceryList: (state, action) => {
-      state.groceryList = [...state.groceryList, action.payload];
+    removeFromGroceryList: (state, action) => {
+      state.groceryList = [
+        ...state.groceryList.slice(0, action.payload),
+        ...state.groceryList.slice(action.payload + 1),
+      ];
     },
   },
 });
 
-export const {addToGroceryList, removeItemFromGroceryList} =
+export const {addToGroceryList, removeFromGroceryList} =
   groceryListReducer.actions;
 
 export const useGroceryList = (state: {groceryList: {groceryList: any}}) =>
