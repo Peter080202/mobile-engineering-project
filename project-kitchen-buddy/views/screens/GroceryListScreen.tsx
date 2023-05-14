@@ -2,6 +2,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {FilterType} from '../../types/types';
 import React from 'react';
 import GroceryList from '../components/GroceryList';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default function GroceryListScreen({navigation, route}: any) {
   return (
@@ -25,14 +26,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 20,
+    paddingTop: 20,
+    backgroundColor: Colors.white,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     padding: 10,
-    marginVertical: 5,
     borderRadius: 5,
     width: '80%',
   },
