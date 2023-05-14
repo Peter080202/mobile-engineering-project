@@ -37,7 +37,10 @@ export default function GroceryList({navigation, route}: any) {
   return (
     <View style={styles.container}>
       {groceryList.length == 0 ? (
-        <Text style={styles.text}> No ingredients found</Text>
+        <Text style={[styles.text, {marginTop: 20}]}>
+          {' '}
+          No ingredients found
+        </Text>
       ) : (
         <FlatList
           data={groceryList}

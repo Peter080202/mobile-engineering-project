@@ -14,13 +14,6 @@ export const groceryListReducer = createSlice({
     removeItemFromGroceryList: (state, action) => {
       state.groceryList = [...state.groceryList, action.payload];
     },
-    updateIngredients: (state, action) => {
-      state.groceryList = [
-        ...state.groceryList.slice(0, action.payload.index),
-        action.payload.ingredient,
-        ...state.groceryList.slice(action.payload.index + 1),
-      ];
-    },
   },
 });
 
