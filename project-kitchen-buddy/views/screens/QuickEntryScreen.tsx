@@ -6,11 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {FilterType, Ingredient} from '../../types/types';
+import {Ingredient} from '../../types/types';
 import React, {useState} from 'react';
 import {addToGroceryList} from '../../store/groceryListReducer';
 import {useDispatch} from 'react-redux';
-import {addIngredient} from '../../store/ingredientsReducer';
 
 export default function QuickEntryScreen({navigation, route}: any) {
   const dispatch = useDispatch();

@@ -30,7 +30,9 @@ export default function QueriesNavigator({navigation}: any) {
       <Stack.Screen
         name="EditIngredientView"
         component={IngredientView}
-        options={{title: 'Edit Ingredient'}}
+        options={({route}: any) => ({
+          title: route.params.reBought ? 'Re-bought item' : 'Edit Ingredient',
+        })}
       />
     </Stack.Navigator>
   );

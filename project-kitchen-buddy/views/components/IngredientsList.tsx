@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -8,12 +8,12 @@ import {
   Dimensions,
 } from 'react-native';
 
-import {FilterType, Ingredient} from '../../types/types';
+import {FilterType, GroceryListIngredient, Ingredient} from '../../types/types';
 import {LogBox} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useSearchPattern} from '../../store/searchPatternReducer';
 import SearchBar from './SearchBar';
-import {addIngredient, useIngredients} from '../../store/ingredientsReducer';
+import {useIngredients} from '../../store/ingredientsReducer';
 import {
   expiringSoonIngredients,
   groceryListIngredients,
@@ -34,7 +34,7 @@ export default function IngredientsList({navigation, route}: any) {
   const groceryList = useSelector(useGroceryList);
   const searchPattern = useSelector(useSearchPattern);
 
-  const filteredIngredients = (): Ingredient[] => {
+  const filteredIngredients = (): Ingredient[] | GroceryListIngredient[] => {
     switch (route.params.filter) {
       case FilterType.ExpiringSoon:
         return expiringSoonIngredients(ingredients);
@@ -44,11 +44,15 @@ export default function IngredientsList({navigation, route}: any) {
         return recentlyAddedIngredients(ingredients);
       case FilterType.GroceryList:
         const timestamps: number[] = groceryList.map(
-          (groceryListItem: Ingredient) => groceryListItem.timestamp,
+          (groceryListItem: GroceryListIngredient) => groceryListItem.timestamp,
         );
         return groceryListIngredients(ingredients).filter(
           (ingredient: Ingredient) =>
             !timestamps.includes(ingredient.timestamp),
+        );
+      case FilterType.RecentlyBought:
+        return groceryList.filter(
+          (groceryListItem: GroceryListIngredient) => groceryListItem.bought,
         );
       case FilterType.Category:
         return ingredients.filter(
@@ -78,10 +82,11 @@ export default function IngredientsList({navigation, route}: any) {
     return -1;
   };
 
-  const openEditMode = (ingredient: Ingredient) => {
+  const openEditMode = (ingredient: Ingredient, reBought: boolean) => {
     navigation.navigate('EditIngredientView', {
       ingredient: ingredient,
       index: getIndex(ingredient),
+      reBought: reBought,
     });
     setFocusSearchBar(false);
   };
@@ -148,15 +153,17 @@ export default function IngredientsList({navigation, route}: any) {
             setFocusSearchBar={setFocusSearchBar}
           />
           <FlatList
-            data={filteredIngredients().filter((ingredient: Ingredient) =>
-              ingredient.ingredientName.includes(searchPattern),
-            )}
+            data={filteredIngredients()}
             keyExtractor={(item, index) => String(index)}
-            renderItem={({item}: {item: Ingredient}) => (
+            renderItem={({
+              item,
+            }: {
+              item: Ingredient | GroceryListIngredient;
+            }) => (
               <TouchableOpacity
                 key={item.timestamp}
                 onPress={() => {
-                  openEditMode(item);
+                  openEditMode(item, 'bought' in item);
                 }}>
                 <IngredientComp ingredient={item} />
               </TouchableOpacity>

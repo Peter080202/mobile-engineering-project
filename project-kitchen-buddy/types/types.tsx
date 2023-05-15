@@ -8,6 +8,10 @@ export type Ingredient = {
   timestamp: number;
 };
 
+export interface GroceryListIngredient extends Ingredient {
+  bought: boolean;
+}
+
 export enum SelectionType {
   Category = 'Category',
   Location = 'Location',
@@ -22,4 +26,5 @@ export enum FilterType {
   Location,
   ConfectionType,
   GroceryList,
+  RecentlyBought,
 }

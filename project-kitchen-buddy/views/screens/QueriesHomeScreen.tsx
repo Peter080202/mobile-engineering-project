@@ -63,6 +63,17 @@ export default function QueriesHomeScreen({navigation, route}: any) {
         }>
         <Text style={styles.buttonText}>Same Confection Type</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate('IngredientsList', {
+            filter: FilterType.RecentlyBought,
+            title: 'Recently Bought Ingredients',
+          })
+        }>
+        <Text style={styles.buttonText}>Recently Bought</Text>
+      </TouchableOpacity>
     </View>
   );
 }

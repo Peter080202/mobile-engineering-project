@@ -11,7 +11,10 @@ import {
 import {useState, useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {getFormattedDate} from '../../services/commons';
+import {
+  getDifferenceDaysFromDateAndTimestamp,
+  getFormattedDate,
+} from '../../services/commons';
 import {Ingredient} from '../../types/types';
 import {
   categories,
@@ -19,8 +22,12 @@ import {
   locations,
   quantityTypes,
 } from '../../services/constants';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {addIngredient, updateIngredients} from '../../store/ingredientsReducer';
+import {
+  removeFromGroceryList,
+  useGroceryList,
+} from '../../store/groceryListReducer';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -28,50 +35,63 @@ LogBox.ignoreLogs([
 
 export default function IngredientView({navigation, route}: any) {
   const dispatch = useDispatch();
+  const groceryList = useSelector(useGroceryList);
 
+  const reBoughtMode =
+    route.params !== undefined &&
+    route.params.ingredient.category !== undefined &&
+    route.params.reBought !== undefined &&
+    route.params.reBought;
+  const editMode = reBoughtMode
+    ? false
+    : route.params !== undefined && route.params.ingredient !== undefined;
   const defaultText = '---';
 
   const [ingredientName, setIngredientName] = useState<string>(
-    route.params !== undefined &&
-      route.params.ingredient.ingredientName !== undefined
-      ? route.params.ingredient.ingredientName
-      : '',
+    reBoughtMode || editMode ? route.params.ingredient.ingredientName : '',
   );
 
   const [category, setCategory] = useState<string | undefined>(
-    route.params !== undefined && route.params.ingredient.category !== undefined
-      ? route.params.ingredient.category
-      : undefined,
+    reBoughtMode || editMode ? route.params.ingredient.category : undefined,
   );
   const categoriesDropdownRef = useRef<SelectDropdown>(null);
 
   const [location, setLocation] = useState<string | undefined>(
-    route.params !== undefined && route.params.ingredient.location !== undefined
-      ? route.params.ingredient.location
-      : undefined,
+    reBoughtMode || editMode ? route.params.ingredient.location : undefined,
   );
   const locationsDropdownRef = useRef<SelectDropdown>(null);
 
   const [confectionType, setConfectionType] = useState<string | undefined>(
-    route.params !== undefined &&
-      route.params.ingredient.confectionType !== undefined
+    reBoughtMode || editMode
       ? route.params.ingredient.confectionType
       : undefined,
   );
   const confectionTypesDropdownRef = useRef<SelectDropdown>(null);
 
+  const getReBoughtExpirationDateSuggestion = (): Date => {
+    const reBoughtExpirationDateSuggestion =
+      route.params.ingredient.expirationDate;
+    reBoughtExpirationDateSuggestion.setDate(
+      reBoughtExpirationDateSuggestion.getDate() +
+        getDifferenceDaysFromDateAndTimestamp(
+          route.params.ingredient.expirationDate,
+          route.params.ingredient.timestamp,
+        ),
+    );
+    return reBoughtExpirationDateSuggestion;
+  };
+
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(
-    route.params !== undefined &&
-      route.params.ingredient.expirationDate !== undefined
+    reBoughtMode
+      ? getReBoughtExpirationDateSuggestion()
+      : editMode
       ? route.params.ingredient.expirationDate
       : undefined,
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const [quantity, setQuantity] = useState<string | number | undefined>(
-    route.params !== undefined && route.params.ingredient.quantity !== undefined
-      ? route.params.ingredient.quantity
-      : undefined,
+    reBoughtMode || editMode ? route.params.ingredient.quantity : undefined,
   );
   const quantityTypesDropdownRef = useRef<SelectDropdown>(null);
 
@@ -132,10 +152,37 @@ export default function IngredientView({navigation, route}: any) {
     }
   };
 
+  const saveReBoughtItem = () => {
+    if (ingredientName.length === 0) {
+      Alert.alert('Please enter an item name!');
+    } else {
+      const newIngredient: Ingredient = {
+        ingredientName: ingredientName,
+        category: category,
+        location: location,
+        confectionType: confectionType,
+        expirationDate: expirationDate,
+        quantity: quantity,
+        timestamp: Date.now(),
+      };
+      for (let i = 0; i < groceryList.length; i++) {
+        if (groceryList[i].timestamp === route.params.ingredient.timestamp) {
+          dispatch(removeFromGroceryList(i));
+          dispatch(addIngredient(newIngredient));
+        }
+      }
+
+      Alert.alert('Saved re-bought item successfully!');
+      navigation.goBack();
+    }
+  };
+
   return (
     <View style={{flex: 1, flexDirection: 'column'}}>
       <View style={styles.header}>
-        {route.params !== undefined && route.params.ingredient !== undefined ? (
+        {reBoughtMode ? (
+          <Text style={styles.headerText}>Save re-bought item</Text>
+        ) : editMode ? (
           <Text style={styles.headerText}>Edit item</Text>
         ) : (
           <Text style={styles.headerText}>Add a new item</Text>
@@ -155,8 +202,7 @@ export default function IngredientView({navigation, route}: any) {
           data={categories}
           ref={categoriesDropdownRef}
           defaultValue={
-            route.params !== undefined &&
-            route.params.ingredient.category !== undefined
+            reBoughtMode || editMode
               ? route.params.ingredient.category
               : undefined
           }
@@ -174,8 +220,7 @@ export default function IngredientView({navigation, route}: any) {
           data={locations}
           ref={locationsDropdownRef}
           defaultValue={
-            route.params !== undefined &&
-            route.params.ingredient.location !== undefined
+            reBoughtMode || editMode
               ? route.params.ingredient.location
               : undefined
           }
@@ -193,8 +238,7 @@ export default function IngredientView({navigation, route}: any) {
           data={confectionTypes}
           ref={confectionTypesDropdownRef}
           defaultValue={
-            route.params !== undefined &&
-            route.params.ingredient.confectionType !== undefined
+            reBoughtMode || editMode
               ? route.params.ingredient.confectionType
               : undefined
           }
@@ -264,7 +308,12 @@ export default function IngredientView({navigation, route}: any) {
         </View>
       </View>
       <View style={styles.space} />
-      {route.params !== undefined && route.params.ingredient !== undefined ? (
+      {reBoughtMode ? (
+        <Button
+          title="Save re-bought item"
+          onPress={() => saveReBoughtItem()}
+        />
+      ) : editMode ? (
         <Button title="Save item" onPress={() => saveEditedItem()} />
       ) : (
         <Button title="Save new item" onPress={() => addNewItem()} />

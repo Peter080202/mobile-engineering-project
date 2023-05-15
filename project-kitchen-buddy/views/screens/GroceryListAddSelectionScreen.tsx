@@ -1,4 +1,4 @@
-import {FilterType, SelectionType} from '../../types/types';
+import {FilterType} from '../../types/types';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
