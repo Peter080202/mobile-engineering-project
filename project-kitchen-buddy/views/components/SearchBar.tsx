@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {Feather, Entypo} from '@expo/vector-icons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,11 +14,6 @@ type SearchBarProps = {
 
 function SearchBar({focusSearchBar, setFocusSearchBar}: SearchBarProps) {
   const dispatch = useDispatch();
-  const [searchPattern, setSearchPattern] = useState<string>();
-  useEffect(() => {
-    dispatch(updateSearchPattern(searchPattern));
-  }, [searchPattern]);
-  console.log('first render');
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
@@ -31,8 +26,10 @@ function SearchBar({focusSearchBar, setFocusSearchBar}: SearchBarProps) {
         <TextInput
           style={styles.input}
           placeholder="Search"
-          value={searchPattern}
-          onChangeText={searchPattern => setSearchPattern(searchPattern)}
+          value={useSelector(useSearchPattern)}
+          onChangeText={searchPattern =>
+            dispatch(updateSearchPattern(searchPattern))
+          }
           onFocus={() => {
             setFocusSearchBar(true);
           }}
