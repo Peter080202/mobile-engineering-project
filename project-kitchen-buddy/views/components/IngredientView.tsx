@@ -68,22 +68,15 @@ export default function IngredientView({navigation, route}: any) {
   );
   const confectionTypesDropdownRef = useRef<SelectDropdown>(null);
 
-  const getReBoughtExpirationDateSuggestion = (): Date => {
-    const reBoughtExpirationDateSuggestion =
-      route.params.ingredient.expirationDate;
-    reBoughtExpirationDateSuggestion.setDate(
-      reBoughtExpirationDateSuggestion.getDate() +
-        getDifferenceDaysFromDateAndTimestamp(
-          route.params.ingredient.expirationDate,
-          route.params.ingredient.timestamp,
-        ),
-    );
-    return reBoughtExpirationDateSuggestion;
-  };
-
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(
     reBoughtMode
-      ? getReBoughtExpirationDateSuggestion()
+      ? new Date(
+          route.params.ingredient.expirationDate.getTime() +
+            getDifferenceDaysFromDateAndTimestamp(
+              route.params.ingredient.expirationDate,
+              route.params.ingredient.timestamp,
+            ),
+        )
       : editMode
       ? route.params.ingredient.expirationDate
       : undefined,
