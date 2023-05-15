@@ -27,11 +27,15 @@ export default function GroceryList({navigation, route}: any) {
 
   const IngredientComp = ({
     ingredient,
-    index,
   }: {
     ingredient: GroceryListIngredient;
-    index: number;
   }) => {
+    let index = -1;
+    for (let i = 0; i < groceryList.length; i++) {
+      if (groceryList[i].timestamp === ingredient.timestamp) {
+        index = i;
+      }
+    }
     return (
       <View style={styles.paddedRow}>
         <Text style={styles.text}>{ingredient.ingredientName}</Text>
@@ -68,13 +72,9 @@ export default function GroceryList({navigation, route}: any) {
             (groceryListItem: GroceryListIngredient) => !groceryListItem.bought,
           )}
           keyExtractor={(item, index) => String(index)}
-          renderItem={({
-            item,
-            index,
-          }: {
-            item: GroceryListIngredient;
-            index: number;
-          }) => <IngredientComp ingredient={item} index={index} />}
+          renderItem={({item}: {item: GroceryListIngredient}) => (
+            <IngredientComp ingredient={item} />
+          )}
           ItemSeparatorComponent={ItemDivider}
         />
       )}

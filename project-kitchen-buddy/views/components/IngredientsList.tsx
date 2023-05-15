@@ -153,7 +153,9 @@ export default function IngredientsList({navigation, route}: any) {
             setFocusSearchBar={setFocusSearchBar}
           />
           <FlatList
-            data={filteredIngredients()}
+            data={filteredIngredients().filter((ingredient: Ingredient) =>
+              ingredient.ingredientName.includes(searchPattern),
+            )}
             keyExtractor={(item, index) => String(index)}
             renderItem={({
               item,
