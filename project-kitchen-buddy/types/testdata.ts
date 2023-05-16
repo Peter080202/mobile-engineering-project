@@ -23,6 +23,7 @@ export const testIngredients: Ingredient[] = [
     confectionType: 'fresh',
     expirationDate: daysFromNowOn(2),
     timestamp: Date.now() - 2000,
+    lastRipenessCheckDate: new Date('2022-04-26'),
   },
   {
     ingredientName: 'Milk',

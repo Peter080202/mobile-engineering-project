@@ -5,7 +5,9 @@ export type Ingredient = {
   confectionType?: String;
   expirationDate?: Date;
   quantity?: String | number;
+  lastRipenessCheckDate?: Date;
   timestamp: number;
+  ripeness?: String;
 };
 
 export interface GroceryListIngredient extends Ingredient {
@@ -16,6 +18,7 @@ export enum SelectionType {
   Category = 'Category',
   Location = 'Location',
   ConfectionType = 'Confection Type',
+  Ripeness = 'Ripeness',
 }
 
 export enum FilterType {
@@ -27,4 +30,6 @@ export enum FilterType {
   ConfectionType,
   GroceryList,
   RecentlyBought,
+  Ripeness,
+  NeedRipenessCheck,
 }

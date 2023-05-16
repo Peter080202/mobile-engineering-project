@@ -9,6 +9,13 @@ export const categories: string[] = [
   'meat',
   'liquid',
 ];
+
+export const ripenesses: string[] = [
+  'green',
+  'ripe',
+  'advanced',
+  'too ripe',
+];
 export const locations: string[] = ['fridge', 'freezer', 'pantry'];
 export const confectionTypes: string[] = ['fresh', 'canned', 'frozen', 'cured'];
 export const quantityTypes: string[] = ['full', 'half empty', 'empty'];
@@ -22,6 +29,16 @@ export const expiringSoonIngredients = (
       ingredient.expirationDate &&
       getDifferenceDaysFromNow(ingredient.expirationDate) <= 7,
   );
+
+  export const needRipenessCheckIngredients = (
+    ingredients: Ingredient[],
+  ): Ingredient[] =>
+    ingredients.filter(
+      (ingredient: Ingredient) =>
+         ingredient.confectionType === 'fresh' && 
+        ingredient.lastRipenessCheckDate &&
+          getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate) >= 3
+    );
 
 export const incompleteIngredients = (
   ingredients: Ingredient[],

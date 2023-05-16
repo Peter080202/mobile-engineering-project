@@ -21,6 +21,7 @@ import {
   expiringSoonIngredients,
   groceryListIngredients,
   incompleteIngredients,
+  needRipenessCheckIngredients,
   recentlyAddedIngredients,
 } from '../../services/constants';
 import {getDifferenceDaysFromNow} from '../../services/commons';
@@ -44,6 +45,8 @@ export default function IngredientsList({navigation, route}: any) {
 
   const filteredIngredients = (): Ingredient[] | GroceryListIngredient[] => {
     switch (route.params.filter) {
+      case FilterType.NeedRipenessCheck:
+        return needRipenessCheckIngredients(ingredients);
       case FilterType.ExpiringSoon:
         return expiringSoonIngredients(ingredients);
       case FilterType.Incomplete:
@@ -76,6 +79,11 @@ export default function IngredientsList({navigation, route}: any) {
         return ingredients.filter(
           (ingredient: Ingredient) =>
             ingredient.confectionType === route.params.filterOption,
+        );
+        case FilterType.Ripeness:
+        return ingredients.filter(
+          (ingredient: Ingredient) =>
+            ingredient.ripeness === route.params.filterOption,
         );
     }
     return [];
@@ -134,6 +142,37 @@ export default function IngredientsList({navigation, route}: any) {
               <Text>Add to grocery list</Text>
             </TouchableOpacity>
           )}
+      </View>
+    );
+  };
+
+  const IngredientComp2 = ({ingredient}: {ingredient: Ingredient}) => {
+    return (
+      <View style={styles.paddedRow}>
+        <Text style={styles.text}>{ingredient.ingredientName}</Text>
+        {route.params.filter === FilterType.NeedRipenessCheck &&
+          ingredient.lastRipenessCheckDate &&
+          (Math.round(getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate)) >=
+          3 ? (
+            <Text
+              style={[
+                styles.text,
+                {
+                  color: 'red',
+                },
+              ]}>
+              Ripness Check Required
+            </Text>
+          ) : (
+            <Text style={styles.text}>
+              {Math.round(getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate))}{' '}
+              {Math.round(
+                getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate),
+              ) === 1
+                ? 'day'
+                : 'days'}
+            </Text>
+          ))}
       </View>
     );
   };

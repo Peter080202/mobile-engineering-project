@@ -11,6 +11,8 @@ export default function SelectionMenuScreen({navigation, route}: any) {
         return FilterType.Location;
       case SelectionType.ConfectionType:
         return FilterType.ConfectionType;
+      case SelectionType.Ripeness:
+        return FilterType.Ripeness;
     }
   };
 

@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {FilterType, SelectionType} from '../../types/types';
-import {categories, confectionTypes, locations} from '../../services/constants';
+import {categories, confectionTypes, locations, ripenesses} from '../../services/constants';
 import React from 'react';
 
 export default function QueriesHomeScreen({navigation, route}: any) {
@@ -50,6 +50,18 @@ export default function QueriesHomeScreen({navigation, route}: any) {
           })
         }>
         <Text style={styles.buttonText}>Same Location</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate('ButtonMenuScreen', {
+            selection: ripenesses,
+            title: 'Ripeness Check needed',
+            selectionType: SelectionType.Ripeness,
+          })
+        }>
+        <Text style={styles.buttonText}>Same Ripeness</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

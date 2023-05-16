@@ -16,12 +16,7 @@ import {
   getFormattedDate,
 } from '../../services/commons';
 import {Ingredient} from '../../types/types';
-import {
-  categories,
-  confectionTypes,
-  locations,
-  quantityTypes,
-} from '../../services/constants';
+import {categories, confectionTypes, locations, quantityTypes, ripenesses} from '../../services/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {addIngredient, updateIngredients} from '../../store/ingredientsReducer';
 import {
@@ -55,6 +50,7 @@ export default function IngredientView({navigation, route}: any) {
     reBoughtMode || editMode ? route.params.ingredient.category : undefined,
   );
   const categoriesDropdownRef = useRef<SelectDropdown>(null);
+ 
 
   const [location, setLocation] = useState<string | undefined>(
     reBoughtMode || editMode ? route.params.ingredient.location : undefined,
@@ -81,6 +77,14 @@ export default function IngredientView({navigation, route}: any) {
       ? route.params.ingredient.expirationDate
       : undefined,
   );
+
+  const [ripeness, setRipeness] = useState<string | undefined>(
+    route.params !== undefined && route.params.ingredient.ripeness !== undefined
+      ? route.params.ingredient.ripeness
+      : undefined,
+  );
+  const ripenessDropdownRef = useRef<SelectDropdown>(null);
+
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const [quantity, setQuantity] = useState<string | number | undefined>(
@@ -99,6 +103,8 @@ export default function IngredientView({navigation, route}: any) {
     setExpirationDate(undefined);
     setQuantity(undefined);
     quantityTypesDropdownRef.current?.reset();
+    setRipeness(undefined);
+    ripenessDropdownRef.current?.reset();
   };
 
   const addNewItem = () => {
@@ -112,6 +118,7 @@ export default function IngredientView({navigation, route}: any) {
         confectionType: confectionType,
         expirationDate: expirationDate,
         quantity: quantity,
+        ripeness: ripeness,
         timestamp: Date.now(),
       };
       dispatch(addIngredient(newIngredient));
@@ -133,6 +140,7 @@ export default function IngredientView({navigation, route}: any) {
         expirationDate: expirationDate,
         quantity: quantity,
         timestamp: route.params.ingredient.timestamp,
+        ripeness: ripeness,
       };
       dispatch(
         updateIngredients({
@@ -299,7 +307,27 @@ export default function IngredientView({navigation, route}: any) {
             defaultButtonText={defaultText}
           />
         </View>
+        </View>
+        <View style={styles.rowContainer}>
+        <Text style={styles.text}>Ripeness:</Text>
+        <SelectDropdown
+          data={ripenesses}
+          ref={ripenessDropdownRef}
+          defaultValue={
+            route.params !== undefined &&
+            route.params.ingredient.ripeness !== undefined
+              ? route.params.ingredient.ripeness
+              : undefined
+          }
+          onSelect={(selectedRipeness: string) => setRipeness(selectedRipeness)}
+          buttonTextAfterSelection={(selectedRipeness: string) =>
+            selectedRipeness
+          }
+          rowTextForSelection={(ripeness: string) => ripeness}
+          defaultButtonText={defaultText}
+        />
       </View>
+
       <View style={styles.space} />
       {reBoughtMode ? (
         <Button
@@ -321,7 +349,10 @@ export default function IngredientView({navigation, route}: any) {
         }}
         onCancel={() => setDatePickerVisibility(false)}
       />
+
+
     </View>
+    
   );
 }
 
