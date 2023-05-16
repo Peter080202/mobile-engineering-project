@@ -15,6 +15,7 @@ export const testIngredients: Ingredient[] = [
     confectionType: 'fresh',
     expirationDate: daysFromNowOn(1),
     timestamp: Date.now() - 1000,
+    ripenessTimestamp: Date.now()-50,
   },
   {
     ingredientName: 'Carrots',
@@ -23,7 +24,6 @@ export const testIngredients: Ingredient[] = [
     confectionType: 'fresh',
     expirationDate: daysFromNowOn(2),
     timestamp: Date.now() - 2000,
-    lastRipenessCheckDate: new Date('2022-04-26'),
   },
   {
     ingredientName: 'Milk',

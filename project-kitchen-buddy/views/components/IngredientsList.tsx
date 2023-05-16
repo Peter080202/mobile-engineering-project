@@ -80,7 +80,7 @@ export default function IngredientsList({navigation, route}: any) {
           (ingredient: Ingredient) =>
             ingredient.confectionType === route.params.filterOption,
         );
-        case FilterType.Ripeness:
+      case FilterType.Ripeness:
         return ingredients.filter(
           (ingredient: Ingredient) =>
             ingredient.ripeness === route.params.filterOption,
@@ -151,9 +151,9 @@ export default function IngredientsList({navigation, route}: any) {
       <View style={styles.paddedRow}>
         <Text style={styles.text}>{ingredient.ingredientName}</Text>
         {route.params.filter === FilterType.NeedRipenessCheck &&
-          ingredient.lastRipenessCheckDate &&
-          (Math.round(getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate)) >=
-          3 ? (
+          ingredient.ripenessTimestamp &&
+          (Math.round(getDifferenceDaysFromNow(ingredient.ripenessTimestamp)) <=
+          0 ? (
             <Text
               style={[
                 styles.text,
@@ -161,18 +161,28 @@ export default function IngredientsList({navigation, route}: any) {
                   color: 'red',
                 },
               ]}>
-              Ripness Check Required
+              Expired
             </Text>
           ) : (
             <Text style={styles.text}>
-              {Math.round(getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate))}{' '}
               {Math.round(
-                getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate),
+                getDifferenceDaysFromNow(ingredient.ripenessTimestamp),
+              )}{' '}
+              {Math.round(
+                getDifferenceDaysFromNow(ingredient.ripenessTimestamp),
               ) === 1
                 ? 'day'
                 : 'days'}
             </Text>
           ))}
+        {route.params.filter === FilterType.GroceryList &&
+          ingredient.quantity && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => dispatch(addToGroceryList(ingredient))}>
+              <Text>Add to grocery list</Text>
+            </TouchableOpacity>
+          )}
       </View>
     );
   };

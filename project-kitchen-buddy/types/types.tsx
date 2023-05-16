@@ -1,12 +1,13 @@
 export type Ingredient = {
   ingredientName: String;
+  ingredientBrand?: String;
   category?: String;
   location?: String;
   confectionType?: String;
   expirationDate?: Date;
   quantity?: String | number;
-  lastRipenessCheckDate?: Date;
   timestamp: number;
+  ripenessTimestamp?: number;
   ripeness?: String;
 };
 

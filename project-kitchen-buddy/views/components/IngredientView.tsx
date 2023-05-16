@@ -8,15 +8,21 @@ import {
   Alert,
   LogBox,
 } from 'react-native';
-import {useState, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DatesPickerModal from 'react-native-modal-datetime-picker';
 import {
   getDifferenceDaysFromDateAndTimestamp,
   getFormattedDate,
 } from '../../services/commons';
 import {Ingredient} from '../../types/types';
-import {categories, confectionTypes, locations, quantityTypes, ripenesses} from '../../services/constants';
+import {
+  categories,
+  confectionTypes,
+  locations,
+  quantityTypes,
+  ripenesses,
+} from '../../services/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {addIngredient, updateIngredients} from '../../store/ingredientsReducer';
 import {
@@ -46,11 +52,14 @@ export default function IngredientView({navigation, route}: any) {
     reBoughtMode || editMode ? route.params.ingredient.ingredientName : '',
   );
 
+  const [ingredientBrand, setIngredientBrand] = useState<string>(
+    reBoughtMode || editMode ? route.params.ingredient.ingredientBrand : '',
+  );
+
   const [category, setCategory] = useState<string | undefined>(
     reBoughtMode || editMode ? route.params.ingredient.category : undefined,
   );
   const categoriesDropdownRef = useRef<SelectDropdown>(null);
- 
 
   const [location, setLocation] = useState<string | undefined>(
     reBoughtMode || editMode ? route.params.ingredient.location : undefined,
@@ -94,6 +103,7 @@ export default function IngredientView({navigation, route}: any) {
 
   const resetForm = () => {
     setIngredientName('');
+    setIngredientBrand('');
     setCategory(undefined);
     categoriesDropdownRef.current?.reset();
     setLocation(undefined);
@@ -113,6 +123,7 @@ export default function IngredientView({navigation, route}: any) {
     } else {
       const newIngredient: Ingredient = {
         ingredientName: ingredientName,
+        ingredientBrand: ingredientBrand,
         category: category,
         location: location,
         confectionType: confectionType,
@@ -120,6 +131,7 @@ export default function IngredientView({navigation, route}: any) {
         quantity: quantity,
         ripeness: ripeness,
         timestamp: Date.now(),
+        ripenessTimestamp: Date.now(),
       };
       dispatch(addIngredient(newIngredient));
 
@@ -134,6 +146,7 @@ export default function IngredientView({navigation, route}: any) {
     } else {
       const newIngredient: Ingredient = {
         ingredientName: ingredientName,
+        ingredientBrand: ingredientBrand,
         category: category,
         location: location,
         confectionType: confectionType,
@@ -141,6 +154,10 @@ export default function IngredientView({navigation, route}: any) {
         quantity: quantity,
         timestamp: route.params.ingredient.timestamp,
         ripeness: ripeness,
+        ripenessTimestamp:
+          ripeness !== route.params.ingredient.ripeness
+            ? Date.now()
+            : route.params.ingredient.ripenessTimestamp,
       };
       dispatch(
         updateIngredients({
@@ -159,6 +176,7 @@ export default function IngredientView({navigation, route}: any) {
     } else {
       const newIngredient: Ingredient = {
         ingredientName: ingredientName,
+        ingredientBrand: ingredientBrand,
         category: category,
         location: location,
         confectionType: confectionType,
@@ -195,6 +213,14 @@ export default function IngredientView({navigation, route}: any) {
           style={styles.input}
           value={ingredientName}
           onChangeText={itemName => setIngredientName(itemName)}
+        />
+      </View>
+      <View style={styles.rowContainer}>
+        <Text style={styles.text}>Brand name:</Text>
+        <TextInput
+          style={styles.input}
+          value={ingredientBrand}
+          onChangeText={itemName => setIngredientBrand(itemName)}
         />
       </View>
       <View style={styles.rowContainer}>
@@ -307,8 +333,8 @@ export default function IngredientView({navigation, route}: any) {
             defaultButtonText={defaultText}
           />
         </View>
-        </View>
-        <View style={styles.rowContainer}>
+      </View>
+      <View style={styles.rowContainer}>
         <Text style={styles.text}>Ripeness:</Text>
         <SelectDropdown
           data={ripenesses}
@@ -339,7 +365,7 @@ export default function IngredientView({navigation, route}: any) {
       ) : (
         <Button title="Save new item" onPress={() => addNewItem()} />
       )}
-      <DateTimePickerModal
+      <DatesPickerModal
         isVisible={isDatePickerVisible}
         mode="date"
         date={expirationDate}
@@ -349,10 +375,7 @@ export default function IngredientView({navigation, route}: any) {
         }}
         onCancel={() => setDatePickerVisibility(false)}
       />
-
-
     </View>
-    
   );
 }
 

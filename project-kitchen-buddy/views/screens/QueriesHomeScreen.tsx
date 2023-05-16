@@ -1,6 +1,11 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {FilterType, SelectionType} from '../../types/types';
-import {categories, confectionTypes, locations, ripenesses} from '../../services/constants';
+import {
+  categories,
+  confectionTypes,
+  locations,
+  ripenesses,
+} from '../../services/constants';
 import React from 'react';
 
 export default function QueriesHomeScreen({navigation, route}: any) {
@@ -26,6 +31,17 @@ export default function QueriesHomeScreen({navigation, route}: any) {
           })
         }>
         <Text style={styles.buttonText}>Recently Added</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate('IngredientsList', {
+            filter: FilterType.NeedRipenessCheck,
+            title: 'Ripenesscheck required',
+          })
+        }>
+        <Text style={styles.buttonText}>Ripeness Check required</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

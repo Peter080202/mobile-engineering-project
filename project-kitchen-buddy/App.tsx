@@ -9,7 +9,6 @@ import {Provider} from 'react-redux';
 import store from './store/store';
 import ExpiringSoonNavigator from './views/navigators/ExpiringSoonNavigator';
 import GroceryListNavigator from './views/navigators/GroceryListNavigator';
-import RipenessNavigator from './views/navigators/RipenessNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -62,17 +61,10 @@ function App() {
             tabBarLabel: 'Grocery List',
             tabBarIcon: ({color, size}) => (
               <Ionicons name="cart-outline" size={size} color={color} />
-        ), }} />
-        <Tab.Screen          
-          name="Ripeness check required"
-          component={RipenessNavigator}
-          options={{
-            tabBarLabel: 'Ripeness check required',
-            tabBarIcon: ({color, size}) => (
-              <Ionicons name="time" size={size} color={color} />
             ),
           }}
         />
+
         <Tab.Screen
           name="Queries"
           component={QueriesNavigator}

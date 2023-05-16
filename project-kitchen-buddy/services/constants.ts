@@ -32,13 +32,12 @@ export const expiringSoonIngredients = (
 
   export const needRipenessCheckIngredients = (
     ingredients: Ingredient[],
-  ): Ingredient[] =>
-    ingredients.filter(
-      (ingredient: Ingredient) =>
-         ingredient.confectionType === 'fresh' && 
-        ingredient.lastRipenessCheckDate &&
-          getDifferenceDaysFromNow(ingredient.lastRipenessCheckDate) >= 3
-    );
+    ): Ingredient[] =>
+      ingredients.filter(
+        (ingredient: Ingredient) =>
+          ingredient.confectionType == 'fresh' &&
+          (Date.now() - ingredient.ripenessTimestamp) / (1000 * 60 * 60 * 24) >= 3,
+      );
 
 export const incompleteIngredients = (
   ingredients: Ingredient[],
