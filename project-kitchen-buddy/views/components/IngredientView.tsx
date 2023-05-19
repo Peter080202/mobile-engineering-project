@@ -43,7 +43,6 @@ export default function IngredientView({navigation, route}: any) {
 
   const reBoughtMode =
     route.params !== undefined &&
-    route.params.ingredient.category !== undefined &&
     route.params.reBought !== undefined &&
     route.params.reBought;
   const editMode = reBoughtMode
@@ -77,7 +76,7 @@ export default function IngredientView({navigation, route}: any) {
   const confectionTypesDropdownRef = useRef<SelectDropdown>(null);
 
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(
-    reBoughtMode
+    reBoughtMode && route.params.ingredient.expirationDate !== undefined
       ? new Date(
           route.params.ingredient.expirationDate.getTime() +
             getDifferenceDaysFromDateAndTimestamp(
@@ -107,8 +106,6 @@ export default function IngredientView({navigation, route}: any) {
   const [openStatus, setOpenStatus] = useState<boolean>(
     editMode ? route.params.ingredient.open : false,
   );
-
-
 
   const resetForm = () => {
     setIngredientName('');
@@ -198,7 +195,10 @@ export default function IngredientView({navigation, route}: any) {
         ripenessTimestamp: Date.now(),
         open: openStatus,
       };
+      console.log('Here juhu');
       for (let i = 0; i < groceryList.length; i++) {
+        console.log(groceryList[i]);
+        console.log(route.params.ingredient);
         if (groceryList[i].timestamp === route.params.ingredient.timestamp) {
           dispatch(removeFromGroceryList(i));
           dispatch(addIngredient(newIngredient));
@@ -210,9 +210,8 @@ export default function IngredientView({navigation, route}: any) {
     }
   };
 
-
   const handleChangeDate = () => {
-    if (openStatus === false){
+    if (openStatus === false) {
       Alert.alert(
         'Change Expiration Date',
         'Item is being opened, do you want to change its expiration date?',
@@ -225,16 +224,16 @@ export default function IngredientView({navigation, route}: any) {
             text: 'Accept',
             onPress: handleAccept,
           },
-        ]
+        ],
       );
-    };
-  }
-    const handleAccept = () => {
-      setDatePickerVisibility(true)
-    };
+    }
+  };
+  const handleAccept = () => {
+    setDatePickerVisibility(true);
+  };
 
   return (
-    <ScrollView style={{margin:10}}>
+    <ScrollView style={{margin: 10}}>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View style={styles.header}>
           {reBoughtMode ? (
@@ -271,7 +270,9 @@ export default function IngredientView({navigation, route}: any) {
                 ? route.params.ingredient.category
                 : undefined
             }
-            onSelect={(selectedCategory: string) => setCategory(selectedCategory)}
+            onSelect={(selectedCategory: string) =>
+              setCategory(selectedCategory)
+            }
             buttonTextAfterSelection={(selectedCategory: string) =>
               selectedCategory
             }
@@ -289,7 +290,9 @@ export default function IngredientView({navigation, route}: any) {
                 ? route.params.ingredient.location
                 : undefined
             }
-            onSelect={(selectedLocation: string) => setLocation(selectedLocation)}
+            onSelect={(selectedLocation: string) =>
+              setLocation(selectedLocation)
+            }
             buttonTextAfterSelection={(selectedLocation: string) =>
               selectedLocation
             }
@@ -328,7 +331,7 @@ export default function IngredientView({navigation, route}: any) {
           </TouchableOpacity>
         </View>
         <View style={styles.rowContainer}>
-            <Text style={styles.text}>Quantity:</Text>
+          <Text style={styles.text}>Quantity:</Text>
           <TextInput
             style={styles.quantityInput}
             value={
@@ -381,7 +384,9 @@ export default function IngredientView({navigation, route}: any) {
                 ? route.params.ingredient.ripeness
                 : undefined
             }
-            onSelect={(selectedRipeness: string) => setRipeness(selectedRipeness)}
+            onSelect={(selectedRipeness: string) =>
+              setRipeness(selectedRipeness)
+            }
             buttonTextAfterSelection={(selectedRipeness: string) =>
               selectedRipeness
             }
@@ -390,10 +395,13 @@ export default function IngredientView({navigation, route}: any) {
           />
         </View>
         <View style={styles.rowContainer}>
-        <Text style={styles.text}>Open:</Text>
+          <Text style={styles.text}>Open:</Text>
           <Switch
             value={openStatus}
-            onValueChange = {() => {setOpenStatus(!openStatus); handleChangeDate()}}
+            onValueChange={() => {
+              setOpenStatus(!openStatus);
+              handleChangeDate();
+            }}
           />
         </View>
 
