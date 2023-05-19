@@ -1,6 +1,11 @@
 import {Ingredient} from '../types/types';
-import {getDiffFromPastTimestamp, getDifferenceDaysFromDateAndTimestamp, getDifferenceDaysFromNow} from './commons';
+import {
+  getDiffFromPastTimestamp,
+  getDifferenceDaysFromDateAndTimestamp,
+  getDifferenceDaysFromNow,
+} from './commons';
 
+export const ingredientsStorageKey = '@ingredients_storage_key';
 export const categories: string[] = [
   'fruit',
   'vegetable',
@@ -10,12 +15,7 @@ export const categories: string[] = [
   'liquid',
 ];
 
-export const ripenesses: string[] = [
-  'green',
-  'ripe',
-  'advanced',
-  'too ripe',
-];
+export const ripenesses: string[] = ['green', 'ripe', 'advanced', 'too ripe'];
 export const locations: string[] = ['fridge', 'freezer', 'pantry'];
 export const confectionTypes: string[] = ['fresh', 'canned', 'frozen', 'cured'];
 export const quantityTypes: string[] = ['full', 'half empty', 'empty'];
@@ -27,22 +27,22 @@ export const expiringSoonIngredients = (
   ingredients.filter(
     (ingredient: Ingredient) =>
       (ingredient.expirationDate &&
-      getDifferenceDaysFromNow(ingredient.expirationDate) <= 7) || 
+        getDifferenceDaysFromNow(ingredient.expirationDate) <= 7) ||
       ingredient.ripeness === 'ripe' ||
       ingredient.ripeness === 'advanced' ||
       ingredient.ripeness === 'too ripe' ||
       ingredient.open,
   );
 
-  export const needRipenessCheckIngredients = (
-    ingredients: Ingredient[],
-    ): Ingredient[] =>
-      ingredients.filter(
-        (ingredient: Ingredient) =>
-          ingredient.confectionType === 'fresh' && 
-          ingredient.ripeness !== undefined && 
-          getDiffFromPastTimestamp(ingredient.ripenessTimestamp) >= 3
-      );
+export const needRipenessCheckIngredients = (
+  ingredients: Ingredient[],
+): Ingredient[] =>
+  ingredients.filter(
+    (ingredient: Ingredient) =>
+      ingredient.confectionType === 'fresh' &&
+      ingredient.ripeness !== undefined &&
+      getDiffFromPastTimestamp(ingredient.ripenessTimestamp) >= 3,
+  );
 
 export const incompleteIngredients = (
   ingredients: Ingredient[],

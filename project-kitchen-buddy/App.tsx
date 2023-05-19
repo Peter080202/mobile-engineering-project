@@ -1,14 +1,15 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import AddIngredient from './views/components/IngredientView';
 import HomeScreen from './views/screens/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import QueriesNavigator from './views/navigators/QueriesNavigator';
-import {Provider} from 'react-redux';
+import {Provider, useDispatch} from 'react-redux';
 import store from './store/store';
 import ExpiringSoonNavigator from './views/navigators/ExpiringSoonNavigator';
 import GroceryListNavigator from './views/navigators/GroceryListNavigator';
+import {getIngredients} from './store/ingredientsReducer';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,11 @@ export default function AppWrapper({navigation}: any) {
 }
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // @ts-ignore
+    dispatch(getIngredients());
+  });
   return (
     <NavigationContainer>
       <Tab.Navigator>

@@ -24,7 +24,10 @@ import {
   needRipenessCheckIngredients,
   recentlyAddedIngredients,
 } from '../../services/constants';
-import {getDiffFromPastTimestamp, getDifferenceDaysFromNow} from '../../services/commons';
+import {
+  getDiffFromPastTimestamp,
+  getDifferenceDaysFromNow,
+} from '../../services/commons';
 import {addToGroceryList, useGroceryList} from '../../store/groceryListReducer';
 
 LogBox.ignoreLogs([
@@ -113,12 +116,13 @@ export default function IngredientsList({navigation, route}: any) {
         <Text style={styles.text}>{ingredient.ingredientName}</Text>
 
         {route.params.filter === FilterType.NeedRipenessCheck ? (
-            <Text style={styles.text}>
-            {Math.round(getDiffFromPastTimestamp(ingredient.ripenessTimestamp))}{' '} days ago
+          <Text style={styles.text}>
+            {Math.round(getDiffFromPastTimestamp(ingredient.ripenessTimestamp))}{' '}
+            days ago
           </Text>
-          ) : (
-            ""
-          )}
+        ) : (
+          ''
+        )}
 
         {route.params.filter === FilterType.ExpiringSoon &&
           ingredient.expirationDate &&
@@ -161,7 +165,6 @@ export default function IngredientsList({navigation, route}: any) {
 
   return (
     <View style={styles.container}>
-      
       {filteredIngredients().length == 0 ? (
         <Text
           style={[
@@ -179,11 +182,9 @@ export default function IngredientsList({navigation, route}: any) {
             setFocusSearchBar={setFocusSearchBar}
           />
           {route.params.filter === FilterType.NeedRipenessCheck ? (
-            <Text style={{fontSize: 18}}>
-            Last checked: 
-          </Text>
+            <Text style={{fontSize: 18}}>Last checked:</Text>
           ) : (
-            ""
+            ''
           )}
           <FlatList
             data={filteredIngredients().filter((ingredient: Ingredient) =>
