@@ -12,3 +12,8 @@ export const getDifferenceDaysFromDateAndTimestamp = (
   date1: Date,
   date2: number,
 ) => (date1.getTime() - date2) / (1000 * 60 * 60 * 24);
+
+export const getDiffFromPastTimestamp= (date: number):number => {
+  const date2 = new Date(date)
+   return (Date.now() - date2.getTime()) / (1000 * 60 * 60 * 24);
+}

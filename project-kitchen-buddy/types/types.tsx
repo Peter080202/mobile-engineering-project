@@ -7,7 +7,7 @@ export type Ingredient = {
   expirationDate?: Date;
   quantity?: String | number;
   timestamp: number;
-  ripenessTimestamp?: number;
+  ripenessTimestamp: number;
   ripeness?: String;
 };
 

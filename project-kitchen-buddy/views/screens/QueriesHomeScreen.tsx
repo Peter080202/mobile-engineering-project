@@ -38,7 +38,7 @@ export default function QueriesHomeScreen({navigation, route}: any) {
         onPress={() =>
           navigation.navigate('IngredientsList', {
             filter: FilterType.NeedRipenessCheck,
-            title: 'Ripenesscheck required',
+            title: 'Ripeness check required',
           })
         }>
         <Text style={styles.buttonText}>Ripeness Check required</Text>

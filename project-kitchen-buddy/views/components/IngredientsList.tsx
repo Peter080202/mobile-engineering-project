@@ -24,7 +24,7 @@ import {
   needRipenessCheckIngredients,
   recentlyAddedIngredients,
 } from '../../services/constants';
-import {getDifferenceDaysFromNow} from '../../services/commons';
+import {getDiffFromPastTimestamp, getDifferenceDaysFromNow} from '../../services/commons';
 import {addToGroceryList, useGroceryList} from '../../store/groceryListReducer';
 
 LogBox.ignoreLogs([
@@ -111,6 +111,15 @@ export default function IngredientsList({navigation, route}: any) {
     return (
       <View style={styles.paddedRow}>
         <Text style={styles.text}>{ingredient.ingredientName}</Text>
+
+        {route.params.filter === FilterType.NeedRipenessCheck ? (
+            <Text style={styles.text}>
+            {Math.round(getDiffFromPastTimestamp(ingredient.ripenessTimestamp))}{' '} days ago
+          </Text>
+          ) : (
+            ""
+          )}
+
         {route.params.filter === FilterType.ExpiringSoon &&
           ingredient.expirationDate &&
           (Math.round(getDifferenceDaysFromNow(ingredient.expirationDate)) <=
@@ -146,53 +155,13 @@ export default function IngredientsList({navigation, route}: any) {
     );
   };
 
-  const IngredientComp2 = ({ingredient}: {ingredient: Ingredient}) => {
-    return (
-      <View style={styles.paddedRow}>
-        <Text style={styles.text}>{ingredient.ingredientName}</Text>
-        {route.params.filter === FilterType.NeedRipenessCheck &&
-          ingredient.ripenessTimestamp &&
-          (Math.round(getDifferenceDaysFromNow(ingredient.ripenessTimestamp)) <=
-          0 ? (
-            <Text
-              style={[
-                styles.text,
-                {
-                  color: 'red',
-                },
-              ]}>
-              Expired
-            </Text>
-          ) : (
-            <Text style={styles.text}>
-              {Math.round(
-                getDifferenceDaysFromNow(ingredient.ripenessTimestamp),
-              )}{' '}
-              {Math.round(
-                getDifferenceDaysFromNow(ingredient.ripenessTimestamp),
-              ) === 1
-                ? 'day'
-                : 'days'}
-            </Text>
-          ))}
-        {route.params.filter === FilterType.GroceryList &&
-          ingredient.quantity && (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => dispatch(addToGroceryList(ingredient))}>
-              <Text>Add to grocery list</Text>
-            </TouchableOpacity>
-          )}
-      </View>
-    );
-  };
-
   const ItemDivider = () => {
     return <View style={styles.divider} />;
   };
 
   return (
     <View style={styles.container}>
+      
       {filteredIngredients().length == 0 ? (
         <Text
           style={[
@@ -209,6 +178,13 @@ export default function IngredientsList({navigation, route}: any) {
             focusSearchBar={focusSearchBar}
             setFocusSearchBar={setFocusSearchBar}
           />
+          {route.params.filter === FilterType.NeedRipenessCheck ? (
+            <Text style={{fontSize: 18}}>
+            Last checked: 
+          </Text>
+          ) : (
+            ""
+          )}
           <FlatList
             data={filteredIngredients().filter((ingredient: Ingredient) =>
               ingredient.ingredientName.includes(searchPattern),

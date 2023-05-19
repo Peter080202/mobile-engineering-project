@@ -183,6 +183,7 @@ export default function IngredientView({navigation, route}: any) {
         expirationDate: expirationDate,
         quantity: quantity,
         timestamp: Date.now(),
+        ripenessTimestamp: Date.now(),
       };
       for (let i = 0; i < groceryList.length; i++) {
         if (groceryList[i].timestamp === route.params.ingredient.timestamp) {

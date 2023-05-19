@@ -1,5 +1,5 @@
 import {Ingredient} from '../types/types';
-import {getDifferenceDaysFromNow} from './commons';
+import {getDiffFromPastTimestamp, getDifferenceDaysFromDateAndTimestamp, getDifferenceDaysFromNow} from './commons';
 
 export const categories: string[] = [
   'fruit',
@@ -35,9 +35,12 @@ export const expiringSoonIngredients = (
     ): Ingredient[] =>
       ingredients.filter(
         (ingredient: Ingredient) =>
-          ingredient.confectionType == 'fresh' &&
-          (Date.now() - ingredient.ripenessTimestamp) / (1000 * 60 * 60 * 24) >= 3,
+          ingredient.confectionType === 'fresh' && 
+          ingredient.ripeness !== undefined && 
+          getDiffFromPastTimestamp(ingredient.ripenessTimestamp) >= 3
       );
+          //(Date.now() - ingredient.ripenessTimestamp) / (1000 * 60 * 60 * 24) >= 3,
+      //);
 
 export const incompleteIngredients = (
   ingredients: Ingredient[],
