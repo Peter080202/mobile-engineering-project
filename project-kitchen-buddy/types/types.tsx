@@ -9,6 +9,7 @@ export type Ingredient = {
   timestamp: number;
   ripenessTimestamp: number;
   ripeness?: String;
+  open: Boolean;
 };
 
 export interface GroceryListIngredient extends Ingredient {

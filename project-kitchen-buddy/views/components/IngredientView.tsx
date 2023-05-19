@@ -5,12 +5,15 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  Switch,
   Alert,
   LogBox,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatesPickerModal from 'react-native-modal-datetime-picker';
+
 import {
   getDifferenceDaysFromDateAndTimestamp,
   getFormattedDate,
@@ -101,6 +104,12 @@ export default function IngredientView({navigation, route}: any) {
   );
   const quantityTypesDropdownRef = useRef<SelectDropdown>(null);
 
+  const [openStatus, setOpenStatus] = useState<boolean>(
+    editMode ? route.params.ingredient.open : false,
+  );
+
+
+
   const resetForm = () => {
     setIngredientName('');
     setIngredientBrand('');
@@ -115,6 +124,7 @@ export default function IngredientView({navigation, route}: any) {
     quantityTypesDropdownRef.current?.reset();
     setRipeness(undefined);
     ripenessDropdownRef.current?.reset();
+    setOpenStatus(false);
   };
 
   const addNewItem = () => {
@@ -132,6 +142,7 @@ export default function IngredientView({navigation, route}: any) {
         ripeness: ripeness,
         timestamp: Date.now(),
         ripenessTimestamp: Date.now(),
+        open: openStatus,
       };
       dispatch(addIngredient(newIngredient));
 
@@ -158,6 +169,7 @@ export default function IngredientView({navigation, route}: any) {
           ripeness !== route.params.ingredient.ripeness
             ? Date.now()
             : route.params.ingredient.ripenessTimestamp,
+        open: openStatus,
       };
       dispatch(
         updateIngredients({
@@ -184,6 +196,7 @@ export default function IngredientView({navigation, route}: any) {
         quantity: quantity,
         timestamp: Date.now(),
         ripenessTimestamp: Date.now(),
+        open: openStatus,
       };
       for (let i = 0; i < groceryList.length; i++) {
         if (groceryList[i].timestamp === route.params.ingredient.timestamp) {
@@ -197,186 +210,216 @@ export default function IngredientView({navigation, route}: any) {
     }
   };
 
+
+  const handleChangeDate = () => {
+    if (openStatus === false){
+      Alert.alert(
+        'Change Expiration Date',
+        'Item is being opened, do you want to change its expiration date?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Accept',
+            onPress: handleAccept,
+          },
+        ]
+      );
+    };
+  }
+    const handleAccept = () => {
+      setDatePickerVisibility(true)
+    };
+
   return (
-    <View style={{flex: 1, flexDirection: 'column'}}>
-      <View style={styles.header}>
-        {reBoughtMode ? (
-          <Text style={styles.headerText}>Save re-bought item</Text>
-        ) : editMode ? (
-          <Text style={styles.headerText}>Edit item</Text>
-        ) : (
-          <Text style={styles.headerText}>Add a new item</Text>
-        )}
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.text}>Item name:</Text>
-        <TextInput
-          style={styles.input}
-          value={ingredientName}
-          onChangeText={itemName => setIngredientName(itemName)}
-        />
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.text}>Brand name:</Text>
-        <TextInput
-          style={styles.input}
-          value={ingredientBrand}
-          onChangeText={itemName => setIngredientBrand(itemName)}
-        />
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.text}>Category:</Text>
-        <SelectDropdown
-          data={categories}
-          ref={categoriesDropdownRef}
-          defaultValue={
-            reBoughtMode || editMode
-              ? route.params.ingredient.category
-              : undefined
-          }
-          onSelect={(selectedCategory: string) => setCategory(selectedCategory)}
-          buttonTextAfterSelection={(selectedCategory: string) =>
-            selectedCategory
-          }
-          rowTextForSelection={(category: string) => category}
-          defaultButtonText={defaultText}
-        />
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.text}>Location:</Text>
-        <SelectDropdown
-          data={locations}
-          ref={locationsDropdownRef}
-          defaultValue={
-            reBoughtMode || editMode
-              ? route.params.ingredient.location
-              : undefined
-          }
-          onSelect={(selectedLocation: string) => setLocation(selectedLocation)}
-          buttonTextAfterSelection={(selectedLocation: string) =>
-            selectedLocation
-          }
-          rowTextForSelection={(location: string) => location}
-          defaultButtonText={defaultText}
-        />
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.text}>Confection type:</Text>
-        <SelectDropdown
-          data={confectionTypes}
-          ref={confectionTypesDropdownRef}
-          defaultValue={
-            reBoughtMode || editMode
-              ? route.params.ingredient.confectionType
-              : undefined
-          }
-          onSelect={(selectedConfectionType: string) =>
-            setConfectionType(selectedConfectionType)
-          }
-          buttonTextAfterSelection={(selectedConfectionType: string) =>
-            selectedConfectionType
-          }
-          rowTextForSelection={(confectionType: string) => confectionType}
-          defaultButtonText={defaultText}
-        />
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.text}>Expiration date:</Text>
-        <TouchableOpacity
-          style={styles.customButton}
-          onPress={() => setDatePickerVisibility(true)}>
-          <Text style={styles.text}>
-            {expirationDate ? getFormattedDate(expirationDate) : defaultText}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.rowContainer}>
-        <View style={{flex: 2}}>
-          <Text style={styles.text}>Quantity:</Text>
+    <ScrollView style={{margin:10}}>
+      <View style={{flex: 1, flexDirection: 'column'}}>
+        <View style={styles.header}>
+          {reBoughtMode ? (
+            <Text style={styles.headerText}>Save re-bought item</Text>
+          ) : editMode ? (
+            <Text style={styles.headerText}>Edit item</Text>
+          ) : (
+            <Text style={styles.headerText}>Add a new item</Text>
+          )}
         </View>
-        <TextInput
-          style={styles.quantityInput}
-          value={
-            typeof quantity === 'number'
-              ? String(quantity)
-              : quantity?.replace(/[^0-9]/g, '')
-          }
-          keyboardType="numeric"
-          onChangeText={quantity => {
-            quantity = quantity.replace(/[^0-9]/g, '');
-            if (quantity.length > 0) {
-              setQuantity(Number(quantity));
-              quantityTypesDropdownRef.current?.reset();
-            } else if (quantity.length == 0) {
-              setQuantity(undefined);
-            }
-          }}
-        />
-        <View style={{flex: 1}}>
+        <View style={styles.rowContainer}>
+          <Text style={styles.text}>Item name:</Text>
+          <TextInput
+            style={styles.input}
+            value={ingredientName}
+            onChangeText={itemName => setIngredientName(itemName)}
+          />
+        </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.text}>Brand name:</Text>
+          <TextInput
+            style={styles.input}
+            value={ingredientBrand}
+            onChangeText={itemName => setIngredientBrand(itemName)}
+          />
+        </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.text}>Category:</Text>
           <SelectDropdown
-            buttonStyle={{width: 80}}
-            data={quantityTypes}
-            ref={quantityTypesDropdownRef}
+            data={categories}
+            ref={categoriesDropdownRef}
             defaultValue={
-              route.params !== undefined &&
-              route.params.ingredient.quantity !== undefined &&
-              typeof route.params.ingredient.quantity === 'string'
-                ? route.params.ingredient.quantity
+              reBoughtMode || editMode
+                ? route.params.ingredient.category
                 : undefined
             }
-            onSelect={(selectedQuantity: string) =>
-              setQuantity(selectedQuantity)
+            onSelect={(selectedCategory: string) => setCategory(selectedCategory)}
+            buttonTextAfterSelection={(selectedCategory: string) =>
+              selectedCategory
             }
-            buttonTextAfterSelection={(selectedQuantity: string) =>
-              selectedQuantity
-            }
-            rowTextForSelection={(quantity: string) => quantity}
+            rowTextForSelection={(category: string) => category}
             defaultButtonText={defaultText}
           />
         </View>
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.text}>Ripeness:</Text>
-        <SelectDropdown
-          data={ripenesses}
-          ref={ripenessDropdownRef}
-          defaultValue={
-            route.params !== undefined &&
-            route.params.ingredient.ripeness !== undefined
-              ? route.params.ingredient.ripeness
-              : undefined
-          }
-          onSelect={(selectedRipeness: string) => setRipeness(selectedRipeness)}
-          buttonTextAfterSelection={(selectedRipeness: string) =>
-            selectedRipeness
-          }
-          rowTextForSelection={(ripeness: string) => ripeness}
-          defaultButtonText={defaultText}
-        />
-      </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.text}>Location:</Text>
+          <SelectDropdown
+            data={locations}
+            ref={locationsDropdownRef}
+            defaultValue={
+              reBoughtMode || editMode
+                ? route.params.ingredient.location
+                : undefined
+            }
+            onSelect={(selectedLocation: string) => setLocation(selectedLocation)}
+            buttonTextAfterSelection={(selectedLocation: string) =>
+              selectedLocation
+            }
+            rowTextForSelection={(location: string) => location}
+            defaultButtonText={defaultText}
+          />
+        </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.text}>Confection type:</Text>
+          <SelectDropdown
+            data={confectionTypes}
+            ref={confectionTypesDropdownRef}
+            defaultValue={
+              reBoughtMode || editMode
+                ? route.params.ingredient.confectionType
+                : undefined
+            }
+            onSelect={(selectedConfectionType: string) =>
+              setConfectionType(selectedConfectionType)
+            }
+            buttonTextAfterSelection={(selectedConfectionType: string) =>
+              selectedConfectionType
+            }
+            rowTextForSelection={(confectionType: string) => confectionType}
+            defaultButtonText={defaultText}
+          />
+        </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.text}>Expiration date:</Text>
+          <TouchableOpacity
+            style={styles.customButton}
+            onPress={() => setDatePickerVisibility(true)}>
+            <Text style={styles.text}>
+              {expirationDate ? getFormattedDate(expirationDate) : defaultText}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.rowContainer}>
+            <Text style={styles.text}>Quantity:</Text>
+          <TextInput
+            style={styles.quantityInput}
+            value={
+              typeof quantity === 'number'
+                ? String(quantity)
+                : quantity?.replace(/[^0-9]/g, '')
+            }
+            keyboardType="numeric"
+            onChangeText={quantity => {
+              quantity = quantity.replace(/[^0-9]/g, '');
+              if (quantity.length > 0) {
+                setQuantity(Number(quantity));
+                quantityTypesDropdownRef.current?.reset();
+              } else if (quantity.length == 0) {
+                setQuantity(undefined);
+              }
+            }}
+          />
+          <View style={{flex: 1}}>
+            <SelectDropdown
+              buttonStyle={{width: 80}}
+              data={quantityTypes}
+              ref={quantityTypesDropdownRef}
+              defaultValue={
+                route.params !== undefined &&
+                route.params.ingredient.quantity !== undefined &&
+                typeof route.params.ingredient.quantity === 'string'
+                  ? route.params.ingredient.quantity
+                  : undefined
+              }
+              onSelect={(selectedQuantity: string) =>
+                setQuantity(selectedQuantity)
+              }
+              buttonTextAfterSelection={(selectedQuantity: string) =>
+                selectedQuantity
+              }
+              rowTextForSelection={(quantity: string) => quantity}
+              defaultButtonText={defaultText}
+            />
+          </View>
+        </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.text}>Ripeness:</Text>
+          <SelectDropdown
+            data={ripenesses}
+            ref={ripenessDropdownRef}
+            defaultValue={
+              route.params !== undefined &&
+              route.params.ingredient.ripeness !== undefined
+                ? route.params.ingredient.ripeness
+                : undefined
+            }
+            onSelect={(selectedRipeness: string) => setRipeness(selectedRipeness)}
+            buttonTextAfterSelection={(selectedRipeness: string) =>
+              selectedRipeness
+            }
+            rowTextForSelection={(ripeness: string) => ripeness}
+            defaultButtonText={defaultText}
+          />
+        </View>
+        <View style={styles.rowContainer}>
+        <Text style={styles.text}>Open:</Text>
+          <Switch
+            value={openStatus}
+            onValueChange = {() => {setOpenStatus(!openStatus); handleChangeDate()}}
+          />
+        </View>
 
-      <View style={styles.space} />
-      {reBoughtMode ? (
-        <Button
-          title="Save re-bought item"
-          onPress={() => saveReBoughtItem()}
+        <View style={styles.space} />
+        {reBoughtMode ? (
+          <Button
+            title="Save re-bought item"
+            onPress={() => saveReBoughtItem()}
+          />
+        ) : editMode ? (
+          <Button title="Save item" onPress={() => saveEditedItem()} />
+        ) : (
+          <Button title="Save new item" onPress={() => addNewItem()} />
+        )}
+        <DatesPickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          date={expirationDate}
+          onConfirm={(expirationDate: Date) => {
+            setDatePickerVisibility(false);
+            setExpirationDate(expirationDate);
+          }}
+          onCancel={() => setDatePickerVisibility(false)}
         />
-      ) : editMode ? (
-        <Button title="Save item" onPress={() => saveEditedItem()} />
-      ) : (
-        <Button title="Save new item" onPress={() => addNewItem()} />
-      )}
-      <DatesPickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        date={expirationDate}
-        onConfirm={(expirationDate: Date) => {
-          setDatePickerVisibility(false);
-          setExpirationDate(expirationDate);
-        }}
-        onCancel={() => setDatePickerVisibility(false)}
-      />
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -401,7 +444,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
   },
   header: {
     marginTop: 10,

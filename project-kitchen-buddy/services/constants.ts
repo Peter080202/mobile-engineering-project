@@ -26,8 +26,12 @@ export const expiringSoonIngredients = (
 ): Ingredient[] =>
   ingredients.filter(
     (ingredient: Ingredient) =>
-      ingredient.expirationDate &&
-      getDifferenceDaysFromNow(ingredient.expirationDate) <= 7,
+      (ingredient.expirationDate &&
+      getDifferenceDaysFromNow(ingredient.expirationDate) <= 7) || 
+      ingredient.ripeness === 'ripe' ||
+      ingredient.ripeness === 'advanced' ||
+      ingredient.ripeness === 'too ripe' ||
+      ingredient.open,
   );
 
   export const needRipenessCheckIngredients = (
@@ -39,8 +43,6 @@ export const expiringSoonIngredients = (
           ingredient.ripeness !== undefined && 
           getDiffFromPastTimestamp(ingredient.ripenessTimestamp) >= 3
       );
-          //(Date.now() - ingredient.ripenessTimestamp) / (1000 * 60 * 60 * 24) >= 3,
-      //);
 
 export const incompleteIngredients = (
   ingredients: Ingredient[],
