@@ -6,6 +6,7 @@ import {
 } from './commons';
 
 export const ingredientsStorageKey = '@ingredients_storage_key';
+export const groceryListStorageKey = '@grocery_list_storage_key';
 export const categories: string[] = [
   'fruit',
   'vegetable',

@@ -20,6 +20,9 @@ export const getIngredients = createAsyncThunk(
     }),
 );
 
+const updateStorage = (ingredients: Ingredient[]) =>
+  AsyncStorage.setItem(ingredientsStorageKey, JSON.stringify(ingredients));
+
 const initialState = {
   ingredients: [] as Ingredient[],
   status: 'idle',
@@ -32,10 +35,7 @@ export const ingredientsReducer = createSlice({
   reducers: {
     addIngredient: (state, action) => {
       state.ingredients = [...state.ingredients, action.payload];
-      AsyncStorage.setItem(
-        ingredientsStorageKey,
-        JSON.stringify(state.ingredients),
-      );
+      updateStorage(state.ingredients);
     },
     updateIngredients: (state, action) => {
       state.ingredients = [
@@ -43,11 +43,7 @@ export const ingredientsReducer = createSlice({
         action.payload.ingredient,
         ...state.ingredients.slice(action.payload.index + 1),
       ];
-
-      AsyncStorage.setItem(
-        ingredientsStorageKey,
-        JSON.stringify(state.ingredients),
-      );
+      updateStorage(state.ingredients);
     },
   },
   extraReducers(builder) {

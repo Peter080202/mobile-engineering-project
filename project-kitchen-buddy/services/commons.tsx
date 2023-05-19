@@ -1,4 +1,4 @@
-import {Ingredient} from '../types/types';
+import {GroceryListIngredient, Ingredient} from '../types/types';
 
 export const getFormattedDate = (date: Date): string => {
   const day = date.getDate() <= 9 ? `0${date.getDate()}` : date.getDate();
@@ -33,5 +33,24 @@ export const fromJSONToIngredient = (json: any): Ingredient => {
     timestamp: json.timestamp,
     ripenessTimestamp: json.ripenessTimestamp,
     open: json.open,
+  };
+};
+
+export const fromJSONToGroceryListIngredient = (
+  json: any,
+): GroceryListIngredient => {
+  return {
+    ingredientName: json.ingredientName,
+    ingredientBrand: json.ingredientBrand,
+    category: json.category,
+    location: json.location,
+    confectionType: json.confectionType,
+    expirationDate: new Date(json.expirationDate),
+    quantity: json.quantity,
+    ripeness: json.ripeness,
+    timestamp: json.timestamp,
+    ripenessTimestamp: json.ripenessTimestamp,
+    open: json.open,
+    bought: json.bought,
   };
 };

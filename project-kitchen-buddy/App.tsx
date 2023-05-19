@@ -10,6 +10,7 @@ import store from './store/store';
 import ExpiringSoonNavigator from './views/navigators/ExpiringSoonNavigator';
 import GroceryListNavigator from './views/navigators/GroceryListNavigator';
 import {getIngredients} from './store/ingredientsReducer';
+import {getGroceryList} from './store/groceryListReducer';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +27,8 @@ function App() {
   useEffect(() => {
     // @ts-ignore
     dispatch(getIngredients());
+    // @ts-ignore
+    dispatch(getGroceryList());
   });
   return (
     <NavigationContainer>
