@@ -73,7 +73,7 @@ export default function QueriesHomeScreen({navigation, route}: any) {
         onPress={() =>
           navigation.navigate('ButtonMenuScreen', {
             selection: ripenesses,
-            title: 'Ripeness Check needed',
+            title: 'Same Ripeness',
             selectionType: SelectionType.Ripeness,
           })
         }>

@@ -23,16 +23,22 @@ export const getDiffFromPastTimestamp = (date: number): number => {
 export const fromJSONToIngredient = (json: any): Ingredient => {
   return {
     ingredientName: json.ingredientName,
-    ingredientBrand: json.ingredientBrand,
-    category: json.category,
-    location: json.location,
-    confectionType: json.confectionType,
-    expirationDate: new Date(json.expirationDate),
-    quantity: json.quantity,
-    ripeness: json.ripeness,
-    timestamp: json.timestamp,
-    ripenessTimestamp: json.ripenessTimestamp,
-    open: json.open,
+    ingredientBrand:
+      json.ingredientBrand !== undefined ? json.ingredientBrand : undefined,
+    category: json.category !== undefined ? json.category : undefined,
+    location: json.location !== undefined ? json.location : undefined,
+    confectionType:
+      json.confectionType !== undefined ? json.confectionType : undefined,
+    expirationDate:
+      json.expirationDate !== undefined
+        ? new Date(json.expirationDate)
+        : undefined,
+    quantity: json.quantity !== undefined ? json.quantity : undefined,
+    ripeness: json.ripeness !== undefined ? json.ripeness : undefined,
+    timestamp: json.timestamp !== undefined ? json.timestamp : undefined,
+    ripenessTimestamp:
+      json.ripenessTimestamp !== undefined ? json.ripenessTimestamp : undefined,
+    open: json.open !== undefined ? json.open : undefined,
   };
 };
 
@@ -41,16 +47,22 @@ export const fromJSONToGroceryListIngredient = (
 ): GroceryListIngredient => {
   return {
     ingredientName: json.ingredientName,
-    ingredientBrand: json.ingredientBrand,
-    category: json.category,
-    location: json.location,
-    confectionType: json.confectionType,
-    expirationDate: new Date(json.expirationDate),
-    quantity: json.quantity,
-    ripeness: json.ripeness,
-    timestamp: json.timestamp,
-    ripenessTimestamp: json.ripenessTimestamp,
-    open: json.open,
-    bought: json.bought,
+    ingredientBrand:
+      json.ingredientBrand !== undefined ? json.ingredientBrand : undefined,
+    category: json.category !== undefined ? json.category : undefined,
+    location: json.location !== undefined ? json.location : undefined,
+    confectionType:
+      json.confectionType !== undefined ? json.confectionType : undefined,
+    expirationDate:
+      json.expirationDate !== undefined
+        ? new Date(json.expirationDate)
+        : undefined,
+    quantity: json.quantity !== undefined ? json.quantity : undefined,
+    ripeness: json.ripeness !== undefined ? json.ripeness : undefined,
+    timestamp: json.timestamp !== undefined ? json.timestamp : undefined,
+    ripenessTimestamp:
+      json.ripenessTimestamp !== undefined ? json.ripenessTimestamp : undefined,
+    open: json.open !== undefined ? json.open : undefined,
+    bought: json.bought !== undefined ? json.bought : undefined,
   };
 };

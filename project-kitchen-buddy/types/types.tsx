@@ -1,4 +1,5 @@
 export type Ingredient = {
+  timestamp: number;
   ingredientName: String;
   ingredientBrand?: String;
   category?: String;
@@ -6,10 +7,9 @@ export type Ingredient = {
   confectionType?: String;
   expirationDate?: Date;
   quantity?: String | number;
-  timestamp: number;
-  ripenessTimestamp: number;
   ripeness?: String;
-  open: Boolean;
+  ripenessTimestamp?: number;
+  open?: Boolean;
 };
 
 export interface GroceryListIngredient extends Ingredient {
@@ -30,8 +30,8 @@ export enum FilterType {
   Category,
   Location,
   ConfectionType,
-  GroceryList,
-  RecentlyBought,
   Ripeness,
   NeedRipenessCheck,
+  GroceryList,
+  RecentlyBought,
 }

@@ -54,7 +54,7 @@ export default function IngredientView({navigation, route}: any) {
     reBoughtMode || editMode ? route.params.ingredient.ingredientName : '',
   );
 
-  const [ingredientBrand, setIngredientBrand] = useState<string>(
+  const [ingredientBrand, setIngredientBrand] = useState<string | undefined>(
     reBoughtMode || editMode ? route.params.ingredient.ingredientBrand : '',
   );
 
@@ -89,13 +89,6 @@ export default function IngredientView({navigation, route}: any) {
       : undefined,
   );
 
-  const [ripeness, setRipeness] = useState<string | undefined>(
-    route.params !== undefined && route.params.ingredient.ripeness !== undefined
-      ? route.params.ingredient.ripeness
-      : undefined,
-  );
-  const ripenessDropdownRef = useRef<SelectDropdown>(null);
-
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const [quantity, setQuantity] = useState<string | number | undefined>(
@@ -103,13 +96,20 @@ export default function IngredientView({navigation, route}: any) {
   );
   const quantityTypesDropdownRef = useRef<SelectDropdown>(null);
 
+  const [ripeness, setRipeness] = useState<string | undefined>(
+    route.params !== undefined && route.params.ingredient.ripeness !== undefined
+      ? route.params.ingredient.ripeness
+      : undefined,
+  );
+  const ripenessDropdownRef = useRef<SelectDropdown>(null);
+
   const [openStatus, setOpenStatus] = useState<boolean>(
     editMode ? route.params.ingredient.open : false,
   );
 
   const resetForm = () => {
     setIngredientName('');
-    setIngredientBrand('');
+    setIngredientBrand(undefined);
     setCategory(undefined);
     categoriesDropdownRef.current?.reset();
     setLocation(undefined);
@@ -129,6 +129,7 @@ export default function IngredientView({navigation, route}: any) {
       Alert.alert('Please enter an item name!');
     } else {
       const newIngredient: Ingredient = {
+        timestamp: Date.now(),
         ingredientName: ingredientName,
         ingredientBrand: ingredientBrand,
         category: category,
@@ -137,8 +138,7 @@ export default function IngredientView({navigation, route}: any) {
         expirationDate: expirationDate,
         quantity: quantity,
         ripeness: ripeness,
-        timestamp: Date.now(),
-        ripenessTimestamp: Date.now(),
+        ripenessTimestamp: ripeness !== undefined ? Date.now() : undefined,
         open: openStatus,
       };
       dispatch(addIngredient(newIngredient));
@@ -152,7 +152,8 @@ export default function IngredientView({navigation, route}: any) {
     if (ingredientName.length === 0) {
       Alert.alert('Please enter an item name!');
     } else {
-      const newIngredient: Ingredient = {
+      const editedIngredient: Ingredient = {
+        timestamp: route.params.ingredient.timestamp,
         ingredientName: ingredientName,
         ingredientBrand: ingredientBrand,
         category: category,
@@ -160,7 +161,6 @@ export default function IngredientView({navigation, route}: any) {
         confectionType: confectionType,
         expirationDate: expirationDate,
         quantity: quantity,
-        timestamp: route.params.ingredient.timestamp,
         ripeness: ripeness,
         ripenessTimestamp:
           ripeness !== route.params.ingredient.ripeness
@@ -170,7 +170,7 @@ export default function IngredientView({navigation, route}: any) {
       };
       dispatch(
         updateIngredients({
-          ingredient: newIngredient,
+          ingredient: editedIngredient,
           index: route.params.index,
         }),
       );
@@ -184,6 +184,7 @@ export default function IngredientView({navigation, route}: any) {
       Alert.alert('Please enter an item name!');
     } else {
       const newIngredient: Ingredient = {
+        timestamp: Date.now(),
         ingredientName: ingredientName,
         ingredientBrand: ingredientBrand,
         category: category,
@@ -191,14 +192,11 @@ export default function IngredientView({navigation, route}: any) {
         confectionType: confectionType,
         expirationDate: expirationDate,
         quantity: quantity,
-        timestamp: Date.now(),
-        ripenessTimestamp: Date.now(),
+        ripeness: ripeness,
+        ripenessTimestamp: ripeness !== undefined ? Date.now() : undefined,
         open: openStatus,
       };
-      console.log('Here juhu');
       for (let i = 0; i < groceryList.length; i++) {
-        console.log(groceryList[i]);
-        console.log(route.params.ingredient);
         if (groceryList[i].timestamp === route.params.ingredient.timestamp) {
           dispatch(removeFromGroceryList(i));
           dispatch(addIngredient(newIngredient));
@@ -210,8 +208,8 @@ export default function IngredientView({navigation, route}: any) {
     }
   };
 
-  const handleChangeDate = () => {
-    if (openStatus === false) {
+  const handleOpenStatusChange = () => {
+    if (!openStatus) {
       Alert.alert(
         'Change Expiration Date',
         'Item is being opened, do you want to change its expiration date?',
@@ -222,14 +220,11 @@ export default function IngredientView({navigation, route}: any) {
           },
           {
             text: 'Accept',
-            onPress: handleAccept,
+            onPress: () => setDatePickerVisibility(true),
           },
         ],
       );
     }
-  };
-  const handleAccept = () => {
-    setDatePickerVisibility(true);
   };
 
   return (
@@ -400,7 +395,7 @@ export default function IngredientView({navigation, route}: any) {
             value={openStatus}
             onValueChange={() => {
               setOpenStatus(!openStatus);
-              handleChangeDate();
+              handleOpenStatusChange();
             }}
           />
         </View>

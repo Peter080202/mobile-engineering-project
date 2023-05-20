@@ -115,14 +115,15 @@ export default function IngredientsList({navigation, route}: any) {
       <View style={styles.paddedRow}>
         <Text style={styles.text}>{ingredient.ingredientName}</Text>
 
-        {route.params.filter === FilterType.NeedRipenessCheck ? (
-          <Text style={styles.text}>
-            {Math.round(getDiffFromPastTimestamp(ingredient.ripenessTimestamp))}{' '}
-            days ago
-          </Text>
-        ) : (
-          ''
-        )}
+        {route.params.filter === FilterType.NeedRipenessCheck &&
+          ingredient.ripenessTimestamp && (
+            <Text style={styles.text}>
+              {Math.round(
+                getDiffFromPastTimestamp(ingredient.ripenessTimestamp),
+              )}{' '}
+              days ago
+            </Text>
+          )}
 
         {route.params.filter === FilterType.ExpiringSoon &&
           ingredient.expirationDate &&

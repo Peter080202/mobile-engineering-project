@@ -23,11 +23,9 @@ export default function AppWrapper({navigation}: any) {
 }
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   useEffect(() => {
-    // @ts-ignore
     dispatch(getIngredients());
-    // @ts-ignore
     dispatch(getGroceryList());
   });
   return (
