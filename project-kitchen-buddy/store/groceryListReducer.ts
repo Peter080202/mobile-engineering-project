@@ -15,15 +15,11 @@ export const getGroceryList = createAsyncThunk(
 const updateStorage = (groceryList: GroceryListIngredient[]) =>
   AsyncStorage.setItem(groceryListStorageKey, JSON.stringify(groceryList));
 
-const initialState = {
-  groceryList: [] as GroceryListIngredient[],
-  status: 'idle',
-  error: '',
-};
-
 export const groceryListReducer = createSlice({
   name: 'groceryList',
-  initialState,
+  initialState: {
+    groceryList: [] as GroceryListIngredient[],
+  },
   reducers: {
     addToGroceryList: (state, action) => {
       state.groceryList = [
@@ -45,22 +41,13 @@ export const groceryListReducer = createSlice({
     },
   },
   extraReducers(builder) {
-    builder
-      .addCase(getGroceryList.pending, (state, action) => {
-        state.status = 'loading';
-      })
-      .addCase(getGroceryList.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        const groceryList: GroceryListIngredient[] = [];
-        for (let i = 0; i < action.payload.length; i++) {
-          groceryList.push(fromJSONToGroceryListIngredient(action.payload[i]));
-        }
-        state.groceryList = groceryList;
-      })
-      .addCase(getGroceryList.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message as string;
-      });
+    builder.addCase(getGroceryList.fulfilled, (state, action) => {
+      const groceryList: GroceryListIngredient[] = [];
+      for (let i = 0; i < action.payload.length; i++) {
+        groceryList.push(fromJSONToGroceryListIngredient(action.payload[i]));
+      }
+      state.groceryList = groceryList;
+    });
   },
 });
 

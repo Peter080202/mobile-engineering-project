@@ -23,15 +23,11 @@ export const getIngredients = createAsyncThunk(
 const updateStorage = (ingredients: Ingredient[]) =>
   AsyncStorage.setItem(ingredientsStorageKey, JSON.stringify(ingredients));
 
-const initialState = {
-  ingredients: [] as Ingredient[],
-  status: 'idle',
-  error: '',
-};
-
 export const ingredientsReducer = createSlice({
   name: 'ingredients',
-  initialState,
+  initialState: {
+    ingredients: [] as Ingredient[],
+  },
   reducers: {
     addIngredient: (state, action) => {
       state.ingredients = [...state.ingredients, action.payload];
@@ -47,22 +43,13 @@ export const ingredientsReducer = createSlice({
     },
   },
   extraReducers(builder) {
-    builder
-      .addCase(getIngredients.pending, (state, action) => {
-        state.status = 'loading';
-      })
-      .addCase(getIngredients.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        const ingredients: Ingredient[] = [];
-        for (let i = 0; i < action.payload.length; i++) {
-          ingredients.push(fromJSONToIngredient(action.payload[i]));
-        }
-        state.ingredients = ingredients;
-      })
-      .addCase(getIngredients.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message as string;
-      });
+    builder.addCase(getIngredients.fulfilled, (state, action) => {
+      const ingredients: Ingredient[] = [];
+      for (let i = 0; i < action.payload.length; i++) {
+        ingredients.push(fromJSONToIngredient(action.payload[i]));
+      }
+      state.ingredients = ingredients;
+    });
   },
 });
 
