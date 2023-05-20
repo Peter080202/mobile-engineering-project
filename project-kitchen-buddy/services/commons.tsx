@@ -20,6 +20,20 @@ export const getDiffFromPastTimestamp = (date: number): number => {
   return (Date.now() - date2.getTime()) / (1000 * 60 * 60 * 24);
 };
 
+export const getDateSixMonths = (givenDate: Date|undefined):Date => {
+  const currentDate = new Date();
+  let futureDate = new Date();
+
+  if (givenDate instanceof Date) {
+    futureDate = new Date(givenDate);
+  }
+  
+  futureDate.setMonth(futureDate.getMonth() + 6);
+
+  return futureDate;
+};
+
+
 export const fromJSONToIngredient = (json: any): Ingredient => {
   return {
     ingredientName: json.ingredientName,

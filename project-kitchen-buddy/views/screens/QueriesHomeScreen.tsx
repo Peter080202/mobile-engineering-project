@@ -102,7 +102,9 @@ export default function QueriesHomeScreen({navigation, route}: any) {
         }>
         <Text style={styles.buttonText}>Recently Bought</Text>
       </TouchableOpacity>
+      
     </View>
+    
   );
 }
 

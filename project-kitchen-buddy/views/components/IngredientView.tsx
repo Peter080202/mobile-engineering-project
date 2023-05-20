@@ -10,15 +10,16 @@ import {
   LogBox,
   ScrollView,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatesPickerModal from 'react-native-modal-datetime-picker';
 
 import {
   getDifferenceDaysFromDateAndTimestamp,
   getFormattedDate,
+  getDateSixMonths,
 } from '../../services/commons';
-import {Ingredient} from '../../types/types';
+import { Ingredient } from '../../types/types';
 import {
   categories,
   confectionTypes,
@@ -26,8 +27,8 @@ import {
   quantityTypes,
   ripenesses,
 } from '../../services/constants';
-import {useDispatch, useSelector} from 'react-redux';
-import {addIngredient, updateIngredients} from '../../store/ingredientsReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { addIngredient, updateIngredients } from '../../store/ingredientsReducer';
 import {
   removeFromGroceryList,
   useGroceryList,
@@ -37,7 +38,7 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-export default function IngredientView({navigation, route}: any) {
+export default function IngredientView({ navigation, route }: any) {
   const dispatch = useDispatch();
   const groceryList = useSelector(useGroceryList);
 
@@ -78,15 +79,15 @@ export default function IngredientView({navigation, route}: any) {
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(
     reBoughtMode && route.params.ingredient.expirationDate !== undefined
       ? new Date(
-          route.params.ingredient.expirationDate.getTime() +
-            getDifferenceDaysFromDateAndTimestamp(
-              route.params.ingredient.expirationDate,
-              route.params.ingredient.timestamp,
-            ),
-        )
+        route.params.ingredient.expirationDate.getTime() +
+        getDifferenceDaysFromDateAndTimestamp(
+          route.params.ingredient.expirationDate,
+          route.params.ingredient.timestamp,
+        ),
+      )
       : editMode
-      ? route.params.ingredient.expirationDate
-      : undefined,
+        ? route.params.ingredient.expirationDate
+        : undefined,
   );
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -107,6 +108,9 @@ export default function IngredientView({navigation, route}: any) {
     editMode ? route.params.ingredient.open : false,
   );
 
+  const [freshAndFrozen, setFreshAndFrozen] = useState<boolean>(false);
+
+
   const resetForm = () => {
     setIngredientName('');
     setIngredientBrand(undefined);
@@ -122,6 +126,7 @@ export default function IngredientView({navigation, route}: any) {
     setRipeness(undefined);
     ripenessDropdownRef.current?.reset();
     setOpenStatus(false);
+    setFreshAndFrozen(false);
   };
 
   const addNewItem = () => {
@@ -134,8 +139,8 @@ export default function IngredientView({navigation, route}: any) {
         ingredientBrand: ingredientBrand,
         category: category,
         location: location,
-        confectionType: confectionType,
-        expirationDate: expirationDate,
+        confectionType: freshAndFrozen && confectionType === 'fresh' ? 'frozen' : confectionType,
+        expirationDate: freshAndFrozen && confectionType === 'fresh' ? getDateSixMonths(expirationDate) : expirationDate,
         quantity: quantity,
         ripeness: ripeness,
         ripenessTimestamp: ripeness !== undefined ? Date.now() : undefined,
@@ -152,14 +157,15 @@ export default function IngredientView({navigation, route}: any) {
     if (ingredientName.length === 0) {
       Alert.alert('Please enter an item name!');
     } else {
+
       const editedIngredient: Ingredient = {
         timestamp: route.params.ingredient.timestamp,
         ingredientName: ingredientName,
         ingredientBrand: ingredientBrand,
         category: category,
         location: location,
-        confectionType: confectionType,
-        expirationDate: expirationDate,
+        confectionType: freshAndFrozen && confectionType === 'fresh' ? 'frozen' : confectionType,
+        expirationDate: freshAndFrozen && confectionType === 'fresh' ? getDateSixMonths(expirationDate) : expirationDate,
         quantity: quantity,
         ripeness: ripeness,
         ripenessTimestamp:
@@ -189,8 +195,8 @@ export default function IngredientView({navigation, route}: any) {
         ingredientBrand: ingredientBrand,
         category: category,
         location: location,
-        confectionType: confectionType,
-        expirationDate: expirationDate,
+        confectionType: freshAndFrozen && confectionType === 'fresh' ? 'frozen' : confectionType,
+        expirationDate: freshAndFrozen && confectionType === 'fresh' ? getDateSixMonths(expirationDate) : expirationDate,
         quantity: quantity,
         ripeness: ripeness,
         ripenessTimestamp: ripeness !== undefined ? Date.now() : undefined,
@@ -227,9 +233,11 @@ export default function IngredientView({navigation, route}: any) {
     }
   };
 
+
+
   return (
-    <ScrollView style={{margin: 10}}>
-      <View style={{flex: 1, flexDirection: 'column'}}>
+    <ScrollView style={{ margin: 10 }}>
+      <View style={{ flex: 1, flexDirection: 'column' }}>
         <View style={styles.header}>
           {reBoughtMode ? (
             <Text style={styles.headerText}>Save re-bought item</Text>
@@ -315,6 +323,18 @@ export default function IngredientView({navigation, route}: any) {
             defaultButtonText={defaultText}
           />
         </View>
+        {confectionType === 'fresh' && (
+          <View style={styles.rowContainer}>
+            <Text style={styles.text}>Freeze:</Text>
+            <Switch
+              value={freshAndFrozen}
+              onValueChange={() => {
+                setFreshAndFrozen(!freshAndFrozen);
+              }}
+            />
+          </View>
+        )}
+
         <View style={styles.rowContainer}>
           <Text style={styles.text}>Expiration date:</Text>
           <TouchableOpacity
@@ -345,15 +365,15 @@ export default function IngredientView({navigation, route}: any) {
               }
             }}
           />
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <SelectDropdown
-              buttonStyle={{width: 80}}
+              buttonStyle={{ width: 80 }}
               data={quantityTypes}
               ref={quantityTypesDropdownRef}
               defaultValue={
                 route.params !== undefined &&
-                route.params.ingredient.quantity !== undefined &&
-                typeof route.params.ingredient.quantity === 'string'
+                  route.params.ingredient.quantity !== undefined &&
+                  typeof route.params.ingredient.quantity === 'string'
                   ? route.params.ingredient.quantity
                   : undefined
               }
@@ -368,27 +388,29 @@ export default function IngredientView({navigation, route}: any) {
             />
           </View>
         </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.text}>Ripeness:</Text>
-          <SelectDropdown
-            data={ripenesses}
-            ref={ripenessDropdownRef}
-            defaultValue={
-              route.params !== undefined &&
-              route.params.ingredient.ripeness !== undefined
-                ? route.params.ingredient.ripeness
-                : undefined
-            }
-            onSelect={(selectedRipeness: string) =>
-              setRipeness(selectedRipeness)
-            }
-            buttonTextAfterSelection={(selectedRipeness: string) =>
-              selectedRipeness
-            }
-            rowTextForSelection={(ripeness: string) => ripeness}
-            defaultButtonText={defaultText}
-          />
-        </View>
+        {confectionType === 'fresh' && (
+          <View style={styles.rowContainer}>
+            <Text style={styles.text}>Ripeness:</Text>
+            <SelectDropdown
+              data={ripenesses}
+              ref={ripenessDropdownRef}
+              defaultValue={
+                route.params !== undefined &&
+                  route.params.ingredient.ripeness !== undefined
+                  ? route.params.ingredient.ripeness
+                  : undefined
+              }
+              onSelect={(selectedRipeness: string) =>
+                setRipeness(selectedRipeness)
+              }
+              buttonTextAfterSelection={(selectedRipeness: string) =>
+                selectedRipeness
+              }
+              rowTextForSelection={(ripeness: string) => ripeness}
+              defaultButtonText={defaultText}
+            />
+          </View>
+        )}
         <View style={styles.rowContainer}>
           <Text style={styles.text}>Open:</Text>
           <Switch

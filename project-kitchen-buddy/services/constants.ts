@@ -21,6 +21,7 @@ export const locations: string[] = ['fridge', 'freezer', 'pantry'];
 export const confectionTypes: string[] = ['fresh', 'canned', 'frozen', 'cured'];
 export const quantityTypes: string[] = ['full', 'half empty', 'empty'];
 
+
 // If the expiration date of the ingredient is within the next 7 days
 export const expiringSoonIngredients = (
   ingredients: Ingredient[],
@@ -29,10 +30,12 @@ export const expiringSoonIngredients = (
     (ingredient: Ingredient) =>
       (ingredient.expirationDate &&
         getDifferenceDaysFromNow(ingredient.expirationDate) <= 7) ||
-      ingredient.ripeness === 'ripe' ||
-      ingredient.ripeness === 'advanced' ||
-      ingredient.ripeness === 'too ripe' ||
-      ingredient.open,
+      (ingredient.confectionType === 'fresh' &&
+        (ingredient.ripeness === 'ripe' ||
+        ingredient.ripeness === 'advanced' ||
+        ingredient.ripeness === 'too ripe')
+      ) 
+      || ingredient.open,
   );
 
 export const needRipenessCheckIngredients = (
@@ -41,7 +44,8 @@ export const needRipenessCheckIngredients = (
   ingredients.filter(
     (ingredient: Ingredient) =>
       ingredient.confectionType === 'fresh' &&
-      ingredient.ripeness !== undefined &&
+      ingredient.ripeness &&
+      ingredient.ripenessTimestamp &&
       getDiffFromPastTimestamp(ingredient.ripenessTimestamp) >= 3,
   );
 
@@ -77,3 +81,5 @@ export const groceryListIngredients = (
         (ingredient.quantity === quantityTypes[1] ||
           ingredient.quantity === quantityTypes[2])),
   );
+
+  
