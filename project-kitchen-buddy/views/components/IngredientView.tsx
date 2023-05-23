@@ -10,7 +10,7 @@ import {
   LogBox,
   ScrollView,
 } from 'react-native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatesPickerModal from 'react-native-modal-datetime-picker';
 
@@ -34,11 +34,16 @@ import {
   useGroceryList,
 } from '../../store/groceryListReducer';
 
+
+
+
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
 export default function IngredientView({ navigation, route }: any) {
+
+
   const dispatch = useDispatch();
   const groceryList = useSelector(useGroceryList);
 
@@ -46,18 +51,35 @@ export default function IngredientView({ navigation, route }: any) {
     route.params !== undefined &&
     route.params.reBought !== undefined &&
     route.params.reBought;
+
   const editMode = reBoughtMode
     ? false
     : route.params !== undefined && route.params.ingredient !== undefined;
+
   const defaultText = '---';
 
+  const [scan, setScan] = useState<boolean>(
+    route.params === undefined ? false : route.params.scanStatus);
+
+    console.log(scan)
+  
   const [ingredientName, setIngredientName] = useState<string>(
-    reBoughtMode || editMode ? route.params.ingredient.ingredientName : '',
+    scan ? route.params.ingredientName : reBoughtMode || editMode ? route.params.ingredient.ingredientName : '',
   );
 
+  
+
+
   const [ingredientBrand, setIngredientBrand] = useState<string | undefined>(
-    reBoughtMode || editMode ? route.params.ingredient.ingredientBrand : '',
+    scan ? route.params.ingredientBrand : reBoughtMode || editMode ? route.params.ingredient.ingredientBrand : '',
   );
+
+
+  console.log(ingredientName)
+  console.log(ingredientBrand)
+
+  console.log(route.params)
+
 
   const [category, setCategory] = useState<string | undefined>(
     reBoughtMode || editMode ? route.params.ingredient.category : undefined,
@@ -98,7 +120,7 @@ export default function IngredientView({ navigation, route }: any) {
   const quantityTypesDropdownRef = useRef<SelectDropdown>(null);
 
   const [ripeness, setRipeness] = useState<string | undefined>(
-    route.params !== undefined && route.params.ingredient.ripeness !== undefined
+    route.params !== undefined && (editMode || reBoughtMode) && route.params.ingredient.ripeness !== undefined
       ? route.params.ingredient.ripeness
       : undefined,
   );
@@ -109,7 +131,6 @@ export default function IngredientView({ navigation, route }: any) {
   );
 
   const [freshAndFrozen, setFreshAndFrozen] = useState<boolean>(false);
-
 
   const resetForm = () => {
     setIngredientName('');
@@ -127,6 +148,7 @@ export default function IngredientView({ navigation, route }: any) {
     ripenessDropdownRef.current?.reset();
     setOpenStatus(false);
     setFreshAndFrozen(false);
+    setScan(false)
   };
 
   const addNewItem = () => {
@@ -233,6 +255,10 @@ export default function IngredientView({ navigation, route }: any) {
     }
   };
 
+  const navigateToScanner = () => {
+    navigation.navigate('Scanner');
+  };
+
 
 
   return (
@@ -247,6 +273,12 @@ export default function IngredientView({ navigation, route }: any) {
             <Text style={styles.headerText}>Add a new item</Text>
           )}
         </View>
+
+        {!editMode && !reBoughtMode &&
+          <View>
+            <Button title="Scan Barcode" onPress={navigateToScanner} />
+          </View>
+        }
         <View style={styles.rowContainer}>
           <Text style={styles.text}>Item name:</Text>
           <TextInput
@@ -372,6 +404,7 @@ export default function IngredientView({ navigation, route }: any) {
               ref={quantityTypesDropdownRef}
               defaultValue={
                 route.params !== undefined &&
+                  (editMode || reBoughtMode) &&
                   route.params.ingredient.quantity !== undefined &&
                   typeof route.params.ingredient.quantity === 'string'
                   ? route.params.ingredient.quantity
@@ -496,5 +529,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 4,
     backgroundColor: '#edeff2',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

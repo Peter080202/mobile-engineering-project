@@ -9,6 +9,7 @@ import {Provider, useDispatch} from 'react-redux';
 import store from './store/store';
 import ExpiringSoonNavigator from './views/navigators/ExpiringSoonNavigator';
 import GroceryListNavigator from './views/navigators/GroceryListNavigator';
+import AddIngredientNavigator from './views/navigators/BarCodeNavigator'
 import {getIngredients} from './store/ingredientsReducer';
 import {getGroceryList} from './store/groceryListReducer';
 
@@ -43,7 +44,7 @@ function App() {
         />
         <Tab.Screen
           name="Add Ingredient"
-          component={AddIngredient}
+          component={AddIngredientNavigator}
           options={{
             tabBarLabel: 'Add Ingredient',
             tabBarIcon: ({color, size}) => (

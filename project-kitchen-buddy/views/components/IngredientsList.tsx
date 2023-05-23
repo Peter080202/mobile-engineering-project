@@ -106,6 +106,7 @@ export default function IngredientsList({navigation, route}: any) {
       ingredient: ingredient,
       index: getIndex(ingredient),
       reBought: reBought,
+      scanStatus: false,
     });
     setFocusSearchBar(false);
   };
