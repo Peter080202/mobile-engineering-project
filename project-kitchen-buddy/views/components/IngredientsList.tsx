@@ -92,19 +92,13 @@ export default function IngredientsList({navigation, route}: any) {
     return [];
   };
 
-  const getIndex = (ingredient: Ingredient) => {
-    for (let i = 0; i < ingredients.length; i++) {
-      if (ingredients[i].ingredientName === ingredient.ingredientName) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
   const openEditMode = (ingredient: Ingredient, reBought: boolean) => {
     navigation.navigate('EditIngredientView', {
       ingredient: ingredient,
-      index: getIndex(ingredient),
+      index: ingredients.findIndex(
+        (ingredientToBeMatched: Ingredient) =>
+          ingredientToBeMatched === ingredient,
+      ),
       reBought: reBought,
       scanStatus: false,
     });

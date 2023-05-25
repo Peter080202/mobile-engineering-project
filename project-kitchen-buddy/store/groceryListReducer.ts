@@ -42,11 +42,9 @@ export const groceryListReducer = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getGroceryList.fulfilled, (state, action) => {
-      const groceryList: GroceryListIngredient[] = [];
-      for (let i = 0; i < action.payload.length; i++) {
-        groceryList.push(fromJSONToGroceryListIngredient(action.payload[i]));
-      }
-      state.groceryList = groceryList;
+      state.groceryList = action.payload.map((groceryListIngredient: String) =>
+        fromJSONToGroceryListIngredient(groceryListIngredient),
+      );
     });
   },
 });

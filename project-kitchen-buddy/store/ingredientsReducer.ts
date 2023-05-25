@@ -44,11 +44,9 @@ export const ingredientsReducer = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getIngredients.fulfilled, (state, action) => {
-      const ingredients: Ingredient[] = [];
-      for (let i = 0; i < action.payload.length; i++) {
-        ingredients.push(fromJSONToIngredient(action.payload[i]));
-      }
-      state.ingredients = ingredients;
+      state.ingredients = action.payload.map((ingredient: String) =>
+        fromJSONToIngredient(ingredient),
+      );
     });
   },
 });

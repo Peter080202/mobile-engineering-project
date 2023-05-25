@@ -20,7 +20,7 @@ import {
   getFormattedDate,
   getDateSixMonths,
 } from '../../services/commons';
-import {Ingredient} from '../../types/types';
+import {GroceryListIngredient, Ingredient} from '../../types/types';
 import {
   categories,
   confectionTypes,
@@ -228,12 +228,15 @@ export default function IngredientView({navigation, route}: any) {
         ripenessTimestamp: ripeness !== undefined ? Date.now() : undefined,
         open: openStatus,
       };
-      for (let i = 0; i < groceryList.length; i++) {
-        if (groceryList[i].timestamp === route.params.ingredient.timestamp) {
-          dispatch(removeFromGroceryList(i));
-          dispatch(addIngredient(newIngredient));
-        }
-      }
+      dispatch(
+        removeFromGroceryList(
+          groceryList.findIndex(
+            (groceryListIngredient: GroceryListIngredient) =>
+              groceryListIngredient === route.params.ingredient,
+          ),
+        ),
+      );
+      dispatch(addIngredient(newIngredient));
 
       Alert.alert('Saved re-bought item successfully!');
       navigation.goBack();

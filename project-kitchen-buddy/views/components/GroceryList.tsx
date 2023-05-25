@@ -26,19 +26,17 @@ export default function GroceryList({navigation, route}: any) {
   const groceryList = useSelector(useGroceryList);
 
   const IngredientComp = ({
-    ingredient,
+    groceryListIngredient,
   }: {
-    ingredient: GroceryListIngredient;
+    groceryListIngredient: GroceryListIngredient;
   }) => {
-    let index = -1;
-    for (let i = 0; i < groceryList.length; i++) {
-      if (groceryList[i].timestamp === ingredient.timestamp) {
-        index = i;
-      }
-    }
+    const index = groceryList.findIndex(
+      (groceryListIngredientToBeMatched: GroceryListIngredient) =>
+        groceryListIngredientToBeMatched === groceryListIngredient,
+    );
     return (
       <View style={styles.paddedRow}>
-        <Text style={styles.text}>{ingredient.ingredientName}</Text>
+        <Text style={styles.text}>{groceryListIngredient.ingredientName}</Text>
         <TouchableOpacity
           style={styles.ingredientCompButton}
           onPress={() => dispatch(removeFromGroceryList(index))}>
@@ -73,7 +71,7 @@ export default function GroceryList({navigation, route}: any) {
           )}
           keyExtractor={(item, index) => String(index)}
           renderItem={({item}: {item: GroceryListIngredient}) => (
-            <IngredientComp ingredient={item} />
+            <IngredientComp groceryListIngredient={item} />
           )}
           ItemSeparatorComponent={ItemDivider}
         />
