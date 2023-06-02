@@ -1,21 +1,7 @@
-import {FilterType, SelectionType} from '../../types/types';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
 export default function SelectionMenuScreen({navigation, route}: any) {
-  const getFilterType = (selectionType: SelectionType): FilterType => {
-    switch (selectionType) {
-      case SelectionType.Category:
-        return FilterType.Category;
-      case SelectionType.Location:
-        return FilterType.Location;
-      case SelectionType.ConfectionType:
-        return FilterType.ConfectionType;
-      case SelectionType.Ripeness:
-        return FilterType.Ripeness;
-    }
-  };
-
   return (
     <View style={styles.container}>
       {route.params.selection.map((option: string) => (
@@ -24,9 +10,9 @@ export default function SelectionMenuScreen({navigation, route}: any) {
           style={styles.button}
           onPress={() =>
             navigation.navigate('IngredientsList', {
-              filter: getFilterType(route.params.selectionType),
+              filter: route.params.selectionType,
               filterOption: option,
-              title: `${route.params.selectionType}: ${option}`,
+              title: `${route.params.selectionTitle}: ${option}`,
             })
           }>
           <Text style={styles.buttonText}>{option}</Text>

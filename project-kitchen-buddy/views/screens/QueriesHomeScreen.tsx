@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {FilterType, SelectionType} from '../../types/types';
+import {FilterType} from '../../types/types';
 import {
   categories,
   confectionTypes,
@@ -50,7 +50,8 @@ export default function QueriesHomeScreen({navigation, route}: any) {
           navigation.navigate('ButtonMenuScreen', {
             selection: categories,
             title: 'Same Category',
-            selectionType: SelectionType.Category,
+            selectionType: FilterType.Category,
+            selectionTitle: 'Category',
           })
         }>
         <Text style={styles.buttonText}>Same Category</Text>
@@ -62,7 +63,8 @@ export default function QueriesHomeScreen({navigation, route}: any) {
           navigation.navigate('ButtonMenuScreen', {
             selection: locations,
             title: 'Same Location',
-            selectionType: SelectionType.Location,
+            selectionType: FilterType.Location,
+            selectionTitle: 'Location',
           })
         }>
         <Text style={styles.buttonText}>Same Location</Text>
@@ -74,7 +76,8 @@ export default function QueriesHomeScreen({navigation, route}: any) {
           navigation.navigate('ButtonMenuScreen', {
             selection: ripenesses,
             title: 'Same Ripeness',
-            selectionType: SelectionType.Ripeness,
+            selectionType: FilterType.Ripeness,
+            selectionTitle: 'Ripeness',
           })
         }>
         <Text style={styles.buttonText}>Same Ripeness</Text>
@@ -86,7 +89,8 @@ export default function QueriesHomeScreen({navigation, route}: any) {
           navigation.navigate('ButtonMenuScreen', {
             selection: confectionTypes,
             title: 'Same Confection Type',
-            selectionType: SelectionType.ConfectionType,
+            selectionType: FilterType.ConfectionType,
+            selectionTitle: 'Confection Type',
           })
         }>
         <Text style={styles.buttonText}>Same Confection Type</Text>
@@ -102,9 +106,7 @@ export default function QueriesHomeScreen({navigation, route}: any) {
         }>
         <Text style={styles.buttonText}>Recently Bought</Text>
       </TouchableOpacity>
-      
     </View>
-    
   );
 }
 

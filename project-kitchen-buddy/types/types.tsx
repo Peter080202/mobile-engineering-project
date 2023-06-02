@@ -16,13 +16,6 @@ export interface GroceryListIngredient extends Ingredient {
   bought: boolean;
 }
 
-export enum SelectionType {
-  Category = 'Category',
-  Location = 'Location',
-  ConfectionType = 'Confection Type',
-  Ripeness = 'Ripeness',
-}
-
 export enum FilterType {
   ExpiringSoon,
   Incomplete,
