@@ -34,6 +34,7 @@ import {
   removeFromGroceryList,
   useGroceryList,
 } from '../../store/groceryListReducer';
+import Dropdown from './Dropdown';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -302,62 +303,41 @@ export default function IngredientView({navigation, route}: any) {
         </View>
         <View style={styles.rowContainer}>
           <Text style={styles.text}>Category:</Text>
-          <SelectDropdown
-            data={categories}
-            ref={categoriesDropdownRef}
+          <Dropdown
+            options={categories}
+            dropdownRef={categoriesDropdownRef}
             defaultValue={
               reBoughtMode || editMode
                 ? route.params.ingredient.category
                 : undefined
             }
-            onSelect={(selectedCategory: string) =>
-              setCategory(selectedCategory)
-            }
-            buttonTextAfterSelection={(selectedCategory: string) =>
-              selectedCategory
-            }
-            rowTextForSelection={(category: string) => category}
-            defaultButtonText={defaultText}
+            setValue={setCategory}
           />
         </View>
         <View style={styles.rowContainer}>
           <Text style={styles.text}>Location:</Text>
-          <SelectDropdown
-            data={locations}
-            ref={locationsDropdownRef}
+          <Dropdown
+            options={locations}
+            dropdownRef={locationsDropdownRef}
             defaultValue={
               reBoughtMode || editMode
                 ? route.params.ingredient.location
                 : undefined
             }
-            onSelect={(selectedLocation: string) =>
-              setLocation(selectedLocation)
-            }
-            buttonTextAfterSelection={(selectedLocation: string) =>
-              selectedLocation
-            }
-            rowTextForSelection={(location: string) => location}
-            defaultButtonText={defaultText}
+            setValue={setLocation}
           />
         </View>
         <View style={styles.rowContainer}>
           <Text style={styles.text}>Confection type:</Text>
-          <SelectDropdown
-            data={confectionTypes}
-            ref={confectionTypesDropdownRef}
+          <Dropdown
+            options={confectionTypes}
+            dropdownRef={confectionTypesDropdownRef}
             defaultValue={
               reBoughtMode || editMode
                 ? route.params.ingredient.confectionType
                 : undefined
             }
-            onSelect={(selectedConfectionType: string) =>
-              setConfectionType(selectedConfectionType)
-            }
-            buttonTextAfterSelection={(selectedConfectionType: string) =>
-              selectedConfectionType
-            }
-            rowTextForSelection={(confectionType: string) => confectionType}
-            defaultButtonText={defaultText}
+            setValue={setConfectionType}
           />
         </View>
         {confectionType === 'fresh' && (
@@ -403,10 +383,9 @@ export default function IngredientView({navigation, route}: any) {
             }}
           />
           <View style={{flex: 1}}>
-            <SelectDropdown
-              buttonStyle={{width: 80}}
-              data={quantityTypes}
-              ref={quantityTypesDropdownRef}
+            <Dropdown
+              options={quantityTypes}
+              dropdownRef={quantityTypesDropdownRef}
               defaultValue={
                 route.params !== undefined &&
                 (editMode || reBoughtMode) &&
@@ -415,37 +394,23 @@ export default function IngredientView({navigation, route}: any) {
                   ? route.params.ingredient.quantity
                   : undefined
               }
-              onSelect={(selectedQuantity: string) =>
-                setQuantity(selectedQuantity)
-              }
-              buttonTextAfterSelection={(selectedQuantity: string) =>
-                selectedQuantity
-              }
-              rowTextForSelection={(quantity: string) => quantity}
-              defaultButtonText={defaultText}
+              setValue={setQuantity}
             />
           </View>
         </View>
         {confectionType === 'fresh' && (
           <View style={styles.rowContainer}>
             <Text style={styles.text}>Ripeness:</Text>
-            <SelectDropdown
-              data={ripenesses}
-              ref={ripenessDropdownRef}
+            <Dropdown
+              options={ripenesses}
+              dropdownRef={ripenessDropdownRef}
               defaultValue={
                 route.params !== undefined &&
                 route.params.ingredient.ripeness !== undefined
                   ? route.params.ingredient.ripeness
                   : undefined
               }
-              onSelect={(selectedRipeness: string) =>
-                setRipeness(selectedRipeness)
-              }
-              buttonTextAfterSelection={(selectedRipeness: string) =>
-                selectedRipeness
-              }
-              rowTextForSelection={(ripeness: string) => ripeness}
-              defaultButtonText={defaultText}
+              setValue={setRipeness}
             />
           </View>
         )}
