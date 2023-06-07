@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator();
 const ShopNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ShopsNearby" component={ShopsNearbyScreen} />
+      <Stack.Screen name="Shops Nearby" component={ShopsNearbyScreen} />
       <Stack.Screen name="ShopItems" component={ShopsItemsScreen} />
     </Stack.Navigator>
   );

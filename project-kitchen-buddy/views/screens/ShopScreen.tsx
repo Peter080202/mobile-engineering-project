@@ -1,6 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import * as Location from 'expo-location';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  updateSearchPattern,
+  useSearchPattern,
+} from '../../store/searchPatternReducer';
+import SearchBar from '../components/SearchBar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 interface Shop {
   name: string;
@@ -10,13 +26,18 @@ interface Shop {
 }
 
 const ShopScreen = () => {
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null,
+  const dispatch = useDispatch();
+  const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
+  const searchPattern = useSelector(useSearchPattern);
+  const [location, setLocation] = useState<Location.LocationObject | undefined>(
+    undefined,
   );
   const [error, setError] = useState<string | null>(null);
   const [nearbyShops, setNearbyShops] = useState<Shop[]>([]);
 
   useEffect(() => {
+    // Reset search pattern on every mount
+    dispatch(updateSearchPattern(''));
     const fetchData = async () => {
       try {
         const {status} = await Location.requestForegroundPermissionsAsync();
@@ -86,33 +107,110 @@ const ShopScreen = () => {
   };
   const toRad = (angle: number) => (angle * Math.PI) / 180;
 
-  if (error) {
+  const StoreComp = ({store}: {store: any}) => {
     return (
-      <View>
-        <Text>{error}</Text>
+      <View style={styles.paddedRow}>
+        <Text style={styles.text}>{store.name}</Text>
+        <TouchableOpacity
+          style={styles.navigationButton}
+          onPress={() =>
+            Linking.openURL(
+              `google.navigation:q=${store.latitude}+${store.longitude}`,
+            )
+          }>
+          <Ionicons name="navigate" size={20} color={Colors.black} />
+        </TouchableOpacity>
       </View>
     );
-  }
+  };
 
-  if (!location) {
-    return (
-      <View>
-        <Text>Loading location...</Text>
-      </View>
-    );
-  }
+  const ItemDivider = () => {
+    return <View style={styles.divider} />;
+  };
 
-  return (
+  return error ? (
     <View>
-      <Text>
-        Your location: {location.coords.latitude}, {location.coords.longitude}
-      </Text>
-      <Text>Nearby shops:</Text>
-      {nearbyShops.map(shop => (
-        <Text key={shop.name}>{shop.name}</Text>
-      ))}
+      <Text>{error}</Text>
+    </View>
+  ) : location === undefined ? (
+    <View style={styles.container}>
+      <Text style={styles.loadingText}>Loading location...</Text>
+    </View>
+  ) : (
+    <View style={styles.container}>
+      {nearbyShops.length == 0 ? (
+        <Text
+          style={[
+            styles.text,
+            {
+              margin: 15,
+            },
+          ]}>
+          No shops found
+        </Text>
+      ) : (
+        <>
+          <SearchBar
+            focusSearchBar={focusSearchBar}
+            setFocusSearchBar={setFocusSearchBar}
+          />
+          <FlatList
+            data={nearbyShops.filter((store: any) =>
+              store.name.includes(searchPattern),
+            )}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={({item}: {item: any}) => (
+              <TouchableOpacity
+                key={item.name}
+                onPress={() => {
+                  console.log(item);
+                }}>
+                <StoreComp store={item} />
+              </TouchableOpacity>
+            )}
+            ItemSeparatorComponent={ItemDivider}
+          />
+        </>
+      )}
     </View>
   );
 };
 
 export default ShopScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 5,
+    backgroundColor: '#fff',
+  },
+  loadingText: {
+    fontSize: 24,
+  },
+  paddedRow: {
+    padding: 10,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width - 30,
+  },
+  text: {
+    fontSize: 18,
+    flex: 1,
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: '#607D8B',
+  },
+  navigationButton: {
+    width: 32,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 5,
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+});
