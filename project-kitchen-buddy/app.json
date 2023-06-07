@@ -1,5 +1,13 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(APP) to use your location."
+        }
+      ]
+    ],
     "name": "project-kitchen-buddy",
     "slug": "project-kitchen-buddy",
     "version": "1.0.0",
@@ -28,4 +36,6 @@
       "favicon": "./assets/favicon.png"
     }
   }
+
+
 }

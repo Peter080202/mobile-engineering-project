@@ -81,3 +81,4 @@ export const groceryListIngredients = (
         (ingredient.quantity === quantityTypes[1] ||
           ingredient.quantity === quantityTypes[2])),
   );
+

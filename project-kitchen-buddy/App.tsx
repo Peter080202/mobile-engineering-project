@@ -9,7 +9,8 @@ import {Provider, useDispatch} from 'react-redux';
 import store from './store/store';
 import ExpiringSoonNavigator from './views/navigators/ExpiringSoonNavigator';
 import GroceryListNavigator from './views/navigators/GroceryListNavigator';
-import AddIngredientNavigator from './views/navigators/BarCodeNavigator'
+import ShopNavigator from './views/navigators/ShopNavigator';
+import AddIngredientNavigator from './views/navigators/BarCodeNavigator';
 import {getIngredients} from './store/ingredientsReducer';
 import {getGroceryList} from './store/groceryListReducer';
 
@@ -80,6 +81,17 @@ function App() {
             tabBarLabel: 'Query Ingredients',
             tabBarIcon: ({color, size}) => (
               <Ionicons name="search" size={size} color={color} />
+            ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Shops"
+          component={ShopNavigator}
+          options={{
+            tabBarLabel: 'Shops',
+            tabBarIcon: ({color, size}) => (
+              <Ionicons name="cart" size={size} color={color} />
             ),
           }}
         />
