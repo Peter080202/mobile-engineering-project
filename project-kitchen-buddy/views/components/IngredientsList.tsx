@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   paddedRow: {
     padding: 10,
     flexDirection: 'row',
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width - 30,
   },
   divider: {
     height: 1,

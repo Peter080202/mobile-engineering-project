@@ -22,10 +22,10 @@ interface Shop {
   name: string;
   latitude: number;
   longitude: number;
-  type: string;
+  type: string[];
 }
 
-const ShopScreen = () => {
+export default function SelectionMenuScreen({navigation, route}: any) {
   const dispatch = useDispatch();
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
   const searchPattern = useSelector(useSearchPattern);
@@ -53,25 +53,25 @@ const ShopScreen = () => {
             name: 'General Store Bolzano',
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
-            type: 'general',
+            type: ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'],
           },
           {
             name: 'Shop 2',
             latitude: location.coords.latitude,
             longitude: location.coords.longitude - 1,
-            type: 'butcher',
+            type: ['meat'],
           },
           {
             name: 'Shop 3',
             latitude: location.coords.latitude,
             longitude: location.coords.longitude - 1,
-            type: 'general',
+            type: ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'],
           },
           {
             name: 'Bolzano Butcher',
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
-            type: 'butcher',
+            type: ['meat'],
           },
         ];
         const nearbyShops = EXAMPLE_SHOPS.filter(
@@ -107,7 +107,7 @@ const ShopScreen = () => {
   };
   const toRad = (angle: number) => (angle * Math.PI) / 180;
 
-  const StoreComp = ({store}: {store: any}) => {
+  const StoreComp = ({store}: {store: Shop}) => {
     return (
       <View style={styles.paddedRow}>
         <Text style={styles.text}>{store.name}</Text>
@@ -155,15 +155,18 @@ const ShopScreen = () => {
             setFocusSearchBar={setFocusSearchBar}
           />
           <FlatList
-            data={nearbyShops.filter((store: any) =>
+            data={nearbyShops.filter((store: Shop) =>
               store.name.includes(searchPattern),
             )}
             keyExtractor={(item, index) => String(index)}
-            renderItem={({item}: {item: any}) => (
+            renderItem={({item}: {item: Shop}) => (
               <TouchableOpacity
                 key={item.name}
                 onPress={() => {
-                  console.log(item);
+                  navigation.navigate('ShopDetail', {
+                    shop: item,
+                    title: `${item.name}`,
+                  });
                 }}>
                 <StoreComp store={item} />
               </TouchableOpacity>
@@ -174,9 +177,7 @@ const ShopScreen = () => {
       )}
     </View>
   );
-};
-
-export default ShopScreen;
+}
 
 const styles = StyleSheet.create({
   container: {
