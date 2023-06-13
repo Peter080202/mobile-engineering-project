@@ -25,7 +25,7 @@ export default function GroceryList() {
   const dispatch = useDispatch();
   const groceryList = useSelector(useGroceryList);
 
-  const IngredientComp = ({
+  const GroceryListComp = ({
     groceryListIngredient,
   }: {
     groceryListIngredient: GroceryListIngredient;
@@ -71,7 +71,7 @@ export default function GroceryList() {
           )}
           keyExtractor={(item, index) => String(index)}
           renderItem={({item}: {item: GroceryListIngredient}) => (
-            <IngredientComp groceryListIngredient={item} />
+            <GroceryListComp groceryListIngredient={item} />
           )}
           ItemSeparatorComponent={ItemDivider}
         />
