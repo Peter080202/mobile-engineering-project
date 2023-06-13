@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, StyleSheet, Dimensions} from 'react-native';
 import {useSelector} from 'react-redux';
-import {Ingredient} from '../../types/types';
+import {GroceryListIngredient} from '../../types/types';
 import {useGroceryList} from '../../store/groceryListReducer';
 
 export default function ShopDetailScreen({route}: any) {
@@ -24,9 +24,10 @@ export default function ShopDetailScreen({route}: any) {
       </Text>
       <FlatList
         data={groceryList.filter(
-          (ingredient: Ingredient) =>
-            !ingredient.category ||
-            route.params.shop.type.includes(ingredient.category),
+          (groceryListIngredient: GroceryListIngredient) =>
+            !groceryListIngredient.bought &&
+            (!groceryListIngredient.category ||
+              route.params.shop.type.includes(groceryListIngredient.category)),
         )}
         keyExtractor={(item, index) => String(index)}
         renderItem={({item}) => (

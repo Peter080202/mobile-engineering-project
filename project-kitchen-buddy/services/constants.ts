@@ -1,9 +1,5 @@
 import {Ingredient} from '../types/types';
-import {
-  getDiffFromPastTimestamp,
-  getDifferenceDaysFromDateAndTimestamp,
-  getDifferenceDaysFromNow,
-} from './commons';
+import {getDiffFromPastTimestamp, getDifferenceDaysFromNow} from './commons';
 
 export const ingredientsStorageKey = '@ingredients_storage_key';
 export const groceryListStorageKey = '@grocery_list_storage_key';
@@ -81,4 +77,3 @@ export const groceryListIngredients = (
         (ingredient.quantity === quantityTypes[1] ||
           ingredient.quantity === quantityTypes[2])),
   );
-
