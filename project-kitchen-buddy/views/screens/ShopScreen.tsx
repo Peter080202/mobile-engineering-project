@@ -17,15 +17,12 @@ import {
 import SearchBar from '../components/SearchBar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Shop} from '../../types/types';
+import {shops} from '../../types/testdata';
+import {useIsFocused} from '@react-navigation/native';
 
-interface Shop {
-  name: string;
-  latitude: number;
-  longitude: number;
-  type: string[];
-}
-
-export default function SelectionMenuScreen({navigation, route}: any) {
+export default function ShopScreen({navigation, route}: any) {
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
   const searchPattern = useSelector(useSearchPattern);
@@ -36,9 +33,7 @@ export default function SelectionMenuScreen({navigation, route}: any) {
   const [nearbyShops, setNearbyShops] = useState<Shop[]>([]);
 
   useEffect(() => {
-    // Reset search pattern on every mount
-    dispatch(updateSearchPattern(''));
-    const fetchData = async () => {
+    const fetchCurrentPosition = async () => {
       try {
         const {status} = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
@@ -48,45 +43,23 @@ export default function SelectionMenuScreen({navigation, route}: any) {
 
         const location = await Location.getCurrentPositionAsync({});
         setLocation(location);
-        const EXAMPLE_SHOPS: Shop[] = [
-          {
-            name: 'General Store Bolzano',
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            type: ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'],
-          },
-          {
-            name: 'Shop 2',
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude - 1,
-            type: ['meat'],
-          },
-          {
-            name: 'Shop 3',
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude - 1,
-            type: ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'],
-          },
-          {
-            name: 'Bolzano Butcher',
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            type: ['meat'],
-          },
-        ];
-        const nearbyShops = EXAMPLE_SHOPS.filter(
-          shop => Number(calculateDistance(location.coords, shop)) <= 1.5,
+        // Showing shops within a range of 15 km
+        setNearbyShops(
+          shops.filter(
+            shop => Number(calculateDistance(location.coords, shop)) <= 15,
+          ),
         );
-        setNearbyShops(nearbyShops);
       } catch (error) {
         setError('Error retrieving location.');
       }
     };
 
-    fetchData();
-  }, []);
-
-  // ...
+    if (isFocused) {
+      // Reset search pattern on every mount
+      dispatch(updateSearchPattern(''));
+      fetchCurrentPosition();
+    }
+  }, [isFocused]);
 
   const calculateDistance = (
     coords1: Location.LocationObjectCoords,
@@ -128,9 +101,12 @@ export default function SelectionMenuScreen({navigation, route}: any) {
     return <View style={styles.divider} />;
   };
 
-  return error ? (
-    <View>
-      <Text>{error}</Text>
+  return error && location === undefined ? (
+    <View style={styles.container}>
+      <Text style={styles.text}>
+        {error}
+        {'\n\n'}Please enter into your settings and allow location permission!
+      </Text>
     </View>
   ) : location === undefined ? (
     <View style={styles.container}>
@@ -154,6 +130,9 @@ export default function SelectionMenuScreen({navigation, route}: any) {
             focusSearchBar={focusSearchBar}
             setFocusSearchBar={setFocusSearchBar}
           />
+          <Text style={{fontSize: 18, paddingBottom: 20}}>
+            Showing all shops within a range of 15km:
+          </Text>
           <FlatList
             data={nearbyShops.filter((store: Shop) =>
               store.name.includes(searchPattern),

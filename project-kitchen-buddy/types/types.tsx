@@ -17,6 +17,13 @@ export interface GroceryListIngredient extends Ingredient {
   bought: boolean;
 }
 
+export interface Shop {
+  name: string;
+  latitude: number;
+  longitude: number;
+  type: string[];
+}
+
 export enum FilterType {
   ExpiringSoon,
   Incomplete,

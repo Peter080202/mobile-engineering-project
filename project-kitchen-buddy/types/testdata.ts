@@ -1,4 +1,4 @@
-import {Ingredient} from './types';
+import {Ingredient, Shop} from './types';
 
 function daysFromNowOn(days: number) {
   const date = new Date();
@@ -6,6 +6,33 @@ function daysFromNowOn(days: number) {
 
   return date;
 }
+
+export const shops: Shop[] = [
+  {
+    name: 'MPreis Bozen',
+    latitude: 46.498566,
+    longitude: 11.3565227,
+    type: ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'],
+  },
+  {
+    name: 'Butcher Stampfl',
+    latitude: 46.4999572,
+    longitude: 11.3603236,
+    type: ['meat'],
+  },
+  {
+    name: 'Aldi Bozen',
+    latitude: 46.5010481,
+    longitude: 11.3414135,
+    type: ['fruit', 'vegetable', 'dairy', 'fish', 'meat', 'liquid'],
+  },
+  {
+    name: 'Butcher Grünberger',
+    latitude: 46.502856,
+    longitude: 11.3320079,
+    type: ['meat'],
+  },
+];
 
 export const testIngredients: Ingredient[] = [
   {

@@ -5,7 +5,6 @@ import {BarCodeScanner, PermissionResponse} from 'expo-barcode-scanner';
 export const ScannerScreen = ({navigation}: any) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
-  const [productData, setProductData] = useState<any>(null);
 
   useEffect(() => {
     BarCodeScanner.getPermissionsAsync().then(
@@ -26,7 +25,6 @@ export const ScannerScreen = ({navigation}: any) => {
         `https://world.openfoodfacts.org/api/v2/product/${barcode}.json`,
       );
       const data = await response.json();
-      setProductData(data.product);
       handleAddScan(data.product);
     } catch (error) {
       console.log('Error fetching product data:', error);
@@ -35,7 +33,6 @@ export const ScannerScreen = ({navigation}: any) => {
 
   const handleScanAgain = () => {
     setScanned(false);
-    setProductData(null);
   };
 
   if (hasPermission === null) {
