@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 import {addToGroceryList} from '../../store/groceryListReducer';
 import {useDispatch} from 'react-redux';
 
-export default function QuickEntryScreen({navigation, route}: any) {
+export default function QuickEntryScreen({navigation}: any) {
   const dispatch = useDispatch();
   const [ingredientName, setIngredientName] = useState<string>('');
   return (

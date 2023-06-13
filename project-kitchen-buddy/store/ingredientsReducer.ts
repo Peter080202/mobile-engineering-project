@@ -53,7 +53,8 @@ export const ingredientsReducer = createSlice({
 
 export const {addIngredient, updateIngredients} = ingredientsReducer.actions;
 
-export const useIngredients = (state: {ingredients: {ingredients: any}}) =>
-  state.ingredients.ingredients;
+export const useIngredients = (state: {
+  ingredients: {ingredients: Ingredient[]};
+}) => state.ingredients.ingredients;
 
 export default ingredientsReducer.reducer;

@@ -7,7 +7,7 @@ import SelectionMenuScreen from '../screens/SelectionMenuScreen';
 
 const Stack = createNativeStackNavigator();
 
-export default function QueriesNavigator({navigation}: any) {
+export default function QueriesNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen

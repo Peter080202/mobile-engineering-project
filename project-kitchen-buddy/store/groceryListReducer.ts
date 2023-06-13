@@ -52,7 +52,8 @@ export const groceryListReducer = createSlice({
 export const {addToGroceryList, removeFromGroceryList, boughtFromGroceryList} =
   groceryListReducer.actions;
 
-export const useGroceryList = (state: {groceryList: {groceryList: any}}) =>
-  state.groceryList.groceryList;
+export const useGroceryList = (state: {
+  groceryList: {groceryList: GroceryListIngredient[]};
+}) => state.groceryList.groceryList;
 
 export default groceryListReducer.reducer;

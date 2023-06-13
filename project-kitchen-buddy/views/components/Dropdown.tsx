@@ -1,7 +1,5 @@
-import {categories} from '../../services/constants';
 import SelectDropdown from 'react-native-select-dropdown';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 
 type DropdownProps = {
   options: string[];

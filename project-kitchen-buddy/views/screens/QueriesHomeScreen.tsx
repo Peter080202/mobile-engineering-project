@@ -8,7 +8,7 @@ import {
 } from '../../services/constants';
 import React from 'react';
 
-export default function QueriesHomeScreen({navigation, route}: any) {
+export default function QueriesHomeScreen({navigation}: any) {
   return (
     <View style={styles.container}>
       <TouchableOpacity

@@ -14,7 +14,7 @@ export const searchPatternReducer = createSlice({
 
 export const {updateSearchPattern} = searchPatternReducer.actions;
 
-export const useSearchPattern = (state: {searchPattern: {value: any}}) =>
+export const useSearchPattern = (state: {searchPattern: {value: string}}) =>
   state.searchPattern.value;
 
 export default searchPatternReducer.reducer;

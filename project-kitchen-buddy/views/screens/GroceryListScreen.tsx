@@ -4,7 +4,7 @@ import React from 'react';
 import GroceryList from '../components/GroceryList';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-export default function GroceryListScreen({navigation, route}: any) {
+export default function GroceryListScreen({navigation}: any) {
   return (
     <View style={styles.container}>
       <TouchableOpacity

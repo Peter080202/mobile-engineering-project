@@ -6,7 +6,7 @@ import {FilterType} from '../../types/types';
 
 const Stack = createNativeStackNavigator();
 
-export default function ExpiringSoonNavigator({navigation}: any) {
+export default function ExpiringSoonNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
