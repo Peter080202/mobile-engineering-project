@@ -39,9 +39,15 @@ export default function ShopScreen({navigation}: any) {
         setLocation(location);
         // Showing shops within a range of 15 km
         setNearbyShops(
-          shops.filter(
-            shop => Number(calculateDistance(location.coords, shop)) <= 15,
-          ),
+          shops
+            .filter(
+              shop => Number(calculateDistance(location.coords, shop)) <= 15,
+            )
+            .sort(
+              (a: Shop, b: Shop) =>
+                Number(calculateDistance(location.coords, a)) -
+                Number(calculateDistance(location.coords, b)),
+            ),
         );
       } catch (error) {
         setError('Error retrieving location.');
