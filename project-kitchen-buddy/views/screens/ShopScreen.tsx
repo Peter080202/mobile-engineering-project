@@ -9,11 +9,6 @@ import {
   Linking,
 } from 'react-native';
 import * as Location from 'expo-location';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  updateSearchPattern,
-  useSearchPattern,
-} from '../../store/searchPatternReducer';
 import SearchBar from '../components/SearchBar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -23,9 +18,8 @@ import {useIsFocused} from '@react-navigation/native';
 
 export default function ShopScreen({navigation}: any) {
   const isFocused = useIsFocused();
-  const dispatch = useDispatch();
+  const [searchPattern, setSearchPattern] = useState<string>('');
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);
-  const searchPattern = useSelector(useSearchPattern);
   const [location, setLocation] = useState<Location.LocationObject | undefined>(
     undefined,
   );
@@ -55,8 +49,6 @@ export default function ShopScreen({navigation}: any) {
     };
 
     if (isFocused) {
-      // Reset search pattern on every mount
-      dispatch(updateSearchPattern(''));
       fetchCurrentPosition();
     }
   }, [isFocused]);
@@ -127,6 +119,8 @@ export default function ShopScreen({navigation}: any) {
       ) : (
         <>
           <SearchBar
+            searchPattern={searchPattern}
+            setSearchPattern={setSearchPattern}
             focusSearchBar={focusSearchBar}
             setFocusSearchBar={setFocusSearchBar}
           />

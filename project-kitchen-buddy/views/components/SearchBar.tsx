@@ -1,19 +1,20 @@
 import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {Feather, Entypo} from '@expo/vector-icons';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  updateSearchPattern,
-  useSearchPattern,
-} from '../../store/searchPatternReducer';
 
 type SearchBarProps = {
+  searchPattern: string;
+  setSearchPattern: React.Dispatch<React.SetStateAction<string>>;
   focusSearchBar: boolean;
-  setFocusSearchBar: any;
+  setFocusSearchBar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function SearchBar({focusSearchBar, setFocusSearchBar}: SearchBarProps) {
-  const dispatch = useDispatch();
+function SearchBar({
+  searchPattern,
+  setSearchPattern,
+  focusSearchBar,
+  setFocusSearchBar,
+}: SearchBarProps) {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
@@ -26,10 +27,8 @@ function SearchBar({focusSearchBar, setFocusSearchBar}: SearchBarProps) {
         <TextInput
           style={styles.input}
           placeholder="Search"
-          value={useSelector(useSearchPattern)}
-          onChangeText={searchPattern =>
-            dispatch(updateSearchPattern(searchPattern))
-          }
+          value={searchPattern}
+          onChangeText={searchPattern => setSearchPattern(searchPattern)}
           onFocus={() => {
             setFocusSearchBar(true);
           }}
@@ -40,9 +39,7 @@ function SearchBar({focusSearchBar, setFocusSearchBar}: SearchBarProps) {
             size={20}
             color="black"
             style={{padding: 1}}
-            onPress={() => {
-              dispatch(updateSearchPattern(''));
-            }}
+            onPress={() => setSearchPattern('')}
           />
         )}
       </View>
