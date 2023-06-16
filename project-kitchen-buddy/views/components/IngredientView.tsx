@@ -363,7 +363,7 @@ export default function IngredientView({navigation, route}: any) {
           </TouchableOpacity>
         </View>
         <View style={styles.rowContainer}>
-          <Text style={styles.text}>Quantity:</Text>
+          <Text style={{fontSize: 20, flex: 2}}>Quantity:</Text>
           <TextInput
             style={styles.quantityInput}
             value={
@@ -382,7 +382,7 @@ export default function IngredientView({navigation, route}: any) {
               }
             }}
           />
-          <View style={{flex: 1}}>
+          <View style={{flex: 3}}>
             <Dropdown
               options={quantityTypes}
               dropdownRef={quantityTypesDropdownRef}
