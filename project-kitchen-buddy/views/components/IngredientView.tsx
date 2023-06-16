@@ -3,7 +3,6 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   TouchableOpacity,
   Switch,
   Alert,
@@ -281,8 +280,10 @@ export default function IngredientView({navigation, route}: any) {
         </View>
 
         {!editMode && !reBoughtMode && (
-          <View>
-            <Button title="Scan Barcode" onPress={navigateToScanner} />
+          <View style={styles.buttonView}>
+            <TouchableOpacity style={styles.button} onPress={navigateToScanner}>
+              <Text style={styles.buttonText}>Scan Barcode</Text>
+            </TouchableOpacity>
           </View>
         )}
         <View style={styles.rowContainer}>
@@ -426,16 +427,27 @@ export default function IngredientView({navigation, route}: any) {
         </View>
 
         <View style={styles.space} />
-        {reBoughtMode ? (
-          <Button
-            title="Save re-bought item"
-            onPress={() => saveReBoughtItem()}
-          />
-        ) : editMode ? (
-          <Button title="Save item" onPress={() => saveEditedItem()} />
-        ) : (
-          <Button title="Save new item" onPress={() => addNewItem()} />
-        )}
+        <View style={styles.buttonView}>
+          {reBoughtMode ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => saveReBoughtItem()}>
+              <Text style={styles.buttonText}>Save re-bought item</Text>
+            </TouchableOpacity>
+          ) : editMode ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => saveEditedItem()}>
+              <Text style={styles.buttonText}>Save item</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => addNewItem()}>
+              <Text style={styles.buttonText}>Save new item</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <DatesPickerModal
           isVisible={isDatePickerVisible}
           mode="date"
@@ -488,9 +500,28 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
   },
+  buttonView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
   space: {
     width: 20,
     height: 10,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+    width: '80%',
   },
   customButton: {
     height: 40,

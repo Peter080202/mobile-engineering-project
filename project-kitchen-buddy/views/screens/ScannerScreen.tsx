@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Button, DeviceEventEmitter} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  DeviceEventEmitter,
+  TouchableOpacity,
+} from 'react-native';
 import {BarCodeScanner, PermissionResponse} from 'expo-barcode-scanner';
 
 export const ScannerScreen = ({navigation}: any) => {
@@ -61,7 +67,11 @@ export const ScannerScreen = ({navigation}: any) => {
         style={StyleSheet.absoluteFillObject}
       />
       {scanned && (
-        <Button title={'Tap to Scan Again'} onPress={handleScanAgain} />
+        <View style={styles.buttonView}>
+          <TouchableOpacity style={styles.button} onPress={handleScanAgain}>
+            <Text style={styles.buttonText}>Tap to Scan Again</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -78,5 +88,24 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     marginTop: 20,
+  },
+  buttonView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+    width: '80%',
   },
 });
