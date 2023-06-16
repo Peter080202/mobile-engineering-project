@@ -98,14 +98,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 5,
   },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 5,
-    borderRadius: 5,
-    width: '45%',
-  },
   text: {
     fontSize: 18,
     flex: 1,

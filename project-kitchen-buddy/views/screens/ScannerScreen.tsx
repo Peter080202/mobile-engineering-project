@@ -83,12 +83,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  productContainer: {
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    borderRadius: 10,
-    marginTop: 20,
-  },
   buttonView: {
     flex: 1,
     alignItems: 'center',

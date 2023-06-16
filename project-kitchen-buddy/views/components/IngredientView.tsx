@@ -531,9 +531,4 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     backgroundColor: '#edeff2',
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
