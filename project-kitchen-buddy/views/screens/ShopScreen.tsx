@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   Linking,
+  Platform,
 } from 'react-native';
 import * as Location from 'expo-location';
 import SearchBar from '../components/SearchBar';
@@ -84,11 +85,20 @@ export default function ShopScreen({navigation}: any) {
         <Text style={styles.text}>{store.name}</Text>
         <TouchableOpacity
           style={styles.navigationButton}
-          onPress={() =>
-            Linking.openURL(
-              `google.navigation:q=${store.latitude}+${store.longitude}`,
-            )
-          }>
+          onPress={() => {
+            const scheme = Platform.select({
+              ios: 'maps://0,0?q=',
+              android: 'geo:0,0?q=',
+            });
+            const latLng = `${store.latitude},${store.longitude}`;
+            const url = Platform.select({
+              ios: `${scheme}${store.name}@${latLng}`,
+              android: `${scheme}${latLng}(${store.name})`,
+            });
+            if (url !== undefined) {
+              Linking.openURL(url);
+            }
+          }}>
           <Ionicons name="navigate" size={20} color={Colors.black} />
         </TouchableOpacity>
       </View>
