@@ -13,7 +13,7 @@ export const ScannerScreen = ({navigation}: any) => {
   const [scanned, setScanned] = useState<boolean>(false);
 
   useEffect(() => {
-    BarCodeScanner.getPermissionsAsync().then(
+    BarCodeScanner.requestPermissionsAsync().then(
       (permissionResponse: PermissionResponse) => {
         setHasPermission(permissionResponse.status === 'granted');
       },
