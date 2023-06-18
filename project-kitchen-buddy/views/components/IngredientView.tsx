@@ -82,10 +82,12 @@ export default function IngredientView({navigation, route}: any) {
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(
     reBoughtMode && route.params.ingredient.expirationDate !== undefined
       ? new Date(
-          route.params.ingredient.expirationDate.getTime() +
-            getDifferenceDaysFromDateAndTimestamp(
-              route.params.ingredient.expirationDate,
-              route.params.ingredient.timestamp,
+          new Date().getTime() +
+            Math.ceil(
+              getDifferenceDaysFromDateAndTimestamp(
+                route.params.ingredient.expirationDate,
+                route.params.ingredient.timestamp,
+              ),
             ),
         )
       : editMode
