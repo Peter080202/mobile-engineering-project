@@ -18,10 +18,16 @@ export default function Dropdown({
 }: DropdownProps) {
   return (
     <SelectDropdown
-      data={options}
+      data={['---', ...options]}
       ref={dropdownRef}
       defaultValue={defaultValue}
-      onSelect={(selectedValue: string) => setValue(selectedValue)}
+      onSelect={(selectedValue: string) => {
+        if (selectedValue === '---') {
+          setValue(undefined);
+        } else {
+          setValue(selectedValue);
+        }
+      }}
       buttonTextAfterSelection={(selection: string) => selection}
       rowTextForSelection={(selection: string) => selection}
       defaultButtonText={'---'}
