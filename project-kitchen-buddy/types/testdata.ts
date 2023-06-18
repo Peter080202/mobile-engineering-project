@@ -41,9 +41,9 @@ export const testIngredients: Ingredient[] = [
     location: 'fridge',
     confectionType: 'fresh',
     expirationDate: daysFromNowOn(1),
-    timestamp: Date.now() - 1000,
+    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 4,
     ripeness: 'ripe',
-    ripenessTimestamp: Date.now() - 1000,
+    ripenessTimestamp: Date.now() - 1000 * 60 * 60 * 24 * 4,
     open: false,
   },
   {
