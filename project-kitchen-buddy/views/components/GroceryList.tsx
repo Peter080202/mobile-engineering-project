@@ -21,7 +21,7 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-export default function GroceryList() {
+export default function GroceryList(): JSX.Element {
   const dispatch = useDispatch();
   const groceryList = useSelector(useGroceryList);
 

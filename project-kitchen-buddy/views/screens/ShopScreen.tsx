@@ -17,7 +17,7 @@ import {Shop} from '../../types/types';
 import {shops} from '../../types/testdata';
 import {useIsFocused} from '@react-navigation/native';
 
-export default function ShopScreen({navigation}: any) {
+export default function ShopScreen({navigation}: any): JSX.Element {
   const isFocused = useIsFocused();
   const [searchPattern, setSearchPattern] = useState<string>('');
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);

@@ -8,7 +8,7 @@ import QuickEntryScreen from '../screens/QuickEntryScreen';
 
 const Stack = createNativeStackNavigator();
 
-export default function GroceryListNavigator() {
+export default function GroceryListNavigator(): JSX.Element {
   return (
     <Stack.Navigator>
       <Stack.Screen

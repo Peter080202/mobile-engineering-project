@@ -5,7 +5,7 @@ import {ScannerScreen} from '../screens/ScannerScreen';
 
 const Stack = createNativeStackNavigator();
 
-export default function AddIngredientNavigator() {
+export default function AddIngredientNavigator(): JSX.Element {
   return (
     <Stack.Navigator>
       <Stack.Screen

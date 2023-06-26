@@ -15,7 +15,7 @@ import {
   useGroceryList,
 } from '../../store/groceryListReducer';
 
-export default function ShopDetailScreen({route}: any) {
+export default function ShopDetailScreen({route}: any): JSX.Element {
   const dispatch = useDispatch();
   const groceryList = useSelector(useGroceryList);
 

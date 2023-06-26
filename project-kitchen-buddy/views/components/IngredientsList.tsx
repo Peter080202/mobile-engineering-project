@@ -30,7 +30,7 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-export default function IngredientsList({navigation, route}: any) {
+export default function IngredientsList({navigation, route}: any): JSX.Element {
   const dispatch = useDispatch();
   const [searchPattern, setSearchPattern] = useState<string>('');
   const [focusSearchBar, setFocusSearchBar] = useState<boolean>(false);

@@ -15,7 +15,7 @@ export default function Dropdown({
   dropdownRef,
   defaultValue,
   setValue,
-}: DropdownProps) {
+}: DropdownProps): JSX.Element {
   return (
     <SelectDropdown
       data={['---', ...options]}

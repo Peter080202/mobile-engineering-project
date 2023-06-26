@@ -39,7 +39,7 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-export default function IngredientView({navigation, route}: any) {
+export default function IngredientView({navigation, route}: any): JSX.Element {
   const dispatch = useDispatch();
   const groceryList = useSelector(useGroceryList);
 

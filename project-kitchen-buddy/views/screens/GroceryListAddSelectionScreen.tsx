@@ -2,7 +2,9 @@ import {FilterType} from '../../types/types';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
-export default function GroceryListAddSelectionScreen({navigation}: any) {
+export default function GroceryListAddSelectionScreen({
+  navigation,
+}: any): JSX.Element {
   return (
     <View style={styles.container}>
       <TouchableOpacity

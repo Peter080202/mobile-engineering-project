@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {BarCodeScanner, PermissionResponse} from 'expo-barcode-scanner';
 
-export const ScannerScreen = ({navigation}: any) => {
+export const ScannerScreen = ({navigation}: any): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
 

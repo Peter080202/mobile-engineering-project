@@ -1,7 +1,10 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
-export default function SelectionMenuScreen({navigation, route}: any) {
+export default function SelectionMenuScreen({
+  navigation,
+  route,
+}: any): JSX.Element {
   return (
     <View style={styles.container}>
       {route.params.selection.map((option: string) => (

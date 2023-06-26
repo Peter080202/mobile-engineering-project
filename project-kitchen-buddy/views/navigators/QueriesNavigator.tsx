@@ -7,7 +7,7 @@ import SelectionMenuScreen from '../screens/SelectionMenuScreen';
 
 const Stack = createNativeStackNavigator();
 
-export default function QueriesNavigator() {
+export default function QueriesNavigator(): JSX.Element {
   return (
     <Stack.Navigator>
       <Stack.Screen

@@ -5,7 +5,7 @@ import ShopDetailScreen from '../screens/ShopDetailScreen';
 
 const Stack = createNativeStackNavigator();
 
-const ShopNavigator = () => {
+const ShopNavigator = (): JSX.Element => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Shops Nearby" component={ShopsNearbyScreen} />

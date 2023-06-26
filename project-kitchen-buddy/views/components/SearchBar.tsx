@@ -14,7 +14,7 @@ function SearchBar({
   setSearchPattern,
   focusSearchBar,
   setFocusSearchBar,
-}: SearchBarProps) {
+}: SearchBarProps): JSX.Element {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
